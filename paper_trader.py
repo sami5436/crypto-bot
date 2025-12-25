@@ -37,7 +37,7 @@ LIVE_MODE = False
 
 # Capital and trading pair
 STARTING_CAPITAL = 50.0  # USD
-SYMBOL = "BTC/USD"  # Kraken uses USD not USDT
+SYMBOL = "ETH/USD"  # ETH is more volatile = more signals
 TIMEFRAME = "1h"
 
 # Exchange selection (kraken works without geographic restrictions)
@@ -55,18 +55,18 @@ PARTIAL_FILL_PROBABILITY = 0.30  # 30% chance of partial fill
 MIN_FILL_RATIO = 0.30  # Minimum 30% fill on partial
 MAX_FILL_RATIO = 0.80  # Maximum 80% fill on partial
 
-# Strategy parameters - AGGRESSIVE MODE
+# Strategy parameters - ULTRA AGGRESSIVE MODE
 BB_PERIOD = 20
-BB_STD = 1.5  # Tighter bands = more signals (was 2.5)
+BB_STD = 1.0  # Very tight bands = frequent signals (was 2.5)
 RSI_PERIOD = 14
-RSI_OVERSOLD = 40  # Relaxed from 30 = more buy signals
-RSI_OVERBOUGHT = 60  # Relaxed from 70 = more sell signals
+RSI_OVERSOLD = 50  # Basically any RSI triggers
+RSI_OVERBOUGHT = 50  # Basically any RSI triggers
 
 # Risk management
 STOP_LOSS_PCT = 0.02  # 2%
 TAKE_PROFIT_PCT = 0.025  # 2.5% (tighter for faster exits)
 MAX_POSITION_SIZE_PCT = 0.90  # Use max 90% of capital per trade
-MIN_EXPECTED_EDGE = 0.001  # 0.1% minimum edge (was 0.3%)
+MIN_EXPECTED_EDGE = 0.0001  # 0.01% minimum edge (basically disabled)
 
 # Kill switch thresholds
 MAX_DAILY_DRAWDOWN_PCT = 0.10  # 10% (was 5%)
@@ -428,23 +428,13 @@ class SignalGenerator:
         friction = self.calculate_expected_friction(current_price) / current_price
         expected_net_edge = expected_move - friction
         
-        # Check for BUY signal
+        # Check for BUY signal - SUPER SIMPLE: just buy if price below lower band
         if not has_position:
-            # Price crossed below lower band + RSI oversold + sufficient edge
-            if (current_price < current_lower and 
-                prev_close >= lower.iloc[-2] and
-                current_rsi < RSI_OVERSOLD and
-                expected_net_edge >= MIN_EXPECTED_EDGE):
-                
+            if current_price < current_lower:
                 return Signal.BUY, (
                     f"BUY: Price {current_price:.2f} < BB_Lower {current_lower:.2f}, "
-                    f"RSI={current_rsi:.1f}, Expected edge={expected_net_edge:.2%}"
+                    f"RSI={current_rsi:.1f}"
                 )
-            
-            # Price crossed above upper band (potential short, but we're spot only)
-            # We reject this as we can't short in spot trading
-            if current_price > current_upper and current_rsi > RSI_OVERBOUGHT:
-                return Signal.NONE, "Short signal rejected (spot only)"
         
         # Check for SELL signal (exit long position)
         if has_position:
@@ -452,14 +442,8 @@ class SignalGenerator:
             if current_price >= current_middle:
                 return Signal.SELL, f"SELL: Price {current_price:.2f} >= BB_Middle {current_middle:.2f}"
         
-        # No signal - check why
-        if current_price >= current_lower and current_price <= current_upper:
-            return Signal.NONE, f"Price in neutral zone (BB: {current_lower:.2f} - {current_upper:.2f})"
-        
-        if expected_net_edge < MIN_EXPECTED_EDGE:
-            return Signal.NONE, f"Edge too low: {expected_net_edge:.2%} < {MIN_EXPECTED_EDGE:.2%}"
-        
-        return Signal.NONE, "No valid signal"
+        # No signal
+        return Signal.NONE, f"Waiting... Price ${current_price:.2f} in range (BB: {current_lower:.2f} - {current_upper:.2f})"
 
 
 # =============================================================================
@@ -758,9 +742,234 @@ class PaperTradingBot:
 
 
 # =============================================================================
+# BACKTEST BOT
+# =============================================================================
+
+class BacktestBot:
+    """Backtest the strategy on historical data."""
+    
+    def __init__(self, backtest_date: datetime):
+        # Use configurable exchange
+        exchange_class = getattr(ccxt, EXCHANGE)
+        self.exchange = exchange_class({
+            'enableRateLimit': True,
+        })
+        
+        self.backtest_date = backtest_date
+        self.account = PaperAccount(STARTING_CAPITAL)
+        self.kill_switch = KillSwitch(self.account)
+        self.signal_generator = SignalGenerator()
+        self.executor = OrderExecutor()
+        self.logger = TradeLogger(f"backtest_{backtest_date.strftime('%Y%m%d')}.csv")
+    
+    def fetch_historical_data(self) -> Optional[pd.DataFrame]:
+        """Fetch historical OHLCV data for backtest date."""
+        try:
+            # Fetch 1-minute data for the day (granular simulation)
+            # Get data from start of day to end of day
+            start_of_day = self.backtest_date.replace(hour=0, minute=0, second=0)
+            since = int(start_of_day.timestamp() * 1000)
+            
+            # Fetch 1h candles for the day + some history for indicators
+            ohlcv = self.exchange.fetch_ohlcv(
+                SYMBOL, 
+                '1h',  # 1-hour candles
+                since=since - (24 * 60 * 60 * 1000 * 3),  # 3 days before for indicator warmup
+                limit=100
+            )
+            
+            if not ohlcv:
+                print("[ERROR] No historical data available for this date")
+                return None
+            
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+            
+            return df
+            
+        except Exception as e:
+            print(f"[ERROR] Failed to fetch historical data: {e}")
+            return None
+    
+    def run(self):
+        """Run backtest simulation."""
+        print("\n" + "📊" * 20)
+        print("BACKTEST MODE")
+        print(f"Date: {self.backtest_date.strftime('%Y-%m-%d')}")
+        print(f"Symbol: {SYMBOL}")
+        print(f"Starting Capital: ${STARTING_CAPITAL}")
+        print(f"Strategy: Bollinger Band Mean Reversion (BB{BB_PERIOD}, {BB_STD}σ)")
+        print("📊" * 20 + "\n")
+        
+        # Fetch all historical data
+        df = self.fetch_historical_data()
+        if df is None:
+            return
+        
+        print(f"Loaded {len(df)} candles from {df['timestamp'].iloc[0]} to {df['timestamp'].iloc[-1]}")
+        print("\n" + "=" * 60)
+        print("SIMULATING TRADES...")
+        print("=" * 60 + "\n")
+        
+        # Filter to just the backtest day
+        backtest_day_start = self.backtest_date.replace(hour=0, minute=0, second=0)
+        backtest_day_end = self.backtest_date.replace(hour=23, minute=59, second=59)
+        
+        # Simulate hour by hour
+        for i in range(BB_PERIOD + 5, len(df)):
+            current_candle = df.iloc[i]
+            current_time = current_candle['timestamp']
+            
+            # Only process candles from backtest day
+            if current_time.date() != self.backtest_date.date():
+                continue
+            
+            # Get historical window for indicators
+            window_df = df.iloc[:i+1].copy()
+            current_price = current_candle['close']
+            
+            # Calculate ATR for kill switch
+            atr = calculate_atr(window_df['high'], window_df['low'], window_df['close'])
+            current_atr = atr.iloc[-1]
+            
+            # Check kill switch
+            kill_status = self.kill_switch.check(current_price, current_atr)
+            if kill_status.should_halt:
+                print(f"[{current_time}] 🛑 KILL SWITCH: {kill_status.reason}")
+                break
+            
+            # Generate signal
+            signal, signal_reason = self.signal_generator.generate_signal(
+                window_df, current_price, self.account.position is not None
+            )
+            
+            # Check stop loss / take profit
+            sl_tp_signal = check_stop_loss_take_profit(self.account, current_price)
+            if sl_tp_signal:
+                signal = sl_tp_signal
+                signal_reason = f"STOP LOSS/TAKE PROFIT triggered"
+            
+            # Execute trade if conditions are met
+            trade = None
+            if signal != Signal.NONE:
+                can_trade, _ = self.account.can_trade()
+                if can_trade or sl_tp_signal:
+                    # Temporarily set last_trade_time to simulate time passing
+                    self.account.last_trade_time = current_time - timedelta(minutes=COOLDOWN_MINUTES + 1)
+                    
+                    trade = self.executor.execute(
+                        self.account, signal, SYMBOL, current_price
+                    )
+                    if trade:
+                        trade.timestamp = current_time  # Use historical timestamp
+                        self.logger.log_trade(trade)
+                        self.account.last_trade_time = current_time
+                        
+                        # Print trade
+                        equity = self.account.get_equity(current_price)
+                        print(f"[{current_time.strftime('%H:%M')}] ${current_price:,.2f} | "
+                              f"{signal.value.upper()} {trade.qty:.6f} @ ${trade.price:,.2f} | "
+                              f"Equity: ${equity:,.2f} | PnL: ${trade.realized_pnl:+.2f}")
+            
+            # Print hourly price tick with BB debug info
+            if trade is None:
+                closes = window_df['close']
+                upper, middle, lower = calculate_bollinger_bands(closes, BB_PERIOD, BB_STD)
+                bb_lower = lower.iloc[-1]
+                bb_upper = upper.iloc[-1]
+                
+                equity = self.account.get_equity(current_price)
+                unrealized = self.account.get_unrealized_pnl(current_price)
+                pos_str = f"📈 {self.account.position.qty:.6f}" if self.account.position else "No pos"
+                
+                # Show if price is below/above bands
+                if current_price < bb_lower:
+                    status = "⬇️ BELOW LOWER"
+                elif current_price > bb_upper:
+                    status = "⬆️ ABOVE UPPER"
+                else:
+                    status = "➡️ IN RANGE"
+                
+                print(f"[{current_time.strftime('%H:%M')}] ${current_price:,.2f} | BB: {bb_lower:.2f}-{bb_upper:.2f} | {status} | {pos_str}")
+        
+        # Final summary
+        final_price = df['close'].iloc[-1]
+        final_equity = self.account.get_equity(final_price)
+        total_return = (final_equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
+        
+        print("\n" + "=" * 60)
+        print("BACKTEST RESULTS")
+        print("=" * 60)
+        print(f"Date: {self.backtest_date.strftime('%Y-%m-%d')}")
+        print(f"Starting Capital: ${STARTING_CAPITAL:.2f}")
+        print(f"Final Equity: ${final_equity:.2f}")
+        print(f"Total Return: {total_return:+.2f}%")
+        print(f"Realized PnL: ${self.account.realized_pnl:.2f}")
+        print(f"Total Trades: {len(self.account.trades)}")
+        print(f"Trades logged to: backtest_{self.backtest_date.strftime('%Y%m%d')}.csv")
+        print("=" * 60)
+
+
+# =============================================================================
 # ENTRY POINT
 # =============================================================================
 
+def get_user_mode() -> Tuple[str, Optional[datetime]]:
+    """Prompt user for trading mode."""
+    print("\n" + "=" * 60)
+    print("🤖 CRYPTO PAPER TRADING BOT")
+    print("=" * 60)
+    print("\nChoose mode:")
+    print("  1. Live trading (real-time paper trading)")
+    print("  2. Backtest (simulate on historical date)")
+    print()
+    
+    while True:
+        choice = input("Enter choice (1 or 2): ").strip()
+        if choice in ['1', '2']:
+            break
+        print("Invalid choice. Please enter 1 or 2.")
+    
+    if choice == '1':
+        return 'live', None
+    
+    # Backtest mode - get date
+    print("\nEnter backtest date:")
+    print("  Format: YYYY-MM-DD (e.g., 2025-12-20)")
+    print("  Or type 'today' for today's date")
+    print()
+    
+    while True:
+        date_input = input("Date: ").strip().lower()
+        
+        if date_input == 'today':
+            return 'backtest', datetime.now()
+        
+        try:
+            backtest_date = datetime.strptime(date_input, '%Y-%m-%d')
+            
+            # Check if date is in the future
+            if backtest_date.date() > datetime.now().date():
+                print("Error: Cannot backtest future dates!")
+                continue
+            
+            # Check if date is too far in the past (most exchanges limit history)
+            min_date = datetime.now() - timedelta(days=365)
+            if backtest_date < min_date:
+                print(f"Warning: Date may be too old. Exchange might not have data before {min_date.strftime('%Y-%m-%d')}")
+            
+            return 'backtest', backtest_date
+            
+        except ValueError:
+            print("Invalid date format. Please use YYYY-MM-DD (e.g., 2025-12-20)")
+
+
 if __name__ == "__main__":
-    bot = PaperTradingBot()
-    bot.run()
+    mode, backtest_date = get_user_mode()
+    
+    if mode == 'live':
+        bot = PaperTradingBot()
+        bot.run()
+    else:
+        bot = BacktestBot(backtest_date)
+        bot.run()
