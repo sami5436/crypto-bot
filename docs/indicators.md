@@ -1,102 +1,105 @@
 # 📖 indicators.py
 
-Technical indicator calculations using pandas.
+> **The math — calculates technical indicators from price data.**
+
+Technical analysis uses math formulas on price history to predict future moves. This file implements those formulas.
 
 ---
 
-## Functions
+## 🎯 What This File Does
 
-### `calculate_bollinger_bands(closes, period, std_dev)`
+Takes raw price data (OHLCV) and calculates:
+- **RSI** (Relative Strength Index) — Is it overbought or oversold?
+- **Bollinger Bands** — Is price at the extremes?
+- **MACD** — Is momentum shifting?
+- **ATR** (Average True Range) — How volatile is the market?
+- **EMA** (Exponential Moving Average) — Trend direction
 
-Calculate Bollinger Bands.
-
-**Parameters:**
-| Param | Type | Description |
-|-------|------|-------------|
-| `closes` | `pd.Series` | Close prices |
-| `period` | `int` | Moving average period (default: 20) |
-| `std_dev` | `float` | Standard deviation multiplier (default: 2) |
-
-**Returns:** `Tuple[pd.Series, pd.Series, pd.Series]`
-- `upper` - Upper band (SMA + std_dev * STD)
-- `middle` - Middle band (SMA)
-- `lower` - Lower band (SMA - std_dev * STD)
+All strategies use these indicators to make decisions.
 
 ---
 
-### `calculate_rsi(closes, period)`
+## 📊 Functions
 
-Calculate Relative Strength Index.
+### `calculate_rsi(closes, period=14)`
+**What it measures:** Momentum — is something overbought or oversold?
 
-**Parameters:**
-| Param | Type | Description |
-|-------|------|-------------|
-| `closes` | `pd.Series` | Close prices |
-| `period` | `int` | RSI period (default: 14) |
+| RSI Value | Meaning |
+|-----------|---------|
+| < 30 | Oversold (might bounce up) |
+| 30-70 | Normal range |
+| > 70 | Overbought (might drop) |
 
-**Returns:** `pd.Series` - RSI values (0-100)
-- RSI < 30 = Oversold
-- RSI > 70 = Overbought
+```python
+rsi = calculate_rsi(df['close'], period=14)
+print(rsi.iloc[-1])  # Current RSI value
+```
+
+---
+
+### `calculate_bollinger_bands(closes, period=20, std_dev=2)`
+**What it measures:** Volatility bands around the average price.
+
+Returns: `(upper, middle, lower)`
+
+| Condition | Meaning |
+|-----------|---------|
+| Price < Lower band | Unusually low, might bounce |
+| Price > Upper band | Unusually high, might drop |
+| Price near Middle | Normal |
+
+```python
+upper, middle, lower = calculate_bollinger_bands(df['close'])
+```
+
+---
+
+### `calculate_macd(closes, fast=12, slow=26, signal=9)`
+**What it measures:** Momentum and trend changes.
+
+Returns: `(macd_line, signal_line, histogram)`
+
+| Condition | Meaning |
+|-----------|---------|
+| MACD crosses above Signal | Bullish (go long) |
+| MACD crosses below Signal | Bearish (go short) |
+| Histogram growing | Momentum increasing |
 
 ---
 
 ### `calculate_ema(closes, period)`
+**What it measures:** Smoothed average that weighs recent prices more.
 
-Calculate Exponential Moving Average.
-
-**Parameters:**
-| Param | Type | Description |
-|-------|------|-------------|
-| `closes` | `pd.Series` | Close prices |
-| `period` | `int` | EMA period |
-
-**Returns:** `pd.Series` - EMA values
+```python
+ema_9 = calculate_ema(df['close'], 9)
+ema_21 = calculate_ema(df['close'], 21)
+if ema_9.iloc[-1] > ema_21.iloc[-1]:
+    print("Uptrend")
+```
 
 ---
 
-### `calculate_macd(closes, fast, slow, signal)`
+### `calculate_atr(high, low, close, period=14)`
+**What it measures:** Volatility — how much does price move?
 
-Calculate MACD indicator.
+| ATR | Meaning |
+|-----|---------|
+| High | Market is volatile, bigger moves |
+| Low | Market is calm, smaller moves |
 
-**Parameters:**
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `closes` | `pd.Series` | - | Close prices |
-| `fast` | `int` | 12 | Fast EMA period |
-| `slow` | `int` | 26 | Slow EMA period |
-| `signal` | `int` | 9 | Signal line period |
-
-**Returns:** `Tuple[pd.Series, pd.Series, pd.Series]`
-- `macd_line` - MACD line (fast EMA - slow EMA)
-- `signal_line` - Signal line (EMA of MACD)
-- `histogram` - MACD histogram (MACD - signal)
+Used by the kill switch to halt trading when markets are too volatile.
 
 ---
 
-### `calculate_atr(high, low, close, period)`
+## 💡 How Strategies Use These
 
-Calculate Average True Range (volatility).
+```
+Mean Reversion:
+  → RSI < 25 AND Price < Lower BB → BUY
 
-**Parameters:**
-| Param | Type | Description |
-|-------|------|-------------|
-| `high` | `pd.Series` | High prices |
-| `low` | `pd.Series` | Low prices |
-| `close` | `pd.Series` | Close prices |
-| `period` | `int` | ATR period (default: 14) |
+Trend Following:
+  → EMA-9 crosses above EMA-21 AND MACD > Signal → BUY
 
-**Returns:** `pd.Series` - ATR values (higher = more volatile)
-
----
-
-### `calculate_volume_sma(volume, period)`
-
-Calculate Simple Moving Average of volume.
-
-**Parameters:**
-| Param | Type | Description |
-|-------|------|-------------|
-| `volume` | `pd.Series` | Volume data |
-| `period` | `int` | SMA period (default: 20) |
-
-**Returns:** `pd.Series` - Volume SMA values
+Voting:
+  → Checks all of the above, counts votes
+```

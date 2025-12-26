@@ -1,1 +1,1 @@
-timestamp,symbol,side,qty,price,fees,realized_pnl,balance_after,partial_fill,fill_ratio,leverage,margin_used
+timestamp,symbol,side,qty,price,fees,realized_pnl,balance_after,partial_fill,fill_ratio,leverage,margin_used2025-12-26T11:29:25.035406,BTC/USD,long,0.00146143,87243.45,0.0765,0.0000,49.92,True,0.76,3,42.50

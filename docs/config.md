@@ -1,83 +1,141 @@
 # 📖 config.py
 
-Configuration constants for the entire bot. Edit this file to customize behavior.
+> **The control panel — every setting lives here. Change behavior without touching code.**
 
-## Trading Mode
+Want to adjust leverage? Change the strategy? Tweak the stop loss? This is where you do it.
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `LIVE_MODE` | `False` | `True` = real trading, `False` = paper trading |
-| `FUTURES_MODE` | `True` | `True` = perpetual futures, `False` = spot only |
+---
 
-## Capital & Symbol
+## 🎯 What This File Does
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `STARTING_CAPITAL` | `50.0` | Initial USD balance |
-| `SYMBOL` | `"BTC/USD"` | Trading pair for spot |
-| `FUTURES_SYMBOL` | `"BTC/USDT:USDT"` | Trading pair for futures |
-| `TIMEFRAME` | `"1h"` | Candle timeframe (`1h`, `1d`, `15m`, etc.) |
+This file holds **all configurable parameters** for the bot:
+- Trading mode (paper vs live)
+- Which exchange to use
+- Leverage and position sizing
+- Indicator parameters (RSI period, BB width, etc.)
+- Risk management thresholds
+- Fees and slippage simulation
 
-## Exchanges
+**Pro tip:** Start conservative, then tune based on backtest results.
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `SPOT_EXCHANGE` | `"kraken"` | Exchange for spot trading |
-| `FUTURES_EXCHANGE` | `"bybit"` | Exchange for futures trading |
-| `EXCHANGE` | (alias) | Backward compatibility alias |
+---
 
-## Futures Settings
+## ⚡ Quick Reference
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `LEVERAGE` | `3` | Default leverage (1-10x) |
-| `MARGIN_TYPE` | `"isolated"` | `"isolated"` or `"cross"` |
-| `FUNDING_RATE_INTERVAL_HOURS` | `8` | Funding payment frequency |
-| `DEFAULT_FUNDING_RATE` | `0.0001` | Fallback funding rate (0.01%) |
+### The Most Important Settings
 
-## Strategy Parameters
+| Setting | Current Value | What It Does |
+|---------|---------------|--------------|
+| `LIVE_MODE` | `False` | `False` = paper trading, `True` = REAL money |
+| `FUTURES_MODE` | `True` | `True` = longs+shorts, `False` = spot only |
+| `STARTING_CAPITAL` | `50.0` | How much fake money to start with |
+| `LEVERAGE` | `3` | Futures leverage multiplier (1-10x) |
+| `MAX_POSITION_SIZE_PCT` | `0.85` | Use 85% of capital per trade |
+| `STRATEGY` | `"voting"` | Which strategy to use |
 
-### Daily Candles
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `BB_PERIOD` | `20` | Bollinger Bands period |
-| `BB_STD` | `1.0` | Bollinger Bands std deviation |
-| `RSI_PERIOD` | `14` | RSI calculation period |
-| `RSI_OVERSOLD` | `35` | RSI oversold threshold |
-| `RSI_OVERBOUGHT` | `65` | RSI overbought threshold |
+---
 
-### Hourly Candles
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `HOURLY_BB_PERIOD` | `48` | Longer for hourly noise |
-| `HOURLY_BB_STD` | `1.2` | Wider bands for hourly |
-| `HOURLY_RSI_PERIOD` | `24` | Longer RSI for hourly |
+## 📋 All Settings
 
-## Risk Management
+### Trading Mode
+```python
+LIVE_MODE = False        # NEVER set True unless you know what you're doing!
+FUTURES_MODE = True      # Enable longs + shorts
+```
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `STOP_LOSS_PCT` | `0.03` | 3% stop loss |
-| `TAKE_PROFIT_PCT` | `0.05` | 5% take profit |
-| `MAX_POSITION_SIZE_PCT` | `0.50` | Use 50% of capital per trade |
-| `MAX_TRADES_PER_DAY` | `20` | Daily trade limit |
-| `COOLDOWN_MINUTES` | `240` | Minutes between trades (daily) |
-| `HOURLY_COOLDOWN_MINUTES` | `60` | Minutes between trades (hourly) |
+### Capital & Symbol
+```python
+STARTING_CAPITAL = 50.0  # Starting USD balance
+SYMBOL = "BTC/USD"       # What to trade (spot)
+FUTURES_SYMBOL = "BTC/USDT:USDT"  # What to trade (futures)
+TIMEFRAME = "1h"         # Candle timeframe (used by spot bot)
+```
 
-## Kill Switch
+### Exchanges
+```python
+SPOT_EXCHANGE = "kraken"    # For spot trading
+FUTURES_EXCHANGE = "bybit"  # For futures trading
+```
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `MAX_DAILY_DRAWDOWN_PCT` | `0.06` | 6% daily drawdown limit |
-| `MAX_VOLATILITY_PCT` | `0.08` | 8% ATR volatility limit |
-| `MAX_CONSECUTIVE_API_ERRORS` | `5` | API error limit before halt |
+### Leverage & Margin
+```python
+LEVERAGE = 3               # Default leverage (adjustable 1-10)
+MAX_LEVERAGE = 10          # Hard cap
+MARGIN_TYPE = "isolated"   # "isolated" or "cross"
+```
 
-## Fee Simulation
+### Strategy Parameters
+```python
+STRATEGY = "voting"        # Options: "mean_reversion", "trend_following", "voting"
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `MAKER_FEE` | `0.0016` | 0.16% maker fee (spot) |
-| `TAKER_FEE` | `0.0026` | 0.26% taker fee (spot) |
-| `FUTURES_MAKER_FEE` | `0.0001` | 0.01% maker fee (futures) |
-| `FUTURES_TAKER_FEE` | `0.0006` | 0.06% taker fee (futures) |
-| `SIMULATED_SLIPPAGE` | `0.0005` | 0.05% slippage simulation |
+# Bollinger Bands
+BB_PERIOD = 20             # How many candles to calculate BB
+BB_STD = 1.5               # Width of bands (higher = wider)
+
+# RSI
+RSI_PERIOD = 14            # How many candles for RSI
+RSI_OVERSOLD = 25          # Below this = oversold
+RSI_OVERBOUGHT = 75        # Above this = overbought
+```
+
+### Risk Management
+```python
+STOP_LOSS_PCT = 0.03       # 3% stop loss
+TAKE_PROFIT_PCT = 0.02     # 2% take profit
+MAX_POSITION_SIZE_PCT = 0.85  # Use 85% of capital
+
+# Kill Switch Thresholds
+MAX_DAILY_DRAWDOWN_PCT = 0.10  # 10% daily loss = halt trading
+MAX_VOLATILITY_PCT = 0.08      # ATR > 8% = too volatile
+MAX_TRADES_PER_DAY = 20        # Trade limit
+```
+
+### Cooldowns
+```python
+COOLDOWN_MINUTES = 60           # Wait time between spot trades
+HOURLY_COOLDOWN_MINUTES = 360   # Wait time for hourly strategy
+FUTURES_COOLDOWN_MINUTES = 0    # No cooldown for futures (but we have 0.5% threshold)
+```
+
+### Fee Simulation
+```python
+# Spot (Kraken)
+MAKER_FEE = 0.0016   # 0.16%
+TAKER_FEE = 0.0026   # 0.26%
+
+# Futures (Bybit)
+FUTURES_MAKER_FEE = 0.0001  # 0.01%
+FUTURES_TAKER_FEE = 0.0006  # 0.06%
+
+# Slippage (simulated price impact)
+SIMULATED_SLIPPAGE = 0.0002  # 0.02%
+```
+
+---
+
+## 💡 Common Adjustments
+
+### Want more aggressive trading?
+```python
+MAX_POSITION_SIZE_PCT = 0.95  # Use 95% of capital
+LEVERAGE = 5                  # 5x leverage
+RSI_OVERSOLD = 30             # Trigger earlier
+```
+
+### Want safer trading?
+```python
+MAX_POSITION_SIZE_PCT = 0.50  # Use only 50% of capital
+LEVERAGE = 2                  # Low leverage
+STOP_LOSS_PCT = 0.02          # Tighter stop loss
+```
+
+### Want different strategy?
+```python
+STRATEGY = "mean_reversion"   # Or "trend_following"
+```
+
+---
+
+## ⚠️ Warning
+
+The `LIVE_MODE = True` setting would connect to real exchanges with real money. **This is not implemented/tested** — paper trading only!

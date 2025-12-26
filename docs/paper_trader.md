@@ -1,94 +1,76 @@
 # 📖 paper_trader.py
 
-Entry point and interactive menu for the bot.
+> **The main entry point — this is the file you run to start the bot.**
+
+When you run `python paper_trader.py`, this file presents you with a menu of options and routes you to the appropriate trading mode.
 
 ---
 
-## Functions
+## 🎯 What This File Does
+
+1. **Shows the interactive menu** (options 1-7)
+2. **Collects user input** (dates, leverage, timeframe)
+3. **Launches the appropriate bot** based on your selection
+
+This is the "front door" to the entire application. All the actual trading logic lives in other files — this just asks you what you want to do and hands off to the right handler.
+
+---
+
+## 🔧 Main Function
 
 ### `main()`
-Main entry point. Runs the interactive menu and launches the selected mode.
+The entry point. Calls `get_user_mode()` to get user preferences, then launches the appropriate bot:
 
-```bash
-python paper_trader.py
+```python
+if mode == 'live':
+    PaperTradingBot().run()          # Option 1
+elif mode == 'futures_live':
+    FuturesPaperTradingBot().run()   # Option 7
+elif mode == 'futures':
+    FuturesStrategyComparer().run()  # Option 6
+# ... etc
 ```
 
 ---
 
 ### `get_user_mode()`
-Interactive menu that returns the selected mode and parameters.
+Interactive menu that returns a tuple of `(mode, parameters)`:
 
-**Returns:** `Tuple[str, Any]`
-
-| Mode | Value | Description |
-|------|-------|-------------|
-| `'live'` | `None` | Real-time spot paper trading |
-| `'backtest'` | `datetime` | Backtest on specific date |
-| `'compare'` | `dict` | Strategy comparison |
-| `'futures'` | `dict` | Futures backtest |
-| `'futures_live'` | `dict` | Futures live paper trading |
+| User Choice | Returns |
+|-------------|---------|
+| Option 1 | `('live', None)` |
+| Option 2 | `('backtest', datetime)` |
+| Option 3-5 | `('compare', {days/dates, timeframe})` |
+| Option 6 | `('futures', {dates, timeframe, leverage})` |
+| Option 7 | `('futures_live', {leverage})` |
 
 ---
 
-## Menu Options
+## 📋 Menu Breakdown
 
 ```
-1. Live trading (real-time paper trading)
-2. Backtest (simulate on historical date)
-3. Compare strategies (last N days, daily candles)
-4. Compare strategies (date range, daily candles)
-5. Compare strategies (date range, 1-hour candles)
-6. 🔮 FUTURES: Compare with longs + shorts (date range)
-7. 🔮 FUTURES: Live paper trading (longs + shorts)
+1. Live trading           → PaperTradingBot (spot, real-time)
+2. Backtest               → BacktestBot (spot, historical)
+3. Compare (N days)       → StrategyComparer (spot, last N days)
+4. Compare (daily)        → StrategyComparer (spot, date range, daily)
+5. Compare (hourly)       → StrategyComparer (spot, date range, hourly)
+6. Futures backtest       → FuturesStrategyComparer (longs+shorts)
+7. Futures live           → FuturesPaperTradingBot (longs+shorts, real-time)
 ```
 
 ---
 
-## Option Details
-
-### Option 1: Live Spot Trading
-- Uses `PaperTradingBot`
-- Fetches live prices from Kraken
-- Updates every 5 seconds
-- Press Ctrl+C to stop
-
-### Option 2: Backtest
-- Uses `BacktestBot`
-- Enter date like `2025-12-20`
-- Simulates that day's trading
-
-### Options 3-5: Strategy Comparison
-- Uses `StrategyComparer`
-- Choose date range or last N days
-- Daily or hourly candles
-- Compares 3 strategies, shows winner
-
-### Option 6: Futures Backtest
-- Uses `FuturesStrategyComparer`
-- Enter leverage (1-10x)
-- Choose timeframe (daily/hourly)
-- Enter date range
-- Shows longs, shorts, round trips
-
-### Option 7: Futures Live Trading
-- Uses `FuturesPaperTradingBot`
-- Enter leverage (1-10x)
-- Real-time with longs and shorts
-- Shows margin, liquidation price
-
----
-
-## Example Usage
+## 💡 How to Use
 
 ```bash
-$ python paper_trader.py
+# Run the bot
+python paper_trader.py
 
-Choose mode: 6
-
-Leverage [3]: 5
-Timeframe: 2  (hourly)
-Start date: 2025-12-20
-End date: (today)
-
-# Runs futures backtest with 5x leverage on hourly candles
+# Follow the prompts:
+# - Select mode (1-7)
+# - Enter dates if needed
+# - Enter leverage for futures (1-10x)
+# - Watch it trade!
 ```
+
+Press **Ctrl+C** anytime to stop a running bot gracefully.
