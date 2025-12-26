@@ -465,8 +465,10 @@ class FuturesAccount:
             net_pnl = -self.position.margin
         
         # Update balances
-        self.wallet_balance += self.position.margin + net_pnl
-        self.available_balance = self.wallet_balance  # All balance available now
+        # Note: margin was subtracted from available_balance on open (not wallet)
+        # So we only add net_pnl to wallet, and restore available_balance
+        self.wallet_balance += net_pnl
+        self.available_balance += self.position.margin  # Restore available margin
         self.realized_pnl += net_pnl
         
         trade = Trade(

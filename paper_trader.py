@@ -11,7 +11,7 @@ Run this file to start the trading bot.
 from datetime import datetime, timedelta
 from typing import Optional, Tuple, Union
 
-from bots import PaperTradingBot, BacktestBot, StrategyComparer, FuturesStrategyComparer
+from bots import PaperTradingBot, BacktestBot, StrategyComparer, FuturesStrategyComparer, FuturesPaperTradingBot
 from config import LEVERAGE
 
 
@@ -27,13 +27,14 @@ def get_user_mode() -> Tuple[str, any]:
     print("  4. Compare strategies (date range, daily candles)")
     print("  5. Compare strategies (date range, 1-hour candles)")
     print("  6. 🔮 FUTURES: Compare with longs + shorts (date range)")
+    print("  7. 🔮 FUTURES: Live paper trading (longs + shorts)")
     print()
     
     while True:
-        choice = input("Enter choice (1-6): ").strip()
-        if choice in ['1', '2', '3', '4', '5', '6']:
+        choice = input("Enter choice (1-7): ").strip()
+        if choice in ['1', '2', '3', '4', '5', '6', '7']:
             break
-        print("Invalid choice. Please enter 1-6.")
+        print("Invalid choice. Please enter 1-7.")
     
     if choice == '1':
         return 'live', None
@@ -148,6 +149,29 @@ def get_user_mode() -> Tuple[str, any]:
             'leverage': leverage
         }
     
+    if choice == '7':
+        # FUTURES live paper trading
+        print("\n🔮 FUTURES LIVE PAPER TRADING")
+        print("=" * 50)
+        
+        # Get leverage
+        print(f"\nLeverage (1-10, default: {LEVERAGE}x):")
+        while True:
+            lev_input = input(f"Leverage [{LEVERAGE}]: ").strip()
+            if lev_input == '':
+                leverage = LEVERAGE
+                break
+            try:
+                leverage = int(lev_input)
+                if leverage < 1 or leverage > 10:
+                    print("Please enter a number between 1 and 10.")
+                    continue
+                break
+            except ValueError:
+                print("Please enter a valid number.")
+        
+        return 'futures_live', {'leverage': leverage}
+    
     # Backtest mode - get date
     print("\nEnter backtest date:")
     print("  Format: YYYY-MM-DD (e.g., 2025-12-20)")
@@ -203,6 +227,9 @@ def main():
             leverage=value['leverage']
         )
         comparer.run()
+    elif mode == 'futures_live':
+        bot = FuturesPaperTradingBot(leverage=value['leverage'])
+        bot.run()
     else:
         bot = BacktestBot(value)
         bot.run()

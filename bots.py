@@ -179,6 +179,187 @@ class PaperTradingBot:
         print("=" * 60)
 
 
+class FuturesPaperTradingBot:
+    """Live futures paper trading bot with longs and shorts."""
+    
+    def __init__(self, leverage: int = LEVERAGE):
+        exchange_class = getattr(ccxt, EXCHANGE)
+        self.exchange = exchange_class({'enableRateLimit': True})
+        
+        self.leverage = leverage
+        self.account = FuturesAccount(STARTING_CAPITAL, leverage=leverage)
+        self.kill_switch = KillSwitch(self.account)
+        self.signal_generator = FuturesSignalGenerator(strategy=STRATEGY)
+        self.executor = FuturesOrderExecutor()
+        self.logger = TradeLogger("futures_trades.csv")
+        self.running = True
+    
+    def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
+        """Fetch OHLCV data from exchange."""
+        try:
+            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, TIMEFRAME, limit=100)
+            self.account.consecutive_api_errors = 0
+            
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+            return df
+            
+        except Exception as e:
+            self.account.consecutive_api_errors += 1
+            print(f"[ERROR] API error ({self.account.consecutive_api_errors}): {e}")
+            return None
+    
+    def print_status(self, df: pd.DataFrame, signal_reason: str, kill_status: KillSwitchStatus):
+        """Print current status to console."""
+        current_price = df['close'].iloc[-1]
+        equity = self.account.get_equity(current_price)
+        unrealized = self.account.get_unrealized_pnl(current_price)
+        drawdown = self.account.get_daily_drawdown(current_price)
+        
+        closes = df['close']
+        upper, middle, lower = calculate_bollinger_bands(closes, BB_PERIOD, BB_STD)
+        rsi = calculate_rsi(closes, RSI_PERIOD)
+        atr = calculate_atr(df['high'], df['low'], df['close'])
+        
+        print("\n" + "=" * 60)
+        print(f"🔮 FUTURES PAPER TRADING - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("=" * 60)
+        print(f"📊 {SYMBOL} @ ${current_price:,.2f} | Leverage: {self.leverage}x")
+        print(f"   BB: Lower=${lower.iloc[-1]:,.2f} | Mid=${middle.iloc[-1]:,.2f} | Upper=${upper.iloc[-1]:,.2f}")
+        print(f"   RSI: {rsi.iloc[-1]:.1f} | ATR: ${atr.iloc[-1]:,.2f} ({atr.iloc[-1]/current_price*100:.2f}%)")
+        print("-" * 60)
+        print(f"💰 ACCOUNT")
+        print(f"   Wallet: ${self.account.wallet_balance:,.2f}")
+        print(f"   Equity: ${equity:,.2f} (Start: ${STARTING_CAPITAL:,.2f})")
+        print(f"   Available: ${self.account.available_balance:,.2f}")
+        print(f"   Realized PnL: ${self.account.realized_pnl:,.2f}")
+        print(f"   Unrealized PnL: ${unrealized:,.2f}")
+        print(f"   Daily Drawdown: {drawdown:.2%}")
+        print("-" * 60)
+        
+        if self.account.position:
+            pos = self.account.position
+            pnl = pos.calculate_pnl(current_price)
+            roe = pos.calculate_roe(current_price)
+            side_emoji = "📈" if pos.side == PositionSide.LONG else "📉"
+            print(f"{side_emoji} POSITION: {pos.side.value.upper()}")
+            print(f"   Size: {pos.size:.6f} BTC | Margin: ${pos.margin:,.2f}")
+            print(f"   Entry: ${pos.entry_price:,.2f} | Current: ${current_price:,.2f}")
+            print(f"   PnL: ${pnl:,.2f} ({roe:+.1%} ROE)")
+            print(f"   Liq: ${pos.liquidation_price:,.2f} | SL: ${pos.stop_loss:,.2f} | TP: ${pos.take_profit:,.2f}")
+        else:
+            print(f"📈 POSITION: None (ready to trade)")
+        print("-" * 60)
+        print(f"🎯 SIGNAL: {signal_reason}")
+        print(f"📉 Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        
+        can_trade, trade_reason = self.account.can_trade()
+        if not can_trade:
+            print(f"⏸️  Trading paused: {trade_reason}")
+        
+        if kill_status.should_halt:
+            print(f"🛑 KILL SWITCH: {kill_status.reason}")
+        else:
+            print(f"✅ Kill Switch: OK")
+        
+        print("=" * 60)
+    
+    def run(self):
+        """Main futures trading loop."""
+        print("\n" + "🔮" * 20)
+        print("STARTING FUTURES PAPER TRADING BOT")
+        print(f"Mode: PAPER (Futures)")
+        print(f"Symbol: {SYMBOL}")
+        print(f"Leverage: {self.leverage}x")
+        print(f"Starting Capital: ${STARTING_CAPITAL}")
+        print(f"Strategy: {STRATEGY.upper().replace('_', ' ')}")
+        print("🔮" * 20 + "\n")
+        
+        while self.running:
+            try:
+                df = self.fetch_ohlcv()
+                if df is None:
+                    time.sleep(UPDATE_INTERVAL_SECONDS)
+                    continue
+                
+                current_price = df['close'].iloc[-1]
+                atr = calculate_atr(df['high'], df['low'], df['close'])
+                current_atr = atr.iloc[-1]
+                
+                # Check kill switch
+                kill_status = self.kill_switch.check(current_price, current_atr)
+                
+                # Check liquidation
+                liq_signal = check_futures_liquidation(self.account, current_price)
+                if liq_signal:
+                    trade = self.executor.execute(self.account, liq_signal, SYMBOL, current_price)
+                    if trade:
+                        trade.is_liquidation = True
+                        self.logger.log_trade(trade)
+                        print("\n💀 POSITION LIQUIDATED!")
+                
+                # Get current position side
+                if self.account.position is None:
+                    position_side = 'none'
+                else:
+                    position_side = self.account.position.side.value
+                
+                # Generate signal
+                signal, signal_reason = self.signal_generator.generate_signal(
+                    df, current_price, position_side
+                )
+                
+                # Check stop loss / take profit
+                sl_tp_signal = check_stop_loss_take_profit(self.account, current_price)
+                if sl_tp_signal:
+                    signal = sl_tp_signal
+                    signal_reason = f"STOP LOSS/TAKE PROFIT @ ${current_price:,.2f}"
+                
+                # Execute trade
+                trade = None
+                if not kill_status.should_halt and signal != Signal.NONE:
+                    can_trade, _ = self.account.can_trade()
+                    if can_trade or sl_tp_signal:
+                        trade = self.executor.execute(
+                            self.account, signal, SYMBOL, current_price
+                        )
+                        if trade:
+                            self.logger.log_trade(trade)
+                            signal_reason += f" [EXECUTED: {trade.side.upper()}]"
+                
+                self.print_status(df, signal_reason, kill_status)
+                
+                if kill_status.should_halt:
+                    print("\n❌ BOT HALTED BY KILL SWITCH")
+                    self.running = False
+                    break
+                
+                time.sleep(UPDATE_INTERVAL_SECONDS)
+                
+            except KeyboardInterrupt:
+                print("\n\n👋 Shutting down gracefully...")
+                self.running = False
+                break
+            except Exception as e:
+                print(f"\n[ERROR] Unexpected error: {e}")
+                self.account.consecutive_api_errors += 1
+                time.sleep(UPDATE_INTERVAL_SECONDS)
+        
+        # Final status
+        final_price = df['close'].iloc[-1] if df is not None else 0
+        final_equity = self.account.get_equity(final_price)
+        
+        print("\n" + "=" * 60)
+        print("FINAL FUTURES ACCOUNT STATUS")
+        print("=" * 60)
+        print(f"Final Equity: ${final_equity:,.2f}")
+        print(f"Total Return: {(final_equity - STARTING_CAPITAL) / STARTING_CAPITAL:+.2%}")
+        print(f"Total Realized PnL: ${self.account.realized_pnl:,.2f}")
+        print(f"Total Trades: {len(self.account.trades)}")
+        print(f"Trades logged to: futures_trades.csv")
+        print("=" * 60)
+
+
 class BacktestBot:
     """Backtest the strategy on historical data."""
     
@@ -833,8 +1014,36 @@ class FuturesStrategyComparer:
                         'equity': account.get_equity(current_price)
                     })
         
-        final_price = df['close'].iloc[-1]
-        final_equity = account.get_equity(final_price)
+        # Force close any open position at end of backtest
+        # Use the last price from the backtest period, not the entire CSV
+        if account.position is not None:
+            # Find the last candle in the test range
+            test_df = df[df['timestamp'] <= end_date]
+            if len(test_df) > 0:
+                last_backtest_price = test_df['close'].iloc[-1]
+            else:
+                last_backtest_price = df['close'].iloc[-1]
+            
+            # Close the position
+            close_signal = Signal.CLOSE_LONG if account.position.side == PositionSide.LONG else Signal.CLOSE_SHORT
+            trade = executor.execute(account, close_signal, SYMBOL, last_backtest_price)
+            if trade:
+                trades_count += 1
+                if trade.realized_pnl > 0:
+                    winning_trades += 1
+                elif trade.realized_pnl < 0:
+                    losing_trades += 1
+                trade_log.append({
+                    'time': end_date,
+                    'side': f"[AUTO-CLOSE] {trade.side.upper()}",
+                    'price': trade.price,
+                    'pnl': trade.realized_pnl,
+                    'result': '📍 END',
+                    'equity': account.wallet_balance
+                })
+        
+        # Final equity = wallet balance (all positions closed)
+        final_equity = account.wallet_balance
         total_return = (final_equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
         
         return {
@@ -893,7 +1102,7 @@ class FuturesStrategyComparer:
             print(f"\n📊 Testing {strategy.upper().replace('_', ' ')}...")
             result = self.run_strategy_backtest(df, strategy, start_date, end_date)
             results.append(result)
-            print(f"   Trades: {result['trades']} (📈{result['long_trades']} long, 📉{result['short_trades']} short) | "
+            print(f"   {result['long_trades'] + result['short_trades']} round trips (📈{result['long_trades']}L 📉{result['short_trades']}S) | "
                   f"Return: {result['return_pct']:+.2f}% | Win Rate: {result['win_rate']:.1f}%")
             if result['liquidations'] > 0:
                 print(f"   ⚠️ Liquidations: {result['liquidations']}")
@@ -903,14 +1112,15 @@ class FuturesStrategyComparer:
         print("\n\n" + "=" * 70)
         print("📊 FUTURES STRATEGY COMPARISON RESULTS")
         print("=" * 70)
-        print(f"\n{'Strategy':<20} {'Return':>10} {'Trades':>8} {'Long':>6} {'Short':>6} {'Win%':>8} {'Final $':>12}")
+        print(f"\n{'Strategy':<20} {'Return':>10} {'Trips':>6} {'Long':>5} {'Short':>6} {'Win%':>8} {'Final $':>12}")
         print("-" * 70)
         
         for r in results:
+            trips = r['long_trades'] + r['short_trades']
             print(f"{r['strategy'].replace('_', ' ').title():<20} "
                   f"{r['return_pct']:>+9.2f}% "
-                  f"{r['trades']:>8} "
-                  f"{r['long_trades']:>6} "
+                  f"{trips:>6} "
+                  f"{r['long_trades']:>5} "
                   f"{r['short_trades']:>6} "
                   f"{r['win_rate']:>7.1f}% "
                   f"${r['final_equity']:>10.2f}")
@@ -922,7 +1132,8 @@ class FuturesStrategyComparer:
         print("=" * 70)
         print(f"Return: {best['return_pct']:+.2f}%")
         print(f"Final Equity: ${best['final_equity']:.2f}")
-        print(f"Total Trades: {best['trades']} (📈{best['long_trades']} long, 📉{best['short_trades']} short)")
+        trips = best['long_trades'] + best['short_trades']
+        print(f"Round Trips: {trips} (📈{best['long_trades']} long, 📉{best['short_trades']} short)")
         print(f"Win Rate: {best['win_rate']:.1f}%")
         print(f"Leverage: {self.leverage}x")
         
