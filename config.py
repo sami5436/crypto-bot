@@ -85,7 +85,7 @@ HOURLY_ATR_VOLATILITY_THRESHOLD = 0.025  # Stricter for hourly
 
 STOP_LOSS_PCT = 0.03  # 3% stop loss (on position value, not margin)
 TAKE_PROFIT_PCT = 0.02  # 2% take profit
-MAX_POSITION_SIZE_PCT = 0.50  # Use 50% of capital per trade
+MAX_POSITION_SIZE_PCT = 0.85  # Use 85% of capital per trade
 MIN_EXPECTED_EDGE = 0.005  # Need 0.5% expected edge to trade
 
 # Futures-specific risk
@@ -103,6 +103,7 @@ MAX_CONSECUTIVE_API_ERRORS = 3
 MAX_TRADES_PER_DAY = 20  # Trade limit
 COOLDOWN_MINUTES = 60  # 1-hour cooldown (for daily)
 HOURLY_COOLDOWN_MINUTES = 360  # 6-hour cooldown (for hourly)
+FUTURES_COOLDOWN_MINUTES = 0  # No cooldown for futures paper trading
 
 
 # =============================================================================

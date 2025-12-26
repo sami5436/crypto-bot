@@ -254,10 +254,12 @@ class FuturesAccount:
             return False, f"Daily trade limit reached ({MAX_TRADES_PER_DAY})"
         
         if self.last_trade_time:
-            cooldown_end = self.last_trade_time + timedelta(minutes=COOLDOWN_MINUTES)
-            if datetime.now() < cooldown_end:
-                remaining = (cooldown_end - datetime.now()).seconds // 60
-                return False, f"Cooldown active ({remaining} min remaining)"
+            from config import FUTURES_COOLDOWN_MINUTES
+            if FUTURES_COOLDOWN_MINUTES > 0:
+                cooldown_end = self.last_trade_time + timedelta(minutes=FUTURES_COOLDOWN_MINUTES)
+                if datetime.now() < cooldown_end:
+                    remaining = (cooldown_end - datetime.now()).seconds // 60
+                    return False, f"Cooldown active ({remaining} min remaining)"
         
         return True, "OK"
     

@@ -197,7 +197,8 @@ class FuturesPaperTradingBot:
     def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
         """Fetch OHLCV data from exchange."""
         try:
-            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, TIMEFRAME, limit=100)
+            # Use 1-minute candles for fastest signals in live trading
+            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, "1m", limit=100)
             self.account.consecutive_api_errors = 0
             
             df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
@@ -210,59 +211,62 @@ class FuturesPaperTradingBot:
             return None
     
     def print_status(self, df: pd.DataFrame, signal_reason: str, kill_status: KillSwitchStatus):
-        """Print current status to console."""
+        """Print current status to console - clean, compact format."""
+        import os
+        os.system('clear' if os.name != 'nt' else 'cls')  # Clear screen
+        
         current_price = df['close'].iloc[-1]
         equity = self.account.get_equity(current_price)
         unrealized = self.account.get_unrealized_pnl(current_price)
-        drawdown = self.account.get_daily_drawdown(current_price)
+        total_return = (equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
         
         closes = df['close']
-        upper, middle, lower = calculate_bollinger_bands(closes, BB_PERIOD, BB_STD)
         rsi = calculate_rsi(closes, RSI_PERIOD)
-        atr = calculate_atr(df['high'], df['low'], df['close'])
         
-        print("\n" + "=" * 60)
-        print(f"🔮 FUTURES PAPER TRADING - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print("=" * 60)
-        print(f"📊 {SYMBOL} @ ${current_price:,.2f} | Leverage: {self.leverage}x")
-        print(f"   BB: Lower=${lower.iloc[-1]:,.2f} | Mid=${middle.iloc[-1]:,.2f} | Upper=${upper.iloc[-1]:,.2f}")
-        print(f"   RSI: {rsi.iloc[-1]:.1f} | ATR: ${atr.iloc[-1]:,.2f} ({atr.iloc[-1]/current_price*100:.2f}%)")
-        print("-" * 60)
-        print(f"💰 ACCOUNT")
-        print(f"   Wallet: ${self.account.wallet_balance:,.2f}")
-        print(f"   Equity: ${equity:,.2f} (Start: ${STARTING_CAPITAL:,.2f})")
-        print(f"   Available: ${self.account.available_balance:,.2f}")
-        print(f"   Realized PnL: ${self.account.realized_pnl:,.2f}")
-        print(f"   Unrealized PnL: ${unrealized:,.2f}")
-        print(f"   Daily Drawdown: {drawdown:.2%}")
-        print("-" * 60)
+        # Header
+        print("╔════════════════════════════════════════════════════════════╗")
+        print(f"║  🔮 FUTURES PAPER TRADING    {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}           ║")
+        print("╠════════════════════════════════════════════════════════════╣")
         
+        # Price & Market
+        print(f"║  {SYMBOL:12} ${current_price:>10,.2f}    RSI: {rsi.iloc[-1]:>5.1f}    {self.leverage}x LEV  ║")
+        print("╠════════════════════════════════════════════════════════════╣")
+        
+        # Account
+        pnl_emoji = "🟢" if total_return >= 0 else "🔴"
+        print(f"║  💰 EQUITY     ${equity:>10,.2f}    {pnl_emoji} {total_return:>+6.2f}%                ║")
+        print(f"║  📊 REALIZED   ${self.account.realized_pnl:>+10,.2f}    UNREALIZED ${unrealized:>+8,.2f}   ║")
+        print("╠════════════════════════════════════════════════════════════╣")
+        
+        # Position
         if self.account.position:
             pos = self.account.position
             pnl = pos.calculate_pnl(current_price)
             roe = pos.calculate_roe(current_price)
-            side_emoji = "📈" if pos.side == PositionSide.LONG else "📉"
-            print(f"{side_emoji} POSITION: {pos.side.value.upper()}")
-            print(f"   Size: {pos.size:.6f} BTC | Margin: ${pos.margin:,.2f}")
-            print(f"   Entry: ${pos.entry_price:,.2f} | Current: ${current_price:,.2f}")
-            print(f"   PnL: ${pnl:,.2f} ({roe:+.1%} ROE)")
-            print(f"   Liq: ${pos.liquidation_price:,.2f} | SL: ${pos.stop_loss:,.2f} | TP: ${pos.take_profit:,.2f}")
+            pct_move = (current_price - pos.entry_price) / pos.entry_price * 100
+            side_str = "📈 LONG " if pos.side == PositionSide.LONG else "📉 SHORT"
+            pnl_color = "🟢" if pnl >= 0 else "🔴"
+            
+            print(f"║  {side_str}   Entry: ${pos.entry_price:>10,.2f}   Move: {pct_move:>+5.2f}%      ║")
+            print(f"║  {pnl_color} PnL: ${pnl:>+8,.2f} ({roe:>+6.1%} ROE)   Liq: ${pos.liquidation_price:>10,.2f}  ║")
         else:
-            print(f"📈 POSITION: None (ready to trade)")
-        print("-" * 60)
-        print(f"🎯 SIGNAL: {signal_reason}")
-        print(f"📉 Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+            print(f"║  ⏳ NO POSITION - Waiting for signal...                     ║")
+            print(f"║                                                              ║")
         
-        can_trade, trade_reason = self.account.can_trade()
-        if not can_trade:
-            print(f"⏸️  Trading paused: {trade_reason}")
+        print("╠════════════════════════════════════════════════════════════╣")
         
+        # Signal
+        signal_display = signal_reason[:52] if len(signal_reason) > 52 else signal_reason
+        print(f"║  🎯 {signal_display:<54} ║")
+        
+        # Status
         if kill_status.should_halt:
-            print(f"🛑 KILL SWITCH: {kill_status.reason}")
+            print(f"║  🛑 HALTED: {kill_status.reason:<47} ║")
         else:
-            print(f"✅ Kill Switch: OK")
+            trades_msg = f"Trades: {self.account.trades_today}/{MAX_TRADES_PER_DAY}"
+            print(f"║  ✅ ACTIVE    {trades_msg:<45} ║")
         
-        print("=" * 60)
+        print("╚════════════════════════════════════════════════════════════╝")
     
     def run(self):
         """Main futures trading loop."""
@@ -309,7 +313,17 @@ class FuturesPaperTradingBot:
                     df, current_price, position_side
                 )
                 
-                # Check stop loss / take profit
+                # OPTION D: Profit/loss threshold - don't close on tiny moves
+                # Only close if position has moved at least 0.5% (profitable or loss)
+                MIN_CLOSE_THRESHOLD = 0.005  # 0.5% move required to close
+                if signal in [Signal.CLOSE_LONG, Signal.CLOSE_SHORT] and self.account.position:
+                    pos = self.account.position
+                    move_pct = abs(current_price - pos.entry_price) / pos.entry_price
+                    if move_pct < MIN_CLOSE_THRESHOLD:
+                        signal = Signal.NONE
+                        signal_reason = f"HOLDING (move {move_pct:.2%} < {MIN_CLOSE_THRESHOLD:.1%} threshold)"
+                
+                # Check stop loss / take profit (these override the threshold)
                 sl_tp_signal = check_stop_loss_take_profit(self.account, current_price)
                 if sl_tp_signal:
                     signal = sl_tp_signal
@@ -334,7 +348,8 @@ class FuturesPaperTradingBot:
                     self.running = False
                     break
                 
-                time.sleep(UPDATE_INTERVAL_SECONDS)
+                # Update every 60 seconds (once per minute)
+                time.sleep(60)
                 
             except KeyboardInterrupt:
                 print("\n\n👋 Shutting down gracefully...")
@@ -343,7 +358,7 @@ class FuturesPaperTradingBot:
             except Exception as e:
                 print(f"\n[ERROR] Unexpected error: {e}")
                 self.account.consecutive_api_errors += 1
-                time.sleep(UPDATE_INTERVAL_SECONDS)
+                time.sleep(60)
         
         # Final status
         final_price = df['close'].iloc[-1] if df is not None else 0
