@@ -1,0 +1,50 @@
+======================================================================
+FUTURES PAPER TRADING SESSION LOG
+======================================================================
+
+SESSION OVERVIEW
+----------------------------------------
+  Start Time:        2025-12-26 18:33:06
+  End Time:          2025-12-26 22:21:11
+  Duration:          3:48:04
+  Symbol:            BTC/USD
+  Leverage:          3x
+  Strategy:          voting
+
+ACCOUNT SUMMARY
+----------------------------------------
+  Starting Capital:  $500.00
+  Final Equity:      $1,774.24
+  Total Return:      +254.85%
+  Realized PnL:      $+0.00
+
+TRADE SUMMARY
+----------------------------------------
+  Total Trades:      1
+  Winning Trades:    0
+  Losing Trades:     0
+  Flat Trades:       1
+  Win Rate:          0.0%
+
+TRADE LOG
+----------------------------------------------------------------------
+  1. 2025-12-26 18:53:20
+     Side: SHORT  |  Price: $87,306.04  |  Qty: 0.014604
+     Fees: $0.7650  |  PnL: $+0.00
+
+
+FINAL POSITION STATE
+----------------------------------------
+  Side:              SHORT
+  Entry Price:       $87,306.04
+  Current Price:     $0.00
+  Unrealized PnL:    $+1,275.00
+  Liquidation:       $115,971.52
+
+NOTES
+----------------------------------------
+  - Close threshold: 0.15% (prevents oscillation)
+  - All trades logged to: futures_trades.csv
+  - This is PAPER TRADING - no real money
+
+======================================================================
