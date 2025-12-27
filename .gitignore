@@ -1,3 +1,6 @@
+futures_trades.csv
+spot_trades.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
