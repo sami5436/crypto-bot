@@ -193,6 +193,10 @@ class FuturesPaperTradingBot:
         self.executor = FuturesOrderExecutor()
         self.logger = TradeLogger("futures_trades.csv")
         self.running = True
+        
+        # Session tracking for detailed log
+        self.start_time = datetime.now()
+        self.session_log = []  # List of events for detailed logging
     
     def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
         """Fetch OHLCV data from exchange."""
@@ -211,9 +215,9 @@ class FuturesPaperTradingBot:
             return None
     
     def print_status(self, df: pd.DataFrame, signal_reason: str, kill_status: KillSwitchStatus):
-        """Print current status to console - clean, compact format."""
+        """Print current status to console - simple, clean format."""
         import os
-        os.system('clear' if os.name != 'nt' else 'cls')  # Clear screen
+        os.system('clear' if os.name != 'nt' else 'cls')
         
         current_price = df['close'].iloc[-1]
         equity = self.account.get_equity(current_price)
@@ -223,50 +227,46 @@ class FuturesPaperTradingBot:
         closes = df['close']
         rsi = calculate_rsi(closes, RSI_PERIOD)
         
-        # Header
-        print("╔════════════════════════════════════════════════════════════╗")
-        print(f"║  🔮 FUTURES PAPER TRADING    {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}           ║")
-        print("╠════════════════════════════════════════════════════════════╣")
+        print("=" * 60)
+        print(f"FUTURES PAPER TRADING  |  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("=" * 60)
+        print()
+        print(f"  MARKET")
+        print(f"    {SYMBOL}         ${current_price:,.2f}")
+        print(f"    RSI              {rsi.iloc[-1]:.1f}")
+        print(f"    Leverage         {self.leverage}x")
+        print()
+        print(f"  ACCOUNT")
+        print(f"    Equity           ${equity:,.2f}  ({total_return:+.2f}%)")
+        print(f"    Realized PnL     ${self.account.realized_pnl:+,.2f}")
+        print(f"    Unrealized PnL   ${unrealized:+,.2f}")
+        print()
         
-        # Price & Market
-        print(f"║  {SYMBOL:12} ${current_price:>10,.2f}    RSI: {rsi.iloc[-1]:>5.1f}    {self.leverage}x LEV  ║")
-        print("╠════════════════════════════════════════════════════════════╣")
-        
-        # Account
-        pnl_emoji = "🟢" if total_return >= 0 else "🔴"
-        print(f"║  💰 EQUITY     ${equity:>10,.2f}    {pnl_emoji} {total_return:>+6.2f}%                ║")
-        print(f"║  📊 REALIZED   ${self.account.realized_pnl:>+10,.2f}    UNREALIZED ${unrealized:>+8,.2f}   ║")
-        print("╠════════════════════════════════════════════════════════════╣")
-        
-        # Position
         if self.account.position:
             pos = self.account.position
             pnl = pos.calculate_pnl(current_price)
             roe = pos.calculate_roe(current_price)
             pct_move = (current_price - pos.entry_price) / pos.entry_price * 100
-            side_str = "📈 LONG " if pos.side == PositionSide.LONG else "📉 SHORT"
-            pnl_color = "🟢" if pnl >= 0 else "🔴"
+            side_str = "LONG" if pos.side == PositionSide.LONG else "SHORT"
             
-            print(f"║  {side_str}   Entry: ${pos.entry_price:>10,.2f}   Move: {pct_move:>+5.2f}%      ║")
-            print(f"║  {pnl_color} PnL: ${pnl:>+8,.2f} ({roe:>+6.1%} ROE)   Liq: ${pos.liquidation_price:>10,.2f}  ║")
+            print(f"  POSITION [{side_str}]")
+            print(f"    Entry            ${pos.entry_price:,.2f}")
+            print(f"    Current          ${current_price:,.2f}  ({pct_move:+.2f}%)")
+            print(f"    PnL              ${pnl:+,.2f}  ({roe:+.1%} ROE)")
+            print(f"    Liquidation      ${pos.liquidation_price:,.2f}")
         else:
-            print(f"║  ⏳ NO POSITION - Waiting for signal...                     ║")
-            print(f"║                                                              ║")
+            print(f"  POSITION")
+            print(f"    No open position")
+        print()
         
-        print("╠════════════════════════════════════════════════════════════╣")
+        print(f"  SIGNAL")
+        print(f"    {signal_reason}")
+        print()
         
-        # Signal
-        signal_display = signal_reason[:52] if len(signal_reason) > 52 else signal_reason
-        print(f"║  🎯 {signal_display:<54} ║")
-        
-        # Status
-        if kill_status.should_halt:
-            print(f"║  🛑 HALTED: {kill_status.reason:<47} ║")
-        else:
-            trades_msg = f"Trades: {self.account.trades_today}/{MAX_TRADES_PER_DAY}"
-            print(f"║  ✅ ACTIVE    {trades_msg:<45} ║")
-        
-        print("╚════════════════════════════════════════════════════════════╝")
+        status = "HALTED: " + kill_status.reason if kill_status.should_halt else "ACTIVE"
+        print(f"  STATUS: {status}  |  Trades: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        print()
+        print("=" * 60)
     
     def run(self):
         """Main futures trading loop."""
@@ -314,14 +314,14 @@ class FuturesPaperTradingBot:
                 )
                 
                 # OPTION D: Profit/loss threshold - don't close on tiny moves
-                # Only close if position has moved at least 0.5% (profitable or loss)
-                MIN_CLOSE_THRESHOLD = 0.005  # 0.5% move required to close
+                # Only close if position has moved at least 0.15% (prevents oscillation but allows profit-taking)
+                MIN_CLOSE_THRESHOLD = 0.0015  # 0.15% move required to close
                 if signal in [Signal.CLOSE_LONG, Signal.CLOSE_SHORT] and self.account.position:
                     pos = self.account.position
                     move_pct = abs(current_price - pos.entry_price) / pos.entry_price
                     if move_pct < MIN_CLOSE_THRESHOLD:
                         signal = Signal.NONE
-                        signal_reason = f"HOLDING (move {move_pct:.2%} < {MIN_CLOSE_THRESHOLD:.1%} threshold)"
+                        signal_reason = f"HOLDING (move {move_pct:.3%} < {MIN_CLOSE_THRESHOLD:.2%} threshold)"
                 
                 # Check stop loss / take profit (these override the threshold)
                 sl_tp_signal = check_stop_loss_take_profit(self.account, current_price)
@@ -358,21 +358,121 @@ class FuturesPaperTradingBot:
             except Exception as e:
                 print(f"\n[ERROR] Unexpected error: {e}")
                 self.account.consecutive_api_errors += 1
+                self.session_log.append(f"{datetime.now()}: ERROR - {e}")
                 time.sleep(60)
         
         # Final status
         final_price = df['close'].iloc[-1] if df is not None else 0
         final_equity = self.account.get_equity(final_price)
+        total_return = (final_equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
         
         print("\n" + "=" * 60)
-        print("FINAL FUTURES ACCOUNT STATUS")
+        print("SESSION ENDED")
         print("=" * 60)
-        print(f"Final Equity: ${final_equity:,.2f}")
-        print(f"Total Return: {(final_equity - STARTING_CAPITAL) / STARTING_CAPITAL:+.2%}")
-        print(f"Total Realized PnL: ${self.account.realized_pnl:,.2f}")
-        print(f"Total Trades: {len(self.account.trades)}")
-        print(f"Trades logged to: futures_trades.csv")
+        print(f"  Final Equity:      ${final_equity:,.2f}")
+        print(f"  Total Return:      {total_return:+.2f}%")
+        print(f"  Realized PnL:      ${self.account.realized_pnl:+,.2f}")
+        print(f"  Total Trades:      {len(self.account.trades)}")
         print("=" * 60)
+        
+        # Write detailed session log
+        self._write_session_log(final_price)
+    
+    def _write_session_log(self, final_price: float):
+        """Write detailed session log to file."""
+        log_filename = f"session_log_{self.start_time.strftime('%Y%m%d_%H%M%S')}.txt"
+        
+        final_equity = self.account.get_equity(final_price)
+        total_return = (final_equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
+        session_duration = datetime.now() - self.start_time
+        
+        with open(log_filename, 'w') as f:
+            f.write("=" * 70 + "\n")
+            f.write("FUTURES PAPER TRADING SESSION LOG\n")
+            f.write("=" * 70 + "\n\n")
+            
+            # Session Overview
+            f.write("SESSION OVERVIEW\n")
+            f.write("-" * 40 + "\n")
+            f.write(f"  Start Time:        {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"  End Time:          {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"  Duration:          {str(session_duration).split('.')[0]}\n")
+            f.write(f"  Symbol:            {SYMBOL}\n")
+            f.write(f"  Leverage:          {self.leverage}x\n")
+            f.write(f"  Strategy:          {STRATEGY}\n")
+            f.write("\n")
+            
+            # Account Summary
+            f.write("ACCOUNT SUMMARY\n")
+            f.write("-" * 40 + "\n")
+            f.write(f"  Starting Capital:  ${STARTING_CAPITAL:,.2f}\n")
+            f.write(f"  Final Equity:      ${final_equity:,.2f}\n")
+            f.write(f"  Total Return:      {total_return:+.2f}%\n")
+            f.write(f"  Realized PnL:      ${self.account.realized_pnl:+,.2f}\n")
+            f.write("\n")
+            
+            # Trade Summary
+            f.write("TRADE SUMMARY\n")
+            f.write("-" * 40 + "\n")
+            f.write(f"  Total Trades:      {len(self.account.trades)}\n")
+            
+            if self.account.trades:
+                winning = sum(1 for t in self.account.trades if t.realized_pnl > 0)
+                losing = sum(1 for t in self.account.trades if t.realized_pnl < 0)
+                flat = len(self.account.trades) - winning - losing
+                win_rate = winning / len(self.account.trades) * 100 if self.account.trades else 0
+                f.write(f"  Winning Trades:    {winning}\n")
+                f.write(f"  Losing Trades:     {losing}\n")
+                f.write(f"  Flat Trades:       {flat}\n")
+                f.write(f"  Win Rate:          {win_rate:.1f}%\n")
+            f.write("\n")
+            
+            # Trade Log
+            f.write("TRADE LOG\n")
+            f.write("-" * 70 + "\n")
+            if self.account.trades:
+                for i, trade in enumerate(self.account.trades, 1):
+                    f.write(f"  {i}. {trade.timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n")
+                    f.write(f"     Side: {trade.side.upper()}  |  Price: ${trade.price:,.2f}  |  Qty: {trade.qty:.6f}\n")
+                    f.write(f"     Fees: ${trade.fees:.4f}  |  PnL: ${trade.realized_pnl:+,.2f}\n")
+                    f.write("\n")
+            else:
+                f.write("  No trades executed during this session.\n")
+            f.write("\n")
+            
+            # Open Position (if any)
+            f.write("FINAL POSITION STATE\n")
+            f.write("-" * 40 + "\n")
+            if self.account.position:
+                pos = self.account.position
+                pnl = pos.calculate_pnl(final_price)
+                f.write(f"  Side:              {pos.side.value.upper()}\n")
+                f.write(f"  Entry Price:       ${pos.entry_price:,.2f}\n")
+                f.write(f"  Current Price:     ${final_price:,.2f}\n")
+                f.write(f"  Unrealized PnL:    ${pnl:+,.2f}\n")
+                f.write(f"  Liquidation:       ${pos.liquidation_price:,.2f}\n")
+            else:
+                f.write("  No open position at session end.\n")
+            f.write("\n")
+            
+            # Session Events
+            if self.session_log:
+                f.write("SESSION EVENTS\n")
+                f.write("-" * 40 + "\n")
+                for event in self.session_log:
+                    f.write(f"  {event}\n")
+                f.write("\n")
+            
+            # Notes
+            f.write("NOTES\n")
+            f.write("-" * 40 + "\n")
+            f.write("  - Close threshold: 0.15% (prevents oscillation)\n")
+            f.write("  - All trades logged to: futures_trades.csv\n")
+            f.write("  - This is PAPER TRADING - no real money\n")
+            f.write("\n")
+            f.write("=" * 70 + "\n")
+        
+        print(f"\nDetailed session log written to: {log_filename}")
 
 
 class BacktestBot:

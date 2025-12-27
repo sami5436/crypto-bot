@@ -11,7 +11,7 @@ LIVE_MODE = False  # Set to True for live trading (requires API keys)
 FUTURES_MODE = True  # True = Perpetual Futures (longs/shorts), False = Spot only
 
 # Capital and trading pair
-STARTING_CAPITAL = 50.0  # USD
+STARTING_CAPITAL = 500.0  # USD
 SYMBOL = "BTC/USD"  # For spot (Kraken)
 FUTURES_SYMBOL = "BTC/USDT:USDT"  # For futures (Bybit)
 TIMEFRAME = "1h"
