@@ -1,5 +1,6 @@
 """
 Strategy comparison classes for backtesting multiple strategies.
+Supports both idealized and realistic mode with configurable friction.
 """
 
 import os
@@ -9,8 +10,10 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from config import (
-    SYMBOL, STARTING_CAPITAL, STRATEGY,
-    COOLDOWN_MINUTES, HOURLY_COOLDOWN_MINUTES, LEVERAGE
+    SYMBOL, STARTING_CAPITAL,
+    COOLDOWN_MINUTES, HOURLY_COOLDOWN_MINUTES, LEVERAGE,
+    REALISTIC_MODE, PRICE_NOISE, TRADE_REJECTION_RATE, USE_NEXT_CANDLE_OPEN,
+    FUNDING_RATE_MIN, FUNDING_RATE_MAX
 )
 from src.core.models import Signal, PositionSide
 from src.core.account import PaperAccount, FuturesAccount
@@ -100,7 +103,6 @@ class StrategyComparer:
             sl_tp_signal = check_stop_loss_take_profit(account, current_price)
             if sl_tp_signal:
                 signal = sl_tp_signal
-                reason = "SL/TP triggered"
             
             if signal != Signal.NONE:
                 if account.last_trade_time:
@@ -132,9 +134,6 @@ class StrategyComparer:
                         'result': result,
                         'equity': account.get_equity(current_price)
                     })
-                    
-                    if verbose:
-                        print(f"   [{current_time.strftime('%m/%d %H:%M')}] {trade.side.value.upper():4} @ ${trade.price:,.2f} | PnL: ${trade.realized_pnl:+.2f} | {result}")
         
         final_price = df['close'].iloc[-1]
         final_equity = account.get_equity(final_price)
@@ -220,21 +219,18 @@ class StrategyComparer:
         print(f"Total Trades: {best['trades']}")
         print(f"Win Rate: {best['win_rate']:.1f}%")
         
-        if best['trade_log']:
-            print("\n" + "-" * 70)
-            print(f"TRADE LOG ({best['strategy'].upper()}):")
-            print("-" * 70)
-            for t in best['trade_log'][:15]:
-                print(f"  {t['time'].strftime('%Y-%m-%d %H:%M')} | {t['side'].upper():<5} @ ${t['price']:>10,.2f} | "
-                      f"PnL: ${t['pnl']:>+8.2f} | {t['result']}")
-            if len(best['trade_log']) > 15:
-                print(f"  ... ({len(best['trade_log']) - 15} more trades)")
-        
         print("\n" + "=" * 60)
 
 
 class FuturesStrategyComparer:
-    """Compare all strategies for FUTURES trading (longs + shorts)."""
+    """Compare all strategies for FUTURES trading (longs + shorts).
+    
+    Supports realistic mode with:
+    - Next-candle execution (simulates reaction delay)
+    - Price noise (market volatility)
+    - Trade rejection (order failures)
+    - Dynamic funding rates
+    """
     
     STRATEGIES = ["mean_reversion", "trend_following", "voting"]
     
@@ -279,6 +275,27 @@ class FuturesStrategyComparer:
             print(f"   Error loading CSV: {e}")
             return None
     
+    def _apply_price_noise(self, price: float) -> float:
+        """Add random noise to price to simulate real market conditions."""
+        if PRICE_NOISE == 0:
+            return price
+        noise = random.uniform(-PRICE_NOISE, PRICE_NOISE)
+        return price * (1 + noise)
+    
+    def _get_execution_price(self, df: pd.DataFrame, current_idx: int, signal_price: float) -> float:
+        """Get execution price - either close or next candle open."""
+        if USE_NEXT_CANDLE_OPEN and current_idx + 1 < len(df):
+            # Use next candle's open (more realistic - simulates execution delay)
+            next_open = df.iloc[current_idx + 1]['open']
+            return self._apply_price_noise(next_open)
+        else:
+            # Use current candle close (idealized)
+            return self._apply_price_noise(signal_price)
+    
+    def _should_reject_trade(self) -> bool:
+        """Randomly reject trades based on rejection rate."""
+        return random.random() < TRADE_REJECTION_RATE
+    
     def run_strategy_backtest(self, df: pd.DataFrame, strategy_name: str,
                                start_date: datetime, end_date: datetime) -> dict:
         """Run a single strategy with futures (longs + shorts)."""
@@ -293,9 +310,12 @@ class FuturesStrategyComparer:
         long_trades = 0
         short_trades = 0
         liquidations = 0
+        rejected_trades = 0
         trade_log = []
         
         cooldown_mins = COOLDOWN_MINUTES
+        pending_signal = None
+        pending_signal_idx = None
         
         for i in range(75, len(df)):
             current_candle = df.iloc[i]
@@ -306,6 +326,50 @@ class FuturesStrategyComparer:
             
             window_df = df.iloc[:i+1].copy()
             current_price = current_candle['close']
+            
+            # Execute pending signal from previous candle (realistic execution delay)
+            if USE_NEXT_CANDLE_OPEN and pending_signal is not None and pending_signal_idx == i - 1:
+                exec_price = self._get_execution_price(df, pending_signal_idx, df.iloc[pending_signal_idx]['close'])
+                
+                # Check for trade rejection
+                if self._should_reject_trade():
+                    rejected_trades += 1
+                    pending_signal = None
+                    pending_signal_idx = None
+                    continue
+                
+                trade = executor.execute(account, pending_signal, SYMBOL, exec_price)
+                if trade:
+                    trade.timestamp = current_time
+                    account.last_trade_time = current_time
+                    trades_count += 1
+                    
+                    if pending_signal in [Signal.LONG, Signal.BUY]:
+                        long_trades += 1
+                    elif pending_signal in [Signal.SHORT]:
+                        short_trades += 1
+                    
+                    if trade.realized_pnl > 0:
+                        winning_trades += 1
+                        result = "WIN"
+                    elif trade.realized_pnl < 0:
+                        losing_trades += 1
+                        result = "LOSS"
+                    else:
+                        result = "FLAT"
+                    
+                    logger.log_trade(trade)
+                    trade_log.append({
+                        'time': current_time,
+                        'side': trade.side.upper(),
+                        'price': trade.price,
+                        'pnl': trade.realized_pnl,
+                        'result': result,
+                        'equity': account.get_equity(current_price)
+                    })
+                
+                pending_signal = None
+                pending_signal_idx = None
             
             # Check liquidation first
             liq_signal = check_futures_liquidation(account, current_price)
@@ -328,12 +392,12 @@ class FuturesStrategyComparer:
                     })
                 continue
             
-            # Process funding rate every 8 hours
+            # Process funding rate every 8 hours with realistic range
             if account.position and (
                 account.last_funding_time is None or
                 (current_time - account.last_funding_time).total_seconds() >= 8 * 3600
             ):
-                funding_rate = random.uniform(-0.0001, 0.0003)
+                funding_rate = random.uniform(FUNDING_RATE_MIN, FUNDING_RATE_MAX)
                 account.process_funding(current_price, funding_rate, current_time)
             
             # Get current position side
@@ -349,7 +413,6 @@ class FuturesStrategyComparer:
             sl_tp_signal = check_stop_loss_take_profit(account, current_price)
             if sl_tp_signal:
                 signal = sl_tp_signal
-                reason = "SL/TP triggered"
             
             if signal != Signal.NONE:
                 if account.last_trade_time:
@@ -357,35 +420,47 @@ class FuturesStrategyComparer:
                     if time_since_last < cooldown_mins and not sl_tp_signal:
                         continue
                 
-                trade = executor.execute(account, signal, SYMBOL, current_price)
-                if trade:
-                    trade.timestamp = current_time
-                    account.last_trade_time = current_time
-                    trades_count += 1
+                if USE_NEXT_CANDLE_OPEN:
+                    # Queue for next candle execution
+                    pending_signal = signal
+                    pending_signal_idx = i
+                else:
+                    # Immediate execution (idealized)
+                    exec_price = self._apply_price_noise(current_price)
                     
-                    if signal in [Signal.LONG, Signal.BUY]:
-                        long_trades += 1
-                    elif signal in [Signal.SHORT]:
-                        short_trades += 1
+                    if self._should_reject_trade():
+                        rejected_trades += 1
+                        continue
                     
-                    if trade.realized_pnl > 0:
-                        winning_trades += 1
-                        result = "WIN"
-                    elif trade.realized_pnl < 0:
-                        losing_trades += 1
-                        result = "LOSS"
-                    else:
-                        result = "FLAT"
-                    
-                    logger.log_trade(trade)
-                    trade_log.append({
-                        'time': current_time,
-                        'side': trade.side.upper(),
-                        'price': trade.price,
-                        'pnl': trade.realized_pnl,
-                        'result': result,
-                        'equity': account.get_equity(current_price)
-                    })
+                    trade = executor.execute(account, signal, SYMBOL, exec_price)
+                    if trade:
+                        trade.timestamp = current_time
+                        account.last_trade_time = current_time
+                        trades_count += 1
+                        
+                        if signal in [Signal.LONG, Signal.BUY]:
+                            long_trades += 1
+                        elif signal in [Signal.SHORT]:
+                            short_trades += 1
+                        
+                        if trade.realized_pnl > 0:
+                            winning_trades += 1
+                            result = "WIN"
+                        elif trade.realized_pnl < 0:
+                            losing_trades += 1
+                            result = "LOSS"
+                        else:
+                            result = "FLAT"
+                        
+                        logger.log_trade(trade)
+                        trade_log.append({
+                            'time': current_time,
+                            'side': trade.side.upper(),
+                            'price': trade.price,
+                            'pnl': trade.realized_pnl,
+                            'result': result,
+                            'equity': account.get_equity(current_price)
+                        })
         
         # Force close any open position at end of backtest
         if account.position is not None:
@@ -428,6 +503,7 @@ class FuturesStrategyComparer:
             'long_trades': long_trades,
             'short_trades': short_trades,
             'liquidations': liquidations,
+            'rejected_trades': rejected_trades,
             'win_rate': (winning_trades / trades_count * 100) if trades_count > 0 else 0,
             'trade_log': trade_log
         }
@@ -439,15 +515,20 @@ class FuturesStrategyComparer:
         else:
             period_str = f"Last {self.days} days"
         
-        print("\n")
-        print("FUTURES STRATEGY COMPARISON")
+        mode_str = "REALISTIC" if REALISTIC_MODE else "IDEALIZED"
+        
+        print("\n" + "=" * 70)
+        print(f"FUTURES STRATEGY COMPARISON [{mode_str} MODE]")
+        print("=" * 70)
         print(f"Testing: {', '.join(self.STRATEGIES)}")
         print(f"Period: {period_str}")
         print(f"Timeframe: {self.timeframe.upper()} candles")
         print(f"Leverage: {self.leverage}x")
         print(f"Symbol: {SYMBOL}")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
-        print("\n")
+        if REALISTIC_MODE:
+            print(f"Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec")
+        print("=" * 70 + "\n")
         
         df = self.load_from_csv()
         if df is None or len(df) == 0:
@@ -477,11 +558,13 @@ class FuturesStrategyComparer:
                   f"Return: {result['return_pct']:+.2f}% | Win Rate: {result['win_rate']:.1f}%")
             if result['liquidations'] > 0:
                 print(f"   Liquidations: {result['liquidations']}")
+            if result.get('rejected_trades', 0) > 0:
+                print(f"   Rejected trades: {result['rejected_trades']}")
         
         results.sort(key=lambda x: x['return_pct'], reverse=True)
         
         print("\n\n" + "=" * 70)
-        print("FUTURES STRATEGY COMPARISON RESULTS")
+        print(f"FUTURES STRATEGY COMPARISON RESULTS [{mode_str}]")
         print("=" * 70)
         print(f"\n{'Strategy':<20} {'Return':>10} {'Trips':>6} {'Long':>5} {'Short':>6} {'Win%':>8} {'Final $':>12}")
         print("-" * 70)

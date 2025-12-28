@@ -48,8 +48,49 @@ TAKER_FEE = 0.0026  # 0.26%
 # SIMULATED MARKET FRICTION
 # =============================================================================
 
+# Toggle between idealized (optimistic) and realistic (conservative) friction
+REALISTIC_MODE = True  # Set to False for idealized backtest, True for realistic
+
+# Idealized settings (optimistic backtest)
+IDEALIZED_SLIPPAGE = 0.0005  # 0.05%
+IDEALIZED_FEE_MULTIPLIER = 1.0  # Use base fees
+IDEALIZED_PRICE_NOISE = 0.0  # No noise
+IDEALIZED_TRADE_REJECTION_RATE = 0.0  # All trades execute
+IDEALIZED_USE_NEXT_OPEN = False  # Enter at close price (unrealistic but common)
+
+# Realistic settings (conservative, closer to live trading)
+REALISTIC_SLIPPAGE = 0.003  # 0.3% - much worse in volatile markets
+REALISTIC_FEE_MULTIPLIER = 1.5  # 50% higher fees (hidden costs, wider spreads)
+REALISTIC_PRICE_NOISE = 0.002  # ±0.2% random noise on entry/exit
+REALISTIC_TRADE_REJECTION_RATE = 0.10  # 10% of orders fail
+REALISTIC_USE_NEXT_OPEN = True  # Enter at NEXT candle open (simulates delay)
+
+# Funding rate ranges
+IDEALIZED_FUNDING_MIN = -0.0001  # -0.01%
+IDEALIZED_FUNDING_MAX = 0.0003   # +0.03%
+REALISTIC_FUNDING_MIN = -0.001   # -0.1%
+REALISTIC_FUNDING_MAX = 0.001    # +0.1%
+
+# Select active settings based on mode
+if REALISTIC_MODE:
+    SIMULATED_SLIPPAGE = REALISTIC_SLIPPAGE
+    FEE_MULTIPLIER = REALISTIC_FEE_MULTIPLIER
+    PRICE_NOISE = REALISTIC_PRICE_NOISE
+    TRADE_REJECTION_RATE = REALISTIC_TRADE_REJECTION_RATE
+    USE_NEXT_CANDLE_OPEN = REALISTIC_USE_NEXT_OPEN
+    FUNDING_RATE_MIN = REALISTIC_FUNDING_MIN
+    FUNDING_RATE_MAX = REALISTIC_FUNDING_MAX
+else:
+    SIMULATED_SLIPPAGE = IDEALIZED_SLIPPAGE
+    FEE_MULTIPLIER = IDEALIZED_FEE_MULTIPLIER
+    PRICE_NOISE = IDEALIZED_PRICE_NOISE
+    TRADE_REJECTION_RATE = IDEALIZED_TRADE_REJECTION_RATE
+    USE_NEXT_CANDLE_OPEN = IDEALIZED_USE_NEXT_OPEN
+    FUNDING_RATE_MIN = IDEALIZED_FUNDING_MIN
+    FUNDING_RATE_MAX = IDEALIZED_FUNDING_MAX
+
+# Other friction settings (same for both modes)
 SIMULATED_SPREAD = 0.0005  # 0.05%
-SIMULATED_SLIPPAGE = 0.0002  # 0.02%
 PARTIAL_FILL_PROBABILITY = 0.30  # 30% chance of partial fill
 MIN_FILL_RATIO = 0.30  # Minimum 30% fill on partial
 MAX_FILL_RATIO = 0.80  # Maximum 80% fill on partial
