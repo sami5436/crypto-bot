@@ -12,7 +12,7 @@ from config import (
     FUTURES_MODE, LEVERAGE, FUTURES_MAKER_FEE, FUTURES_TAKER_FEE,
     LIQUIDATION_BUFFER_PCT, DEFAULT_FUNDING_RATE
 )
-from models import Side, Position, Trade, PositionSide, FuturesPosition, FundingPayment
+from src.core.models import Side, Position, Trade, PositionSide, FuturesPosition, FundingPayment
 
 
 class PaperAccount:

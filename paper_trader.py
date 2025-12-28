@@ -11,7 +11,7 @@ Run this file to start the trading bot.
 from datetime import datetime, timedelta
 from typing import Optional, Tuple, Union
 
-from bots import PaperTradingBot, BacktestBot, StrategyComparer, FuturesStrategyComparer, FuturesPaperTradingBot
+from src.bots.bots import PaperTradingBot, BacktestBot, StrategyComparer, FuturesStrategyComparer, FuturesPaperTradingBot
 from config import LEVERAGE
 
 

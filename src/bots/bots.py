@@ -16,11 +16,11 @@ from config import (
     MAX_TRADES_PER_DAY, COOLDOWN_MINUTES, HOURLY_COOLDOWN_MINUTES,
     FUTURES_MODE, LEVERAGE, FUTURES_SYMBOL
 )
-from models import Signal, KillSwitchStatus, PositionSide
-from indicators import calculate_bollinger_bands, calculate_rsi, calculate_atr
-from account import PaperAccount, FuturesAccount
-from strategies import SignalGenerator, HourlySignalGenerator, FuturesSignalGenerator
-from executor import (
+from src.core.models import Signal, KillSwitchStatus, PositionSide
+from src.strategies.indicators import calculate_bollinger_bands, calculate_rsi, calculate_atr
+from src.core.account import PaperAccount, FuturesAccount
+from src.strategies.strategies import SignalGenerator, HourlySignalGenerator, FuturesSignalGenerator
+from src.core.executor import (
     KillSwitch, OrderExecutor, FuturesOrderExecutor, TradeLogger, 
     check_stop_loss_take_profit, check_futures_liquidation
 )
@@ -191,7 +191,7 @@ class FuturesPaperTradingBot:
         self.kill_switch = KillSwitch(self.account)
         self.signal_generator = FuturesSignalGenerator(strategy=STRATEGY)
         self.executor = FuturesOrderExecutor()
-        self.logger = TradeLogger("futures_trades.csv")
+        self.logger = TradeLogger("logs/futures_trades.csv")
         self.running = True
         
         # Session tracking for detailed log
@@ -380,7 +380,7 @@ class FuturesPaperTradingBot:
     
     def _write_session_log(self, final_price: float):
         """Write detailed session log to file."""
-        log_filename = f"session_log_{self.start_time.strftime('%Y%m%d_%H%M%S')}.txt"
+        log_filename = f"logs/session_log_{self.start_time.strftime('%Y%m%d_%H%M%S')}.txt"
         
         final_equity = self.account.get_equity(final_price)
         total_return = (final_equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
@@ -487,7 +487,7 @@ class BacktestBot:
         self.kill_switch = KillSwitch(self.account)
         self.signal_generator = SignalGenerator(strategy=STRATEGY)
         self.executor = OrderExecutor()
-        self.logger = TradeLogger(f"backtest_{backtest_date.strftime('%Y%m%d')}.csv")
+        self.logger = TradeLogger(f"logs/backtest_{backtest_date.strftime('%Y%m%d')}.csv")
     
     def fetch_historical_data(self) -> Optional[pd.DataFrame]:
         """Fetch historical OHLCV data for backtest date."""
@@ -650,13 +650,13 @@ class StrategyComparer:
     STRATEGIES = ["mean_reversion", "trend_following", "voting"]
     
     CSV_FILES_DAILY = {
-        'BTC/USD': 'historical_data/btc_usd_daily.csv',
-        'ETH/USD': 'historical_data/eth_usd_daily.csv',
+        'BTC/USD': 'data/historical/btc_usd_daily.csv',
+        'ETH/USD': 'data/historical/eth_usd_daily.csv',
     }
     
     CSV_FILES_HOURLY = {
-        'BTC/USD': 'historical_data/btc_usd_hourly.csv',
-        'ETH/USD': 'historical_data/eth_usd_hourly.csv',
+        'BTC/USD': 'data/historical/btc_usd_hourly.csv',
+        'ETH/USD': 'data/historical/eth_usd_hourly.csv',
     }
     
     def __init__(self, days: int = None, start_date: datetime = None, end_date: datetime = None, timeframe: str = 'daily'):
@@ -991,13 +991,13 @@ class FuturesStrategyComparer:
     STRATEGIES = ["mean_reversion", "trend_following", "voting"]
     
     CSV_FILES_DAILY = {
-        'BTC/USD': 'historical_data/btc_usd_daily.csv',
-        'ETH/USD': 'historical_data/eth_usd_daily.csv',
+        'BTC/USD': 'data/historical/btc_usd_daily.csv',
+        'ETH/USD': 'data/historical/eth_usd_daily.csv',
     }
     
     CSV_FILES_HOURLY = {
-        'BTC/USD': 'historical_data/btc_usd_hourly.csv',
-        'ETH/USD': 'historical_data/eth_usd_hourly.csv',
+        'BTC/USD': 'data/historical/btc_usd_hourly.csv',
+        'ETH/USD': 'data/historical/eth_usd_hourly.csv',
     }
     
     def __init__(self, days: int = None, start_date: datetime = None, 

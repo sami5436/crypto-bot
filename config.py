@@ -110,7 +110,7 @@ FUTURES_COOLDOWN_MINUTES = 0  # No cooldown for futures paper trading
 # LOGGING & TIMING
 # =============================================================================
 
-TRADES_LOG_FILE = "trades_log.csv"
+TRADES_LOG_FILE = "logs/trades_log.csv"
 UPDATE_INTERVAL_SECONDS = 5
 
 # Strategy selection: "mean_reversion", "trend_following", or "voting"

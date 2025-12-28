@@ -14,8 +14,8 @@ from config import (
     MAX_DAILY_DRAWDOWN_PCT, MAX_VOLATILITY_PCT, MAX_CONSECUTIVE_API_ERRORS,
     FUTURES_MODE, LIQUIDATION_BUFFER_PCT
 )
-from models import Signal, Side, Trade, KillSwitchStatus, PositionSide
-from account import PaperAccount, FuturesAccount
+from src.core.models import Signal, Side, Trade, KillSwitchStatus, PositionSide
+from src.core.account import PaperAccount, FuturesAccount
 
 
 class KillSwitch:

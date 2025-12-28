@@ -12,8 +12,8 @@ from config import (
     HOURLY_BB_PERIOD, HOURLY_BB_STD, HOURLY_RSI_PERIOD, 
     HOURLY_RSI_OVERSOLD, HOURLY_RSI_OVERBOUGHT, HOURLY_ATR_VOLATILITY_THRESHOLD
 )
-from models import Signal
-from indicators import (
+from src.core.models import Signal
+from src.strategies.indicators import (
     calculate_bollinger_bands, calculate_rsi, calculate_ema,
     calculate_macd, calculate_volume_sma, calculate_atr
 )
