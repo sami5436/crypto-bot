@@ -16,7 +16,7 @@ Think of these as the "vocabulary" the bot uses to talk about trades.
 
 ---
 
-## 📊 Enums
+##  Enums
 
 ### `Side`
 Which direction is a spot order?

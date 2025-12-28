@@ -102,7 +102,7 @@ Checks if a futures position would be liquidated at the current price.
 ```python
 signal = check_futures_liquidation(account, current_price)
 if signal:
-    print("💀 LIQUIDATION TRIGGERED")
+    print(" LIQUIDATION TRIGGERED")
 ```
 
 ---
@@ -116,7 +116,7 @@ if signal:
 
 ---
 
-## 💡 Why Simulate Fees and Slippage?
+##  Why Simulate Fees and Slippage?
 
 Real trading has friction:
 - **Fees**: Exchanges charge 0.1-0.3% per trade

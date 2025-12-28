@@ -73,7 +73,7 @@ def download_hourly(symbol: str, days: int = 365) -> pd.DataFrame:
             data = response.json()
             
             if data.get('Response') != 'Success':
-                print(f"   ⚠️ API error: {data.get('Message', 'Unknown error')}")
+                print(f"   [WARN] API error: {data.get('Message', 'Unknown error')}")
                 break
             
             candles = data.get('Data', {}).get('Data', [])
@@ -89,7 +89,7 @@ def download_hourly(symbol: str, days: int = 365) -> pd.DataFrame:
             time.sleep(0.5)  # Rate limiting
         
         if not all_candles:
-            print(f"   ⚠️ No data returned for {symbol}")
+            print(f"   [WARN] No data returned for {symbol}")
             return pd.DataFrame()
         
         # Build DataFrame
@@ -112,11 +112,11 @@ def download_hourly(symbol: str, days: int = 365) -> pd.DataFrame:
         date_from = df['timestamp'].iloc[0]
         date_to = df['timestamp'].iloc[-1]
         
-        print(f"   ✅ Got {len(df):,} candles from {date_from.date()} to {date_to.date()}")
+        print(f"    Got {len(df):,} candles from {date_from.date()} to {date_to.date()}")
         return df
         
     except Exception as e:
-        print(f"   ❌ Error: {e}")
+        print(f"    Error: {e}")
         return pd.DataFrame()
 
 
@@ -136,7 +136,7 @@ def download_daily(symbol: str, days: int = 365) -> pd.DataFrame:
         data = response.json()
         
         if data.get('Response') != 'Success':
-            print(f"   ⚠️ API error: {data.get('Message', 'Unknown error')}")
+            print(f"   [WARN] API error: {data.get('Message', 'Unknown error')}")
             return pd.DataFrame()
         
         candles = data.get('Data', {}).get('Data', [])
@@ -149,11 +149,11 @@ def download_daily(symbol: str, days: int = 365) -> pd.DataFrame:
         df = df[['timestamp', 'open', 'high', 'low', 'close', 'volume']]
         df = df[df['close'] > 0]  # Remove empty candles
         
-        print(f"   ✅ Got {len(df)} candles from {df['timestamp'].iloc[0].date()} to {df['timestamp'].iloc[-1].date()}")
+        print(f"    Got {len(df)} candles from {df['timestamp'].iloc[0].date()} to {df['timestamp'].iloc[-1].date()}")
         return df
         
     except Exception as e:
-        print(f"   ❌ Error: {e}")
+        print(f"    Error: {e}")
         return pd.DataFrame()
 
 
@@ -177,7 +177,7 @@ def save_to_csv(df: pd.DataFrame, filename: str) -> str:
 
 def main():
     print("\n" + "=" * 60)
-    print("📊 CRYPTO DATA COLLECTOR (CryptoCompare)")
+    print(" CRYPTO DATA COLLECTOR (CryptoCompare)")
     print("=" * 60)
     print(f"Coins: {', '.join(COINS.keys())}")
     print(f"Timeframes: hourly, daily")
@@ -188,7 +188,7 @@ def main():
     
     for symbol, filename_prefix in COINS.items():
         print(f"\n{'─' * 50}")
-        print(f"📈 {symbol}/USD")
+        print(f" {symbol}/USD")
         print(f"{'─' * 50}")
         
         # Download hourly data (365 days = ~8,760 candles!)
@@ -209,7 +209,7 @@ def main():
     
     # Summary
     print("\n" + "=" * 60)
-    print("✅ DOWNLOAD COMPLETE")
+    print(" DOWNLOAD COMPLETE")
     print("=" * 60)
     print(f"Files created: {len(all_files)}")
     for f in all_files:

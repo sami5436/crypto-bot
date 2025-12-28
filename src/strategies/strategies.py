@@ -82,7 +82,7 @@ class SignalGenerator:
             if current_price >= bb_middle:
                 return Signal.SELL, f"MEAN_REV SELL: Price ${current_price:.2f} >= BB_Mid ${bb_middle:.2f}", votes
         
-        trend_str = "📉STRONG DOWN" if strong_downtrend else "OK"
+        trend_str = "STRONG DOWN" if strong_downtrend else "OK"
         return Signal.NONE, f"MEAN_REV: Waiting (RSI: {current_rsi:.0f}, Trend: {trend_str})", votes
     
     def _trend_following_signal(self, df: pd.DataFrame, current_price: float,

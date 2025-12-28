@@ -113,7 +113,7 @@ SIMULATED_SLIPPAGE = 0.0002  # 0.02%
 
 ---
 
-## 💡 Common Adjustments
+##  Common Adjustments
 
 ### Want more aggressive trading?
 ```python
@@ -136,6 +136,6 @@ STRATEGY = "mean_reversion"   # Or "trend_following"
 
 ---
 
-## ⚠️ Warning
+## ️ Warning
 
 The `LIVE_MODE = True` setting would connect to real exchanges with real money. **This is not implemented/tested** — paper trading only!

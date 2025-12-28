@@ -77,7 +77,7 @@ account = FuturesAccount(starting_capital=50.0, leverage=3)
 
 ---
 
-## 💰 Position Sizing
+##  Position Sizing
 
 **How much of your balance is used per trade?**
 
@@ -92,7 +92,7 @@ margin_used = 50 * 0.85 = $42.50 per trade
 
 ---
 
-## ⚠️ Trading Rules Enforced
+## ️ Trading Rules Enforced
 
 | Rule | Config Setting | Effect |
 |------|----------------|--------|
@@ -102,7 +102,7 @@ margin_used = 50 * 0.85 = $42.50 per trade
 
 ---
 
-## 📊 Balance Flow Example (Futures)
+##  Balance Flow Example (Futures)
 
 ```
 Starting: $50.00 wallet, $50.00 available
@@ -124,7 +124,7 @@ Starting: $50.00 wallet, $50.00 available
 
 ---
 
-## 💡 Why Separate Accounts?
+##  Why Separate Accounts?
 
 - **PaperAccount** is simpler — just tracks buy/sell with no leverage
 - **FuturesAccount** has complex margin math, liquidation, funding rates

@@ -19,7 +19,7 @@ All strategies use these indicators to make decisions.
 
 ---
 
-## 📊 Functions
+##  Functions
 
 ### `calculate_rsi(closes, period=14)`
 **What it measures:** Momentum — is something overbought or oversold?
@@ -91,7 +91,7 @@ Used by the kill switch to halt trading when markets are too volatile.
 
 ---
 
-## 💡 How Strategies Use These
+##  How Strategies Use These
 
 ```
 Mean Reversion:

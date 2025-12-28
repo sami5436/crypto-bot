@@ -111,7 +111,7 @@ Checks these indicators:
 
 ---
 
-## 💡 Important Notes
+##  Important Notes
 
 - All strategies have a **volatility filter** — won't trade if ATR > threshold (too choppy)
 - Strategies return a **reason string** explaining why they made the decision

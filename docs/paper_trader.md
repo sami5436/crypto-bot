@@ -60,7 +60,7 @@ Interactive menu that returns a tuple of `(mode, parameters)`:
 
 ---
 
-## 💡 How to Use
+##  How to Use
 
 ```bash
 # Run the bot

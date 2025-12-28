@@ -1,4 +1,4 @@
-# 🤖 Crypto Paper Trading Bot
+#  Crypto Paper Trading Bot
 
 > **A fully-featured cryptocurrency trading simulator that lets you test algorithmic trading strategies with fake money and real market prices.**
 
@@ -74,8 +74,8 @@ python paper_trader.py --help
 | **3** | Compare (N days) | Compare strategies over last N days |
 | **4** | Compare (daily) | Compare strategies on daily candles |
 | **5** | Compare (hourly) | Compare strategies on hourly candles |
-| **6** | 🔮 Futures Backtest | Test longs + shorts with leverage |
-| **7** | 🔮 Futures Live | Real-time futures paper trading |
+| **6** |  Futures Backtest | Test longs + shorts with leverage |
+| **7** |  Futures Live | Real-time futures paper trading |
 
 ---
 
@@ -94,7 +94,7 @@ python paper_trader.py --help
 
 ---
 
-## 📊 Available Strategies
+##  Available Strategies
 
 | Strategy | How It Works | Best For |
 |----------|--------------|----------|
@@ -104,7 +104,7 @@ python paper_trader.py --help
 
 ---
 
-## ⚠️ Important Concepts
+## ️ Important Concepts
 
 ### Paper Trading vs Live Trading
 - **Paper trading** = fake money, real prices (what this bot does by default)
@@ -122,7 +122,7 @@ If your futures position loses too much, the exchange closes it automatically. T
 
 ---
 
-## 💡 Tips for Getting Started
+##  Tips for Getting Started
 
 1. **Start with Option 6** (Futures Backtest) to see how strategies perform historically
 2. **Then try Option 7** (Futures Live) to watch the bot trade in real-time
@@ -131,22 +131,22 @@ If your futures position loses too much, the exchange closes it automatically. T
 
 ---
 
-## 📈 Example Output (Futures Backtest)
+##  Example Output (Futures Backtest)
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🔮 FUTURES PAPER TRADING    2025-12-26 11:25:00           ║
+║   FUTURES PAPER TRADING    2025-12-26 11:25:00           ║
 ╠════════════════════════════════════════════════════════════╣
 ║  BTC/USD       $88,950.00    RSI:  45.2    3x LEV          ║
 ╠════════════════════════════════════════════════════════════╣
-║  💰 EQUITY     $    52.50    🟢  +5.00%                    ║
-║  📊 REALIZED   $    +2.50    UNREALIZED $   +0.00          ║
+║   EQUITY     $    52.50      +5.00%                    ║
+║   REALIZED   $    +2.50    UNREALIZED $   +0.00          ║
 ╠════════════════════════════════════════════════════════════╣
-║  📈 LONG    Entry: $ 88,500.00   Move: +0.51%              ║
-║  🟢 PnL: $   +0.45 ( +1.8% ROE)   Liq: $ 59,000.00         ║
+║   LONG    Entry: $ 88,500.00   Move: +0.51%              ║
+║   PnL: $   +0.45 ( +1.8% ROE)   Liq: $ 59,000.00         ║
 ╠════════════════════════════════════════════════════════════╣
 ║  🎯 VOTING: L=3/5, S=1/5 - HOLDING                         ║
-║  ✅ ACTIVE    Trades: 5/20                                 ║
+║   ACTIVE    Trades: 5/20                                 ║
 ╚════════════════════════════════════════════════════════════╝
 ```
 
@@ -158,4 +158,4 @@ Click any link in the project structure table above, or browse the [`docs/`](doc
 
 ---
 
-**Happy paper trading! 🚀**
+**Happy paper trading! **

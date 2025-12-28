@@ -637,11 +637,11 @@ class BacktestBot:
                 pos_str = f"{self.account.position.qty:.6f}" if self.account.position else "No pos"
                 
                 if current_price < bb_lower:
-                    status = "⬇️ BELOW LOWER"
+                    status = "BELOW LOWER"
                 elif current_price > bb_upper:
-                    status = "⬆️ ABOVE UPPER"
+                    status = "ABOVE UPPER"
                 else:
-                    status = "➡️ IN RANGE"
+                    status = "IN RANGE"
                 
                 print(f"[{current_time.strftime('%H:%M')}] ${current_price:,.2f} | BB: {bb_lower:.2f}-{bb_upper:.2f} | {status} | {pos_str}")
         
@@ -851,14 +851,14 @@ class StrategyComparer:
         else:
             period_str = f"Last {self.days} days"
         
-        print("\n" + "🔬" * 20)
+        print("\n" + "=" * 60)
         print("STRATEGY COMPARISON MODE")
         print(f"Testing: {', '.join(self.STRATEGIES)}")
         print(f"Period: {period_str}")
         print(f"Timeframe: {self.timeframe.upper()} candles")
         print(f"Symbol: {SYMBOL}")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
-        print("🔬" * 20 + "\n")
+        print("=" * 60 + "\n")
         
         df = self.fetch_multi_day_data()
         if df is None or len(df) == 0:
@@ -976,7 +976,7 @@ class StrategyComparer:
                     print("   → Market had clear directional moves")
                     print("   → Consider: Increase position size during trends")
             elif r['strategy'] == 'voting':
-                print(f"\n🗳️ VOTING STRATEGY ({r['return_pct']:+.2f}%):")
+                print(f"\nVOTING STRATEGY ({r['return_pct']:+.2f}%):")
                 if r['trades'] < results[0]['trades'] / 2:
                     print("   → More selective (fewer trades)")
                     print("   → May avoid some losses but miss opportunities")
@@ -984,7 +984,7 @@ class StrategyComparer:
                     print("   → Balanced approach with confirmation signals")
         
         print("\n" + "-" * 60)
-        print("💡 RECOMMENDED SETTINGS FOR LIVE TRADING:")
+        print("RECOMMENDED SETTINGS FOR LIVE TRADING:")
         print("-" * 60)
         
         if best['return_pct'] > 0:

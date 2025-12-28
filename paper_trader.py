@@ -18,7 +18,7 @@ from config import LEVERAGE
 def get_user_mode() -> Tuple[str, any]:
     """Prompt user for trading mode."""
     print("\n" + "=" * 60)
-    print("🤖 CRYPTO PAPER TRADING BOT")
+    print("CRYPTO PAPER TRADING BOT")
     print("=" * 60)
     print("\nChoose mode:")
     print("  1. Live trading (real-time paper trading)")
@@ -26,8 +26,8 @@ def get_user_mode() -> Tuple[str, any]:
     print("  3. Compare strategies (last N days, daily candles)")
     print("  4. Compare strategies (date range, daily candles)")
     print("  5. Compare strategies (date range, 1-hour candles)")
-    print("  6. 🔮 FUTURES: Compare with longs + shorts (date range)")
-    print("  7. 🔮 FUTURES: Live paper trading (longs + shorts)")
+    print("  6. FUTURES: Compare with longs + shorts (date range)")
+    print("  7. FUTURES: Live paper trading (longs + shorts)")
     print()
     
     while True:
@@ -90,7 +90,7 @@ def get_user_mode() -> Tuple[str, any]:
     
     if choice == '6':
         # FUTURES mode
-        print("\n🔮 FUTURES MODE: Longs + Shorts with Leverage")
+        print("\nFUTURES MODE: Longs + Shorts with Leverage")
         print("=" * 50)
         
         # Get leverage
@@ -151,7 +151,7 @@ def get_user_mode() -> Tuple[str, any]:
     
     if choice == '7':
         # FUTURES live paper trading
-        print("\n🔮 FUTURES LIVE PAPER TRADING")
+        print("\nFUTURES LIVE PAPER TRADING")
         print("=" * 50)
         
         # Get leverage
