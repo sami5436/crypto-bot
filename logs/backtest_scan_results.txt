@@ -1,5 +1,5 @@
 FUTURES BACKTEST SCAN RESULTS
-Generated: Sun Dec 28 15:32:19 CST 2025
+Generated: Sun Dec 28 15:41:15 CST 2025
 Leverage: 3x
 Mode: REALISTIC
 ========================================
@@ -152,7 +152,7 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   1 round trips (1L 0S) | Return: -10.92% | Win Rate: 0.0%
+   1 round trips (1L 0S) | Return: -10.88% | Win Rate: 0.0%
 
 Testing VOTING...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
@@ -166,7 +166,7 @@ Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
 Voting                   +0.00%      0     0      0     0.0% $    500.00
-Trend Following         -10.92%      1     1      0     0.0% $    445.38
+Trend Following         -10.88%      1     1      0     0.0% $    445.58
 
 ======================================================================
 WINNER: MEAN REVERSION
@@ -211,10 +211,10 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   2 round trips (0L 2S) | Return: +19.54% | Win Rate: 50.0%
+   2 round trips (0L 2S) | Return: +19.60% | Win Rate: 50.0%
 
 Testing VOTING...
-   1 round trips (1L 0S) | Return: -10.18% | Win Rate: 0.0%
+   1 round trips (1L 0S) | Return: -10.33% | Win Rate: 0.0%
 
 
 ======================================================================
@@ -223,27 +223,27 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following         +19.54%      2     0      2    50.0% $    597.71
+Trend Following         +19.60%      2     0      2    50.0% $    598.01
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
-Voting                  -10.18%      1     1      0     0.0% $    449.08
+Voting                  -10.33%      1     1      0     0.0% $    448.34
 
 ======================================================================
 WINNER: TREND FOLLOWING
 ======================================================================
-Return: +19.54%
-Final Equity: $597.71
+Return: +19.60%
+Final Equity: $598.01
 Round Trips: 2 (0 long, 2 short)
 Win Rate: 50.0%
 Leverage: 3x
-Funding Paid: $-0.46
+Funding Paid: $-1.04
 
 ----------------------------------------------------------------------
 TRADE LOG (TREND_FOLLOWING):
 ----------------------------------------------------------------------
-  2024-04-16 00:00 | SHORT        @ $ 63,338.93 | PnL: $   +0.00 | FLAT
-  2024-04-18 00:00 | CLOSE_SHORT  @ $ 61,536.55 | PnL: $  +35.54 | WIN
-  2024-04-25 00:00 | SHORT        @ $ 64,027.78 | PnL: $   +0.00 | FLAT
-  2024-04-30 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $ 60,815.87 | PnL: $  +63.23 | END
+  2024-04-16 00:00 | SHORT        @ $ 63,279.92 | PnL: $   +0.00 | FLAT
+  2024-04-18 00:00 | CLOSE_SHORT  @ $ 61,540.38 | PnL: $  +34.31 | WIN
+  2024-04-25 00:00 | SHORT        @ $ 64,078.80 | PnL: $   +0.00 | FLAT
+  2024-04-30 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $ 60,815.87 | PnL: $  +64.20 | END
 
 ======================================================================
 
@@ -278,12 +278,12 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   1 round trips (1L 0S) | Return: +15.26% | Win Rate: 50.0%
-   Rejected trades: 2
+   3 round trips (1L 2S) | Return: -31.88% | Win Rate: 16.7%
+   Rejected trades: 1
 
 Testing VOTING...
-   3 round trips (2L 1S) | Return: -33.27% | Win Rate: 0.0%
-   Rejected trades: 1
+   2 round trips (1L 1S) | Return: -23.29% | Win Rate: 0.0%
+   Rejected trades: 2
 
 
 ======================================================================
@@ -292,25 +292,19 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following         +15.26%      1     1      0    50.0% $    576.30
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
-Voting                  -33.27%      3     2      1     0.0% $    333.64
+Voting                  -23.29%      2     1      1     0.0% $    383.55
+Trend Following         -31.88%      3     1      2    16.7% $    340.59
 
 ======================================================================
-WINNER: TREND FOLLOWING
+WINNER: MEAN REVERSION
 ======================================================================
-Return: +15.26%
-Final Equity: $576.30
-Round Trips: 1 (1 long, 0 short)
-Win Rate: 50.0%
+Return: +0.00%
+Final Equity: $500.00
+Round Trips: 0 (0 long, 0 short)
+Win Rate: 0.0%
 Leverage: 3x
-Funding Paid: $-1.31
-
-----------------------------------------------------------------------
-TRADE LOG (TREND_FOLLOWING):
-----------------------------------------------------------------------
-  2024-05-18 00:00 | LONG         @ $ 67,236.38 | PnL: $   +0.00 | FLAT
-  2024-05-21 00:00 | CLOSE_LONG   @ $ 71,273.79 | PnL: $  +75.75 | WIN
+Funding Paid: $+0.00
 
 ======================================================================
 
@@ -342,13 +336,13 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   2 round trips (2L 0S) | Return: -3.82% | Win Rate: 25.0%
+   2 round trips (2L 0S) | Return: -3.68% | Win Rate: 25.0%
 
 Testing TREND FOLLOWING...
-   2 round trips (1L 1S) | Return: -9.52% | Win Rate: 25.0%
+   2 round trips (1L 1S) | Return: -1.95% | Win Rate: 25.0%
 
 Testing VOTING...
-   4 round trips (3L 1S) | Return: -7.27% | Win Rate: 25.0%
+   4 round trips (3L 1S) | Return: -8.03% | Win Rate: 25.0%
 
 
 ======================================================================
@@ -357,27 +351,27 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Mean Reversion           -3.82%      2     2      0    25.0% $    480.88
-Voting                   -7.27%      4     3      1    25.0% $    463.66
-Trend Following          -9.52%      2     1      1    25.0% $    452.39
+Trend Following          -1.95%      2     1      1    25.0% $    490.25
+Mean Reversion           -3.68%      2     2      0    25.0% $    481.58
+Voting                   -8.03%      4     3      1    25.0% $    459.85
 
 ======================================================================
-WINNER: MEAN REVERSION
+WINNER: TREND FOLLOWING
 ======================================================================
-Return: -3.82%
-Final Equity: $480.88
-Round Trips: 2 (2 long, 0 short)
+Return: -1.95%
+Final Equity: $490.25
+Round Trips: 2 (1 long, 1 short)
 Win Rate: 25.0%
 Leverage: 3x
-Funding Paid: $+2.81
+Funding Paid: $-2.09
 
 ----------------------------------------------------------------------
-TRADE LOG (MEAN_REVERSION):
+TRADE LOG (TREND_FOLLOWING):
 ----------------------------------------------------------------------
-  2024-06-19 00:00 | LONG         @ $ 65,363.29 | PnL: $   +0.00 | FLAT
-  2024-06-24 00:00 | CLOSE_LONG   @ $ 62,983.80 | PnL: $  -47.15 | LOSS
-  2024-06-27 00:00 | LONG         @ $ 60,913.60 | PnL: $   +0.00 | FLAT
-  2024-06-30 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $ 62,497.82 | PnL: $  +32.37 | END
+  2024-06-06 00:00 | LONG         @ $ 71,447.36 | PnL: $   +0.00 | FLAT
+  2024-06-09 00:00 | CLOSE_LONG   @ $ 69,172.40 | PnL: $  -41.34 | LOSS
+  2024-06-19 00:00 | SHORT        @ $ 64,916.82 | PnL: $   +0.00 | FLAT
+  2024-06-24 00:00 | CLOSE_SHORT  @ $ 63,299.34 | PnL: $  +31.02 | WIN
 
 ======================================================================
 
@@ -409,14 +403,13 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   1 round trips (0L 1S) | Return: +6.92% | Win Rate: 50.0%
+   1 round trips (0L 1S) | Return: +5.71% | Win Rate: 50.0%
 
 Testing TREND FOLLOWING...
-   2 round trips (1L 1S) | Return: -3.97% | Win Rate: 25.0%
-   Rejected trades: 1
+   3 round trips (1L 2S) | Return: -10.69% | Win Rate: 16.7%
 
 Testing VOTING...
-   3 round trips (2L 1S) | Return: +10.05% | Win Rate: 33.3%
+   3 round trips (2L 1S) | Return: +11.43% | Win Rate: 33.3%
 
 
 ======================================================================
@@ -425,29 +418,29 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                  +10.05%      3     2      1    33.3% $    550.23
-Mean Reversion           +6.92%      1     0      1    50.0% $    534.62
-Trend Following          -3.97%      2     1      1    25.0% $    480.13
+Voting                  +11.43%      3     2      1    33.3% $    557.17
+Mean Reversion           +5.71%      1     0      1    50.0% $    528.55
+Trend Following         -10.69%      3     1      2    16.7% $    446.53
 
 ======================================================================
 WINNER: VOTING
 ======================================================================
-Return: +10.05%
-Final Equity: $550.23
+Return: +11.43%
+Final Equity: $557.17
 Round Trips: 3 (2 long, 1 short)
 Win Rate: 33.3%
 Leverage: 3x
-Funding Paid: $+1.52
+Funding Paid: $-0.69
 
 ----------------------------------------------------------------------
 TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2024-07-04 00:00 | SHORT        @ $ 59,973.44 | PnL: $   +0.00 | FLAT
-  2024-07-05 00:00 | CLOSE_SHORT  @ $ 57,324.61 | PnL: $  +55.58 | WIN
-  2024-07-09 00:00 | LONG         @ $ 56,810.26 | PnL: $   +0.00 | FLAT
-  2024-07-10 00:00 | CLOSE_LONG   @ $ 57,909.01 | PnL: $  +23.88 | WIN
-  2024-07-16 00:00 | LONG         @ $ 65,037.78 | PnL: $   +0.00 | FLAT
-  2024-07-18 00:00 | CLOSE_LONG   @ $ 63,779.86 | PnL: $  -25.41 | LOSS
+  2024-07-04 00:00 | SHORT        @ $ 60,070.42 | PnL: $   +0.00 | FLAT
+  2024-07-05 00:00 | CLOSE_SHORT  @ $ 57,281.97 | PnL: $  +58.46 | WIN
+  2024-07-09 00:00 | LONG         @ $ 56,888.37 | PnL: $   +0.00 | FLAT
+  2024-07-10 00:00 | CLOSE_LONG   @ $ 57,832.51 | PnL: $  +20.38 | WIN
+  2024-07-16 00:00 | LONG         @ $ 64,833.45 | PnL: $   +0.00 | FLAT
+  2024-07-18 00:00 | CLOSE_LONG   @ $ 63,851.60 | PnL: $  -20.06 | LOSS
 
 ======================================================================
 
@@ -479,13 +472,16 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   1 round trips (1L 0S) | Return: -20.39% | Win Rate: 0.0%
+   0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
+   Rejected trades: 1
 
 Testing TREND FOLLOWING...
-   4 round trips (1L 3S) | Return: -48.86% | Win Rate: 12.5%
+   3 round trips (1L 2S) | Return: -22.22% | Win Rate: 16.7%
+   Rejected trades: 1
 
 Testing VOTING...
-   3 round trips (2L 1S) | Return: -18.34% | Win Rate: 0.0%
+   3 round trips (2L 1S) | Return: -26.05% | Win Rate: 0.0%
+   Rejected trades: 1
 
 
 ======================================================================
@@ -494,29 +490,19 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                  -18.34%      3     2      1     0.0% $    408.29
-Mean Reversion          -20.39%      1     1      0     0.0% $    398.05
-Trend Following         -48.86%      4     1      3    12.5% $    255.72
+Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
+Trend Following         -22.22%      3     1      2    16.7% $    388.92
+Voting                  -26.05%      3     2      1     0.0% $    369.76
 
 ======================================================================
-WINNER: VOTING
+WINNER: MEAN REVERSION
 ======================================================================
-Return: -18.34%
-Final Equity: $408.29
-Round Trips: 3 (2 long, 1 short)
+Return: +0.00%
+Final Equity: $500.00
+Round Trips: 0 (0 long, 0 short)
 Win Rate: 0.0%
 Leverage: 3x
-Funding Paid: $-0.11
-
-----------------------------------------------------------------------
-TRADE LOG (VOTING):
-----------------------------------------------------------------------
-  2024-08-03 00:00 | LONG         @ $ 61,723.43 | PnL: $   +0.00 | FLAT
-  2024-08-05 00:00 | CLOSE_LONG   @ $ 57,999.45 | PnL: $  -77.64 | LOSS
-  2024-08-24 00:00 | LONG         @ $ 64,301.38 | PnL: $   +0.00 | FLAT
-  2024-08-26 00:00 | CLOSE_LONG   @ $ 63,974.79 | PnL: $   -7.24 | LOSS
-  2024-08-28 00:00 | SHORT        @ $ 59,310.04 | PnL: $   +0.00 | FLAT
-  2024-08-30 00:00 | CLOSE_SHORT  @ $ 59,490.47 | PnL: $   -4.65 | LOSS
+Funding Paid: $+0.00
 
 ======================================================================
 
@@ -548,16 +534,14 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   1 round trips (0L 1S) | Return: -12.95% | Win Rate: 0.0%
-   Rejected trades: 2
+   2 round trips (1L 1S) | Return: +3.28% | Win Rate: 25.0%
 
 Testing TREND FOLLOWING...
-   4 round trips (2L 2S) | Return: -31.65% | Win Rate: 12.5%
-   Rejected trades: 3
+   4 round trips (2L 2S) | Return: -30.96% | Win Rate: 12.5%
+   Rejected trades: 1
 
 Testing VOTING...
-   4 round trips (3L 1S) | Return: +6.23% | Win Rate: 37.5%
-   Rejected trades: 2
+   4 round trips (2L 2S) | Return: +16.12% | Win Rate: 37.5%
 
 
 ======================================================================
@@ -566,31 +550,31 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                   +6.23%      4     3      1    37.5% $    531.16
-Mean Reversion          -12.95%      1     0      1     0.0% $    435.25
-Trend Following         -31.65%      4     2      2    12.5% $    341.73
+Voting                  +16.12%      4     2      2    37.5% $    580.59
+Mean Reversion           +3.28%      2     1      1    25.0% $    516.42
+Trend Following         -30.96%      4     2      2    12.5% $    345.21
 
 ======================================================================
 WINNER: VOTING
 ======================================================================
-Return: +6.23%
-Final Equity: $531.16
-Round Trips: 4 (3 long, 1 short)
+Return: +16.12%
+Final Equity: $580.59
+Round Trips: 4 (2 long, 2 short)
 Win Rate: 37.5%
 Leverage: 3x
-Funding Paid: $-1.88
+Funding Paid: $+2.34
 
 ----------------------------------------------------------------------
 TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2024-09-06 00:00 | SHORT        @ $ 56,080.39 | PnL: $   +0.00 | FLAT
-  2024-09-09 00:00 | CLOSE_SHORT  @ $ 55,098.93 | PnL: $  +21.56 | WIN
-  2024-09-14 00:00 | LONG         @ $ 60,709.40 | PnL: $   +0.00 | FLAT
-  2024-09-16 00:00 | CLOSE_LONG   @ $ 58,869.08 | PnL: $  -39.39 | LOSS
-  2024-09-18 00:00 | LONG         @ $ 60,578.34 | PnL: $   +0.00 | FLAT
-  2024-09-20 00:00 | CLOSE_LONG   @ $ 62,755.75 | PnL: $  +45.04 | WIN
-  2024-09-27 00:00 | LONG         @ $ 65,357.46 | PnL: $   +0.00 | FLAT
-  2024-09-29 00:00 | CLOSE_LONG   @ $ 65,660.09 | PnL: $   +5.14 | WIN
+  2024-09-06 00:00 | SHORT        @ $ 55,956.75 | PnL: $   +0.00 | FLAT
+  2024-09-07 00:00 | CLOSE_SHORT  @ $ 54,053.33 | PnL: $  +42.63 | WIN
+  2024-09-10 00:00 | LONG         @ $ 57,226.16 | PnL: $   +0.00 | FLAT
+  2024-09-14 00:00 | CLOSE_LONG   @ $ 60,380.06 | PnL: $  +69.46 | WIN
+  2024-09-18 00:00 | LONG         @ $ 60,390.47 | PnL: $   +0.00 | FLAT
+  2024-09-19 00:00 | CLOSE_LONG   @ $ 61,659.88 | PnL: $  +26.02 | WIN
+  2024-09-23 00:00 | SHORT        @ $ 63,314.40 | PnL: $   +0.00 | FLAT
+  2024-09-28 00:00 | CLOSE_SHORT  @ $ 65,863.29 | PnL: $  -52.12 | LOSS
 
 ======================================================================
 
@@ -622,14 +606,14 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   1 round trips (0L 1S) | Return: -13.59% | Win Rate: 0.0%
-   Rejected trades: 1
+   1 round trips (0L 1S) | Return: -8.64% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   3 round trips (3L 0S) | Return: -0.74% | Win Rate: 33.3%
+   2 round trips (2L 0S) | Return: +15.98% | Win Rate: 50.0%
 
 Testing VOTING...
-   5 round trips (2L 3S) | Return: -18.61% | Win Rate: 20.0%
+   4 round trips (1L 3S) | Return: -8.46% | Win Rate: 25.0%
+   Rejected trades: 2
 
 
 ======================================================================
@@ -638,29 +622,27 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following          -0.74%      3     3      0    33.3% $    496.30
-Mean Reversion          -13.59%      1     0      1     0.0% $    432.04
-Voting                  -18.61%      5     2      3    20.0% $    406.93
+Trend Following         +15.98%      2     2      0    50.0% $    579.89
+Voting                   -8.46%      4     1      3    25.0% $    457.72
+Mean Reversion           -8.64%      1     0      1     0.0% $    456.78
 
 ======================================================================
 WINNER: TREND FOLLOWING
 ======================================================================
-Return: -0.74%
-Final Equity: $496.30
-Round Trips: 3 (3 long, 0 short)
-Win Rate: 33.3%
+Return: +15.98%
+Final Equity: $579.89
+Round Trips: 2 (2 long, 0 short)
+Win Rate: 50.0%
 Leverage: 3x
-Funding Paid: $+1.16
+Funding Paid: $+1.09
 
 ----------------------------------------------------------------------
 TRADE LOG (TREND_FOLLOWING):
 ----------------------------------------------------------------------
-  2024-10-15 00:00 | LONG         @ $ 66,192.15 | PnL: $   +0.00 | FLAT
-  2024-10-17 00:00 | CLOSE_LONG   @ $ 67,443.23 | PnL: $  +23.32 | WIN
-  2024-10-19 00:00 | LONG         @ $ 68,553.09 | PnL: $   +0.00 | FLAT
-  2024-10-29 00:00 | CLOSE_LONG   @ $ 69,802.08 | PnL: $  +22.45 | WIN
-  2024-10-31 00:00 | LONG         @ $ 72,574.14 | PnL: $   +0.00 | FLAT
-  2024-10-31 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $ 69,996.92 | PnL: $  -46.02 | END
+  2024-10-15 00:00 | LONG         @ $ 66,377.14 | PnL: $   +0.00 | FLAT
+  2024-10-19 00:00 | CLOSE_LONG   @ $ 68,321.52 | PnL: $  +36.56 | WIN
+  2024-10-29 00:00 | LONG         @ $ 70,006.40 | PnL: $   +0.00 | FLAT
+  2024-10-30 00:00 | CLOSE_LONG   @ $ 72,572.61 | PnL: $  +45.94 | WIN
 
 ======================================================================
 
@@ -692,13 +674,15 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   3 round trips (0L 3S) | Return: -35.47% | Win Rate: 0.0%
+   3 round trips (0L 3S) | Return: -15.96% | Win Rate: 16.7%
+   Rejected trades: 1
 
 Testing TREND FOLLOWING...
-   3 round trips (3L 0S) | Return: +4.74% | Win Rate: 33.3%
+   3 round trips (3L 0S) | Return: +5.16% | Win Rate: 33.3%
+   Rejected trades: 1
 
 Testing VOTING...
-   4 round trips (3L 1S) | Return: +15.78% | Win Rate: 25.0%
+   4 round trips (4L 0S) | Return: +33.34% | Win Rate: 37.5%
    Rejected trades: 1
 
 
@@ -708,31 +692,31 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                  +15.78%      4     3      1    25.0% $    578.89
-Trend Following          +4.74%      3     3      0    33.3% $    523.72
-Mean Reversion          -35.47%      3     0      3     0.0% $    322.66
+Voting                  +33.34%      4     4      0    37.5% $    666.68
+Trend Following          +5.16%      3     3      0    33.3% $    525.82
+Mean Reversion          -15.96%      3     0      3    16.7% $    420.21
 
 ======================================================================
 WINNER: VOTING
 ======================================================================
-Return: +15.78%
-Final Equity: $578.89
-Round Trips: 4 (3 long, 1 short)
-Win Rate: 25.0%
+Return: +33.34%
+Final Equity: $666.68
+Round Trips: 4 (4 long, 0 short)
+Win Rate: 37.5%
 Leverage: 3x
-Funding Paid: $+0.17
+Funding Paid: $-2.82
 
 ----------------------------------------------------------------------
 TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2024-11-06 00:00 | LONG         @ $ 69,501.82 | PnL: $   +0.00 | FLAT
-  2024-11-07 00:00 | CLOSE_LONG   @ $ 75,274.07 | PnL: $ +105.06 | WIN
-  2024-11-09 00:00 | LONG         @ $ 76,933.61 | PnL: $   +0.00 | FLAT
-  2024-11-11 00:00 | CLOSE_LONG   @ $ 80,336.73 | PnL: $  +55.60 | WIN
-  2024-11-15 00:00 | SHORT        @ $ 86,982.74 | PnL: $   +0.00 | FLAT
-  2024-11-16 00:00 | CLOSE_SHORT  @ $ 91,193.14 | PnL: $  -62.52 | LOSS
-  2024-11-22 00:00 | LONG         @ $ 98,630.35 | PnL: $   +0.00 | FLAT
-  2024-11-24 00:00 | CLOSE_LONG   @ $ 97,449.44 | PnL: $  -16.02 | LOSS
+  2024-11-06 00:00 | LONG         @ $ 69,609.08 | PnL: $   +0.00 | FLAT
+  2024-11-07 00:00 | CLOSE_LONG   @ $ 75,282.63 | PnL: $ +103.09 | WIN
+  2024-11-09 00:00 | LONG         @ $ 76,807.62 | PnL: $   +0.00 | FLAT
+  2024-11-11 00:00 | CLOSE_LONG   @ $ 80,169.30 | PnL: $  +55.01 | WIN
+  2024-11-13 00:00 | LONG         @ $ 88,441.00 | PnL: $   +0.00 | FLAT
+  2024-11-14 00:00 | CLOSE_LONG   @ $ 90,351.44 | PnL: $  +26.76 | WIN
+  2024-11-22 00:00 | LONG         @ $ 98,794.49 | PnL: $   +0.00 | FLAT
+  2024-11-24 00:00 | CLOSE_LONG   @ $ 97,463.33 | PnL: $  -17.93 | LOSS
 
 ======================================================================
 
@@ -767,10 +751,11 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   2 round trips (1L 1S) | Return: -17.87% | Win Rate: 0.0%
+   2 round trips (1L 1S) | Return: -22.81% | Win Rate: 0.0%
+   Rejected trades: 1
 
 Testing VOTING...
-   1 round trips (0L 1S) | Return: -3.58% | Win Rate: 0.0%
+   1 round trips (0L 1S) | Return: -3.76% | Win Rate: 0.0%
    Rejected trades: 1
 
 
@@ -781,8 +766,8 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
-Voting                   -3.58%      1     0      1     0.0% $    482.10
-Trend Following         -17.87%      2     1      1     0.0% $    410.65
+Voting                   -3.76%      1     0      1     0.0% $    481.21
+Trend Following         -22.81%      2     1      1     0.0% $    385.97
 
 ======================================================================
 WINNER: MEAN REVERSION
@@ -827,7 +812,7 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   1 round trips (1L 0S) | Return: -10.52% | Win Rate: 0.0%
+   1 round trips (1L 0S) | Return: -10.63% | Win Rate: 0.0%
 
 Testing VOTING...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
@@ -841,7 +826,7 @@ Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
 Voting                   +0.00%      0     0      0     0.0% $    500.00
-Trend Following         -10.52%      1     1      0     0.0% $    447.42
+Trend Following         -10.63%      1     1      0     0.0% $    446.86
 
 ======================================================================
 WINNER: MEAN REVERSION
@@ -883,15 +868,15 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   2 round trips (2L 0S) | Return: -3.95% | Win Rate: 25.0%
+   2 round trips (2L 0S) | Return: -12.82% | Win Rate: 25.0%
+   Rejected trades: 1
 
 Testing TREND FOLLOWING...
-   6 round trips (2L 4S) | Return: +5.12% | Win Rate: 25.0%
-   Rejected trades: 4
+   7 round trips (2L 5S) | Return: -6.34% | Win Rate: 28.6%
 
 Testing VOTING...
-   8 round trips (6L 2S) | Return: -21.01% | Win Rate: 18.8%
-   Rejected trades: 1
+   8 round trips (6L 2S) | Return: -11.87% | Win Rate: 25.0%
+   Rejected trades: 3
 
 
 ======================================================================
@@ -900,35 +885,37 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following          +5.12%      6     2      4    25.0% $    525.62
-Mean Reversion           -3.95%      2     2      0    25.0% $    480.26
-Voting                  -21.01%      8     6      2    18.8% $    394.95
+Trend Following          -6.34%      7     2      5    28.6% $    468.28
+Voting                  -11.87%      8     6      2    25.0% $    440.63
+Mean Reversion          -12.82%      2     2      0    25.0% $    435.90
 
 ======================================================================
 WINNER: TREND FOLLOWING
 ======================================================================
-Return: +5.12%
-Final Equity: $525.62
-Round Trips: 6 (2 long, 4 short)
-Win Rate: 25.0%
+Return: -6.34%
+Final Equity: $468.28
+Round Trips: 7 (2 long, 5 short)
+Win Rate: 28.6%
 Leverage: 3x
-Funding Paid: $-4.76
+Funding Paid: $+6.01
 
 ----------------------------------------------------------------------
 TRADE LOG (TREND_FOLLOWING):
 ----------------------------------------------------------------------
-  2024-04-18 00:00 | SHORT        @ $ 61,095.95 | PnL: $   +0.00 | FLAT
-  2024-04-19 00:00 | CLOSE_SHORT  @ $ 63,824.19 | PnL: $  -57.73 | LOSS
-  2024-04-25 00:00 | SHORT        @ $ 64,026.96 | PnL: $   +0.00 | FLAT
-  2024-05-03 00:00 | CLOSE_SHORT  @ $ 59,296.46 | PnL: $  +93.49 | WIN
-  2024-05-12 00:00 | SHORT        @ $ 60,620.43 | PnL: $   +0.00 | FLAT
-  2024-05-14 00:00 | CLOSE_SHORT  @ $ 63,090.72 | PnL: $  -52.75 | LOSS
-  2024-05-18 00:00 | LONG         @ $ 67,377.72 | PnL: $   +0.00 | FLAT
-  2024-05-21 00:00 | CLOSE_LONG   @ $ 71,117.27 | PnL: $  +69.96 | WIN
-  2024-06-06 00:00 | LONG         @ $ 71,213.97 | PnL: $   +0.00 | FLAT
-  2024-06-12 00:00 | CLOSE_LONG   @ $ 66,989.74 | PnL: $  -76.35 | LOSS
-  2024-06-24 00:00 | SHORT        @ $ 62,930.74 | PnL: $   +0.00 | FLAT
-  2024-06-25 00:00 | CLOSE_SHORT  @ $ 60,484.29 | PnL: $  +48.83 | WIN
+  2024-04-16 00:00 | SHORT        @ $ 63,156.85 | PnL: $   +0.00 | FLAT
+  2024-04-18 00:00 | CLOSE_SHORT  @ $ 61,379.65 | PnL: $  +35.13 | WIN
+  2024-04-25 00:00 | SHORT        @ $ 64,125.13 | PnL: $   +0.00 | FLAT
+  2024-05-01 00:00 | CLOSE_SHORT  @ $ 60,829.71 | PnL: $  +64.80 | WIN
+  2024-05-03 00:00 | SHORT        @ $ 58,826.66 | PnL: $   +0.00 | FLAT
+  2024-05-04 00:00 | CLOSE_SHORT  @ $ 63,162.27 | PnL: $  -94.79 | LOSS
+  2024-05-12 00:00 | SHORT        @ $ 60,570.87 | PnL: $   +0.00 | FLAT
+  2024-05-14 00:00 | CLOSE_SHORT  @ $ 63,088.80 | PnL: $  -53.80 | LOSS
+  2024-05-18 00:00 | LONG         @ $ 67,374.44 | PnL: $   +0.00 | FLAT
+  2024-05-21 00:00 | CLOSE_LONG   @ $ 71,300.53 | PnL: $  +73.49 | WIN
+  2024-06-06 00:00 | LONG         @ $ 71,284.78 | PnL: $   +0.00 | FLAT
+  2024-06-12 00:00 | CLOSE_LONG   @ $ 67,114.72 | PnL: $  -75.31 | LOSS
+  2024-06-19 00:00 | SHORT        @ $ 64,950.57 | PnL: $   +0.00 | FLAT
+  2024-06-24 00:00 | CLOSE_SHORT  @ $ 63,377.93 | PnL: $  +30.12 | WIN
 
 ======================================================================
 
@@ -960,15 +947,13 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   4 round trips (2L 2S) | Return: -15.81% | Win Rate: 25.0%
-   Rejected trades: 1
+   4 round trips (2L 2S) | Return: -10.17% | Win Rate: 25.0%
 
 Testing TREND FOLLOWING...
-   8 round trips (4L 4S) | Return: -67.54% | Win Rate: 18.8%
-   Rejected trades: 6
+   12 round trips (4L 8S) | Return: -56.81% | Win Rate: 25.0%
 
 Testing VOTING...
-   10 round trips (6L 4S) | Return: +24.60% | Win Rate: 30.0%
+   10 round trips (6L 4S) | Return: -18.15% | Win Rate: 20.0%
    Rejected trades: 1
 
 
@@ -978,39 +963,31 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                  +24.60%     10     6      4    30.0% $    622.98
-Mean Reversion          -15.81%      4     2      2    25.0% $    420.95
-Trend Following         -67.54%      8     4      4    18.8% $    162.32
+Mean Reversion          -10.17%      4     2      2    25.0% $    449.17
+Voting                  -18.15%     10     6      4    20.0% $    409.24
+Trend Following         -56.81%     12     4      8    25.0% $    215.95
 
 ======================================================================
-WINNER: VOTING
+WINNER: MEAN REVERSION
 ======================================================================
-Return: +24.60%
-Final Equity: $622.98
-Round Trips: 10 (6 long, 4 short)
-Win Rate: 30.0%
+Return: -10.17%
+Final Equity: $449.17
+Round Trips: 4 (2 long, 2 short)
+Win Rate: 25.0%
 Leverage: 3x
 Funding Paid: $-6.51
 
 ----------------------------------------------------------------------
-TRADE LOG (VOTING):
+TRADE LOG (MEAN_REVERSION):
 ----------------------------------------------------------------------
-  2024-07-04 00:00 | SHORT        @ $ 60,013.08 | PnL: $   +0.00 | FLAT
-  2024-07-05 00:00 | CLOSE_SHORT  @ $ 57,218.77 | PnL: $  +58.64 | WIN
-  2024-07-09 00:00 | LONG         @ $ 56,989.55 | PnL: $   +0.00 | FLAT
-  2024-07-14 00:00 | CLOSE_LONG   @ $ 58,976.52 | PnL: $  +43.66 | WIN
-  2024-07-16 00:00 | LONG         @ $ 64,936.40 | PnL: $   +0.00 | FLAT
-  2024-07-20 00:00 | CLOSE_LONG   @ $ 66,415.32 | PnL: $  +28.26 | WIN
-  2024-08-03 00:00 | LONG         @ $ 61,564.52 | PnL: $   +0.00 | FLAT
-  2024-08-05 00:00 | CLOSE_LONG   @ $ 58,000.14 | PnL: $  -74.54 | LOSS
-  2024-08-24 00:00 | LONG         @ $ 64,227.53 | PnL: $   +0.00 | FLAT
-  2024-08-26 00:00 | CLOSE_LONG   @ $ 64,045.84 | PnL: $   -4.37 | LOSS
-  2024-08-28 00:00 | SHORT        @ $ 59,284.82 | PnL: $   +0.00 | FLAT
-  2024-08-30 00:00 | CLOSE_SHORT  @ $ 59,489.40 | PnL: $   -5.17 | LOSS
-  2024-09-06 00:00 | SHORT        @ $ 55,892.19 | PnL: $   +0.00 | FLAT
-  2024-09-07 00:00 | CLOSE_SHORT  @ $ 54,210.98 | PnL: $  +37.61 | WIN
-  2024-09-10 00:00 | LONG         @ $ 57,270.07 | PnL: $   +0.00 | FLAT
-  ... (5 more trades)
+  2024-07-20 00:00 | SHORT        @ $ 66,477.74 | PnL: $   +0.00 | FLAT
+  2024-08-01 00:00 | CLOSE_SHORT  @ $ 64,686.43 | PnL: $  +33.61 | WIN
+  2024-08-05 00:00 | LONG         @ $ 58,406.34 | PnL: $   +0.00 | FLAT
+  2024-08-06 00:00 | CLOSE_LONG   @ $ 53,803.22 | PnL: $ -101.19 | LOSS
+  2024-09-07 00:00 | LONG         @ $ 54,088.50 | PnL: $   +0.00 | FLAT
+  2024-09-10 00:00 | CLOSE_LONG   @ $ 56,834.21 | PnL: $  +63.92 | WIN
+  2024-09-21 00:00 | SHORT        @ $ 62,990.74 | PnL: $   +0.00 | FLAT
+  2024-09-27 00:00 | CLOSE_SHORT  @ $ 65,452.39 | PnL: $  -50.62 | LOSS
 
 ======================================================================
 
@@ -1042,15 +1019,13 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   4 round trips (0L 4S) | Return: -44.35% | Win Rate: 0.0%
+   4 round trips (0L 4S) | Return: -42.75% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   7 round trips (6L 1S) | Return: -16.07% | Win Rate: 21.4%
-   Rejected trades: 1
+   7 round trips (6L 1S) | Return: +0.46% | Win Rate: 28.6%
 
 Testing VOTING...
-   9 round trips (5L 4S) | Return: -20.79% | Win Rate: 16.7%
-   Rejected trades: 2
+   11 round trips (6L 5S) | Return: -13.91% | Win Rate: 22.7%
 
 
 ======================================================================
@@ -1059,37 +1034,37 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following         -16.07%      7     6      1    21.4% $    419.67
-Voting                  -20.79%      9     5      4    16.7% $    396.03
-Mean Reversion          -44.35%      4     0      4     0.0% $    278.23
+Trend Following          +0.46%      7     6      1    28.6% $    502.31
+Voting                  -13.91%     11     6      5    22.7% $    430.45
+Mean Reversion          -42.75%      4     0      4     0.0% $    286.27
 
 ======================================================================
 WINNER: TREND FOLLOWING
 ======================================================================
-Return: -16.07%
-Final Equity: $419.67
+Return: +0.46%
+Final Equity: $502.31
 Round Trips: 7 (6 long, 1 short)
-Win Rate: 21.4%
+Win Rate: 28.6%
 Leverage: 3x
-Funding Paid: $+0.81
+Funding Paid: $-2.52
 
 ----------------------------------------------------------------------
 TRADE LOG (TREND_FOLLOWING):
 ----------------------------------------------------------------------
-  2024-10-17 00:00 | LONG         @ $ 67,746.57 | PnL: $   +0.00 | FLAT
-  2024-10-29 00:00 | CLOSE_LONG   @ $ 69,599.21 | PnL: $  +34.08 | WIN
-  2024-10-31 00:00 | LONG         @ $ 72,660.22 | PnL: $   +0.00 | FLAT
-  2024-11-01 00:00 | CLOSE_LONG   @ $ 70,060.03 | PnL: $  -46.36 | LOSS
-  2024-11-07 00:00 | LONG         @ $ 75,739.82 | PnL: $   +0.00 | FLAT
-  2024-11-11 00:00 | CLOSE_LONG   @ $ 80,133.48 | PnL: $  +73.15 | WIN
-  2024-11-13 00:00 | LONG         @ $ 88,142.13 | PnL: $   +0.00 | FLAT
-  2024-11-14 00:00 | CLOSE_LONG   @ $ 90,203.74 | PnL: $  +29.04 | WIN
-  2024-11-22 00:00 | LONG         @ $ 98,836.16 | PnL: $   +0.00 | FLAT
-  2024-11-26 00:00 | CLOSE_LONG   @ $ 92,623.83 | PnL: $  -80.86 | LOSS
-  2024-12-17 00:00 | LONG         @ $106,448.81 | PnL: $   +0.00 | FLAT
-  2024-12-19 00:00 | CLOSE_LONG   @ $ 99,989.94 | PnL: $  -78.08 | LOSS
-  2024-12-30 00:00 | SHORT        @ $ 93,351.72 | PnL: $   +0.00 | FLAT
-  2024-12-31 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $ 93,672.16 | PnL: $   -5.14 | END
+  2024-10-15 00:00 | LONG         @ $ 66,349.15 | PnL: $   +0.00 | FLAT
+  2024-10-19 00:00 | CLOSE_LONG   @ $ 68,135.21 | PnL: $  +33.54 | WIN
+  2024-10-29 00:00 | LONG         @ $ 70,155.11 | PnL: $   +0.00 | FLAT
+  2024-10-30 00:00 | CLOSE_LONG   @ $ 72,368.48 | PnL: $  +39.44 | WIN
+  2024-11-07 00:00 | LONG         @ $ 75,750.30 | PnL: $   +0.00 | FLAT
+  2024-11-11 00:00 | CLOSE_LONG   @ $ 80,229.71 | PnL: $  +74.59 | WIN
+  2024-11-13 00:00 | LONG         @ $ 88,190.23 | PnL: $   +0.00 | FLAT
+  2024-11-14 00:00 | CLOSE_LONG   @ $ 90,141.30 | PnL: $  +27.43 | WIN
+  2024-11-22 00:00 | LONG         @ $ 98,800.08 | PnL: $   +0.00 | FLAT
+  2024-11-26 00:00 | CLOSE_LONG   @ $ 92,733.26 | PnL: $  -79.01 | LOSS
+  2024-12-17 00:00 | LONG         @ $106,590.57 | PnL: $   +0.00 | FLAT
+  2024-12-19 00:00 | CLOSE_LONG   @ $ 99,672.18 | PnL: $  -83.47 | LOSS
+  2024-12-30 00:00 | SHORT        @ $ 93,190.43 | PnL: $   +0.00 | FLAT
+  2024-12-31 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $ 93,672.16 | PnL: $   -7.36 | END
 
 ======================================================================
 
@@ -1121,15 +1096,15 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   2 round trips (2L 0S) | Return: -3.39% | Win Rate: 25.0%
+   2 round trips (2L 0S) | Return: -3.32% | Win Rate: 25.0%
 
 Testing TREND FOLLOWING...
-   8 round trips (3L 5S) | Return: -30.92% | Win Rate: 18.8%
-   Rejected trades: 3
+   8 round trips (3L 5S) | Return: -33.21% | Win Rate: 18.8%
+   Rejected trades: 1
 
 Testing VOTING...
-   8 round trips (6L 2S) | Return: -16.09% | Win Rate: 25.0%
-   Rejected trades: 1
+   7 round trips (6L 1S) | Return: -24.40% | Win Rate: 21.4%
+   Rejected trades: 3
 
 
 ======================================================================
@@ -1138,27 +1113,27 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Mean Reversion           -3.39%      2     2      0    25.0% $    483.06
-Voting                  -16.09%      8     6      2    25.0% $    419.53
-Trend Following         -30.92%      8     3      5    18.8% $    345.38
+Mean Reversion           -3.32%      2     2      0    25.0% $    483.40
+Voting                  -24.40%      7     6      1    21.4% $    377.99
+Trend Following         -33.21%      8     3      5    18.8% $    333.97
 
 ======================================================================
 WINNER: MEAN REVERSION
 ======================================================================
-Return: -3.39%
-Final Equity: $483.06
+Return: -3.32%
+Final Equity: $483.40
 Round Trips: 2 (2 long, 0 short)
 Win Rate: 25.0%
 Leverage: 3x
-Funding Paid: $-2.28
+Funding Paid: $+2.10
 
 ----------------------------------------------------------------------
 TRADE LOG (MEAN_REVERSION):
 ----------------------------------------------------------------------
-  2024-06-19 00:00 | LONG         @ $ 65,304.86 | PnL: $   +0.00 | FLAT
-  2024-06-24 00:00 | CLOSE_LONG   @ $ 62,944.70 | PnL: $  -46.82 | LOSS
-  2024-06-27 00:00 | LONG         @ $ 61,065.54 | PnL: $   +0.00 | FLAT
-  2024-06-30 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $ 62,497.82 | PnL: $  +29.12 | END
+  2024-06-19 00:00 | LONG         @ $ 65,368.46 | PnL: $   +0.00 | FLAT
+  2024-06-24 00:00 | CLOSE_LONG   @ $ 63,111.52 | PnL: $  -44.76 | LOSS
+  2024-06-27 00:00 | LONG         @ $ 60,940.89 | PnL: $   +0.00 | FLAT
+  2024-06-30 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $ 62,497.82 | PnL: $  +31.79 | END
 
 ======================================================================
 
@@ -1190,14 +1165,15 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   8 round trips (2L 6S) | Return: -33.04% | Win Rate: 18.8%
+   8 round trips (2L 6S) | Return: -41.58% | Win Rate: 18.8%
+   Rejected trades: 3
 
 Testing TREND FOLLOWING...
-   17 round trips (9L 8S) | Return: -67.88% | Win Rate: 23.5%
+   16 round trips (9L 7S) | Return: -35.63% | Win Rate: 25.0%
    Rejected trades: 3
 
 Testing VOTING...
-   21 round trips (12L 9S) | Return: -1.92% | Win Rate: 23.8%
+   21 round trips (12L 9S) | Return: +12.30% | Win Rate: 23.8%
    Rejected trades: 2
 
 
@@ -1207,38 +1183,38 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                   -1.92%     21    12      9    23.8% $    490.40
-Mean Reversion          -33.04%      8     2      6    18.8% $    334.82
-Trend Following         -67.88%     17     9      8    23.5% $    160.60
+Voting                  +12.30%     21    12      9    23.8% $    561.48
+Trend Following         -35.63%     16     9      7    25.0% $    321.84
+Mean Reversion          -41.58%      8     2      6    18.8% $    292.12
 
 ======================================================================
 WINNER: VOTING
 ======================================================================
-Return: -1.92%
-Final Equity: $490.40
+Return: +12.30%
+Final Equity: $561.48
 Round Trips: 21 (12 long, 9 short)
 Win Rate: 23.8%
 Leverage: 3x
-Funding Paid: $-0.96
+Funding Paid: $+7.47
 
 ----------------------------------------------------------------------
 TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2024-07-04 00:00 | SHORT        @ $ 60,072.95 | PnL: $   +0.00 | FLAT
-  2024-07-05 00:00 | CLOSE_SHORT  @ $ 57,312.99 | PnL: $  +57.85 | WIN
-  2024-07-09 00:00 | LONG         @ $ 56,909.98 | PnL: $   +0.00 | FLAT
-  2024-07-14 00:00 | CLOSE_LONG   @ $ 59,161.07 | PnL: $  +49.64 | WIN
-  2024-07-16 00:00 | LONG         @ $ 64,928.13 | PnL: $   +0.00 | FLAT
-  2024-07-18 00:00 | CLOSE_LONG   @ $ 63,820.43 | PnL: $  -22.50 | LOSS
-  2024-08-03 00:00 | LONG         @ $ 61,521.99 | PnL: $   +0.00 | FLAT
-  2024-08-05 00:00 | CLOSE_LONG   @ $ 57,851.39 | PnL: $  -76.79 | LOSS
-  2024-08-24 00:00 | LONG         @ $ 64,160.23 | PnL: $   +0.00 | FLAT
-  2024-08-26 00:00 | CLOSE_LONG   @ $ 64,123.81 | PnL: $   -1.49 | LOSS
-  2024-08-28 00:00 | SHORT        @ $ 59,350.43 | PnL: $   +0.00 | FLAT
-  2024-08-30 00:00 | CLOSE_SHORT  @ $ 59,653.37 | PnL: $   -7.28 | LOSS
-  2024-09-06 00:00 | SHORT        @ $ 55,967.34 | PnL: $   +0.00 | FLAT
-  2024-09-07 00:00 | CLOSE_SHORT  @ $ 54,220.78 | PnL: $  +39.05 | WIN
-  2024-09-10 00:00 | LONG         @ $ 57,180.10 | PnL: $   +0.00 | FLAT
+  2024-07-04 00:00 | SHORT        @ $ 60,018.31 | PnL: $   +0.00 | FLAT
+  2024-07-05 00:00 | CLOSE_SHORT  @ $ 57,199.97 | PnL: $  +59.14 | WIN
+  2024-07-09 00:00 | LONG         @ $ 56,920.74 | PnL: $   +0.00 | FLAT
+  2024-07-14 00:00 | CLOSE_LONG   @ $ 58,976.05 | PnL: $  +45.25 | WIN
+  2024-07-16 00:00 | LONG         @ $ 65,059.79 | PnL: $   +0.00 | FLAT
+  2024-07-18 00:00 | CLOSE_LONG   @ $ 63,973.60 | PnL: $  -22.04 | LOSS
+  2024-08-03 00:00 | LONG         @ $ 61,597.74 | PnL: $   +0.00 | FLAT
+  2024-08-05 00:00 | CLOSE_LONG   @ $ 57,871.11 | PnL: $  -77.86 | LOSS
+  2024-08-24 00:00 | LONG         @ $ 64,175.62 | PnL: $   +0.00 | FLAT
+  2024-08-26 00:00 | CLOSE_LONG   @ $ 64,017.42 | PnL: $   -3.91 | LOSS
+  2024-08-28 00:00 | SHORT        @ $ 59,181.14 | PnL: $   +0.00 | FLAT
+  2024-08-30 00:00 | CLOSE_SHORT  @ $ 59,480.34 | PnL: $   -7.21 | LOSS
+  2024-09-06 00:00 | SHORT        @ $ 56,025.60 | PnL: $   +0.00 | FLAT
+  2024-09-07 00:00 | CLOSE_SHORT  @ $ 54,128.96 | PnL: $  +42.42 | WIN
+  2024-09-10 00:00 | LONG         @ $ 57,205.24 | PnL: $   +0.00 | FLAT
   ... (27 more trades)
 
 ======================================================================
@@ -1271,15 +1247,15 @@ RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   9 round trips (4L 5S) | Return: -50.14% | Win Rate: 16.7%
-   Rejected trades: 2
+   10 round trips (4L 6S) | Return: -63.72% | Win Rate: 15.0%
+   Rejected trades: 1
 
 Testing TREND FOLLOWING...
-   23 round trips (12L 11S) | Return: -74.95% | Win Rate: 23.9%
-   Rejected trades: 9
+   26 round trips (12L 14S) | Return: -75.66% | Win Rate: 25.0%
+   Rejected trades: 3
 
 Testing VOTING...
-   28 round trips (17L 11S) | Return: -32.14% | Win Rate: 23.2%
+   26 round trips (16L 10S) | Return: -21.50% | Win Rate: 21.2%
    Rejected trades: 4
 
 
@@ -1289,52 +1265,52 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Voting                  -32.14%     28    17     11    23.2% $    339.32
-Mean Reversion          -50.14%      9     4      5    16.7% $    249.31
-Trend Following         -74.95%     23    12     11    23.9% $    125.24
+Voting                  -21.50%     26    16     10    21.2% $    392.51
+Mean Reversion          -63.72%     10     4      6    15.0% $    181.39
+Trend Following         -75.66%     26    12     14    25.0% $    121.72
 
 ======================================================================
 WINNER: VOTING
 ======================================================================
-Return: -32.14%
-Final Equity: $339.32
-Round Trips: 28 (17 long, 11 short)
-Win Rate: 23.2%
+Return: -21.50%
+Final Equity: $392.51
+Round Trips: 26 (16 long, 10 short)
+Win Rate: 21.2%
 Leverage: 3x
-Funding Paid: $+1.55
+Funding Paid: $+0.40
 
 ----------------------------------------------------------------------
 TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2024-04-09 00:00 | LONG         @ $ 71,707.90 | PnL: $   +0.00 | FLAT
-  2024-04-10 00:00 | CLOSE_LONG   @ $ 68,863.36 | PnL: $  -51.31 | LOSS
-  2024-05-01 00:00 | SHORT        @ $ 60,537.36 | PnL: $   +0.00 | FLAT
-  2024-05-02 00:00 | CLOSE_SHORT  @ $ 58,396.31 | PnL: $  +44.36 | WIN
-  2024-05-16 00:00 | LONG         @ $ 66,481.86 | PnL: $   +0.00 | FLAT
-  2024-05-18 00:00 | CLOSE_LONG   @ $ 66,753.71 | PnL: $   +4.45 | WIN
-  2024-06-05 00:00 | LONG         @ $ 70,700.38 | PnL: $   +0.00 | FLAT
-  2024-06-07 00:00 | CLOSE_LONG   @ $ 70,680.05 | PnL: $   -1.13 | LOSS
-  2024-06-14 00:00 | SHORT        @ $ 66,596.46 | PnL: $   +0.00 | FLAT
-  2024-06-16 00:00 | CLOSE_SHORT  @ $ 66,494.87 | PnL: $   +1.18 | WIN
-  2024-06-19 00:00 | LONG         @ $ 65,450.93 | PnL: $   +0.00 | FLAT
-  2024-06-24 00:00 | CLOSE_LONG   @ $ 63,032.74 | PnL: $  -47.84 | LOSS
-  2024-06-26 00:00 | LONG         @ $ 61,899.28 | PnL: $   +0.00 | FLAT
-  2024-07-05 00:00 | CLOSE_LONG   @ $ 56,921.55 | PnL: $ -103.23 | LOSS
-  2024-07-09 00:00 | LONG         @ $ 56,969.81 | PnL: $   +0.00 | FLAT
-  ... (41 more trades)
+  2024-04-09 00:00 | LONG         @ $ 71,765.50 | PnL: $   +0.00 | FLAT
+  2024-04-10 00:00 | CLOSE_LONG   @ $ 69,045.78 | PnL: $  -49.06 | LOSS
+  2024-05-01 00:00 | SHORT        @ $ 60,334.68 | PnL: $   +0.00 | FLAT
+  2024-05-02 00:00 | CLOSE_SHORT  @ $ 58,366.22 | PnL: $  +40.86 | WIN
+  2024-05-16 00:00 | LONG         @ $ 66,499.94 | PnL: $   +0.00 | FLAT
+  2024-05-18 00:00 | CLOSE_LONG   @ $ 66,969.40 | PnL: $   +8.23 | WIN
+  2024-05-21 00:00 | LONG         @ $ 71,517.16 | PnL: $   +0.00 | FLAT
+  2024-05-23 00:00 | CLOSE_LONG   @ $ 68,985.86 | PnL: $  -45.87 | LOSS
+  2024-06-05 00:00 | LONG         @ $ 70,785.51 | PnL: $   +0.00 | FLAT
+  2024-06-07 00:00 | CLOSE_LONG   @ $ 70,536.70 | PnL: $   -5.24 | LOSS
+  2024-06-14 00:00 | SHORT        @ $ 66,649.89 | PnL: $   +0.00 | FLAT
+  2024-06-16 00:00 | CLOSE_SHORT  @ $ 66,465.42 | PnL: $   +2.77 | WIN
+  2024-06-19 00:00 | LONG         @ $ 65,464.86 | PnL: $   +0.00 | FLAT
+  2024-06-24 00:00 | CLOSE_LONG   @ $ 63,001.93 | PnL: $  -48.70 | LOSS
+  2024-06-26 00:00 | LONG         @ $ 61,964.06 | PnL: $   +0.00 | FLAT
+  ... (37 more trades)
 
 ======================================================================
 
 
 ----------------------------------------
-PERIOD: H1_2025 (2025-01-01 to 2025-06-30)
+PERIOD: Jan_2025 (2025-01-01 to 2025-01-31)
 ----------------------------------------
 
 ======================================================================
 FUTURES STRATEGY COMPARISON [REALISTIC MODE]
 ======================================================================
 Testing: mean_reversion, trend_following, voting
-Period: 2025-01-01 to 2025-06-30
+Period: 2025-01-01 to 2025-01-31
 Timeframe: DAILY candles
 Leverage: 3x
 Symbol: BTC/USD
@@ -1346,170 +1322,7 @@ Loading daily data from data/historical/btc_usd_daily.csv...
    Loaded 731 candles from CSV
 Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
 
-Testing period: 2025-01-01 to 2025-06-30
-
-============================================================
-RUNNING FUTURES STRATEGIES...
-============================================================
-
-Testing MEAN REVERSION...
-   6 round trips (3L 3S) | Return: +14.98% | Win Rate: 33.3%
-
-Testing TREND FOLLOWING...
-   14 round trips (8L 6S) | Return: +18.80% | Win Rate: 32.1%
-   Rejected trades: 2
-
-Testing VOTING...
-   15 round trips (9L 6S) | Return: -43.57% | Win Rate: 16.7%
-   Rejected trades: 1
-
-
-======================================================================
-FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
-======================================================================
-
-Strategy                 Return  Trips  Long  Short     Win%      Final $
-----------------------------------------------------------------------
-Trend Following         +18.80%     14     8      6    32.1% $    594.01
-Mean Reversion          +14.98%      6     3      3    33.3% $    574.92
-Voting                  -43.57%     15     9      6    16.7% $    282.15
-
-======================================================================
-WINNER: TREND FOLLOWING
-======================================================================
-Return: +18.80%
-Final Equity: $594.01
-Round Trips: 14 (8 long, 6 short)
-Win Rate: 32.1%
-Leverage: 3x
-Funding Paid: $-9.40
-
-----------------------------------------------------------------------
-TRADE LOG (TREND_FOLLOWING):
-----------------------------------------------------------------------
-  2025-01-06 00:00 | LONG         @ $ 98,496.03 | PnL: $   +0.00 | FLAT
-  2025-01-07 00:00 | CLOSE_LONG   @ $101,790.72 | PnL: $  +41.86 | WIN
-  2025-01-10 00:00 | SHORT        @ $ 92,098.13 | PnL: $   +0.00 | FLAT
-  2025-01-15 00:00 | CLOSE_SHORT  @ $ 96,955.77 | PnL: $  -68.05 | LOSS
-  2025-01-17 00:00 | LONG         @ $100,372.62 | PnL: $   +0.00 | FLAT
-  2025-01-18 00:00 | CLOSE_LONG   @ $103,626.76 | PnL: $  +40.55 | WIN
-  2025-02-06 00:00 | SHORT        @ $ 96,219.92 | PnL: $   +0.00 | FLAT
-  2025-02-25 00:00 | CLOSE_SHORT  @ $ 91,860.72 | PnL: $  +57.03 | WIN
-  2025-02-27 00:00 | SHORT        @ $ 83,888.59 | PnL: $   +0.00 | FLAT
-  2025-03-03 00:00 | CLOSE_SHORT  @ $ 94,576.11 | PnL: $ -163.30 | LOSS
-  2025-03-09 00:00 | SHORT        @ $ 86,083.14 | PnL: $   +0.00 | FLAT
-  2025-03-10 00:00 | CLOSE_SHORT  @ $ 81,121.42 | PnL: $  +72.77 | WIN
-  2025-04-07 00:00 | SHORT        @ $ 78,218.17 | PnL: $   +0.00 | FLAT
-  2025-04-09 00:00 | CLOSE_SHORT  @ $ 76,438.90 | PnL: $  +28.26 | WIN
-  2025-04-22 00:00 | LONG         @ $ 87,680.48 | PnL: $   +0.00 | FLAT
-  ... (13 more trades)
-
-======================================================================
-
-
-----------------------------------------
-PERIOD: H2_2025 (2025-07-01 to 2025-12-28)
-----------------------------------------
-
-======================================================================
-FUTURES STRATEGY COMPARISON [REALISTIC MODE]
-======================================================================
-Testing: mean_reversion, trend_following, voting
-Period: 2025-07-01 to 2025-12-28
-Timeframe: DAILY candles
-Leverage: 3x
-Symbol: BTC/USD
-Starting Capital: $500.0
-Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
-======================================================================
-
-Loading daily data from data/historical/btc_usd_daily.csv...
-   Loaded 731 candles from CSV
-Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
-
-Testing period: 2025-07-01 to 2025-12-28
-
-============================================================
-RUNNING FUTURES STRATEGIES...
-============================================================
-
-Testing MEAN REVERSION...
-   2 round trips (0L 2S) | Return: +10.43% | Win Rate: 50.0%
-   Rejected trades: 2
-
-Testing TREND FOLLOWING...
-   15 round trips (5L 10S) | Return: -42.54% | Win Rate: 20.0%
-   Rejected trades: 3
-
-Testing VOTING...
-   20 round trips (13L 7S) | Return: +23.13% | Win Rate: 30.0%
-   Rejected trades: 5
-
-
-======================================================================
-FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
-======================================================================
-
-Strategy                 Return  Trips  Long  Short     Win%      Final $
-----------------------------------------------------------------------
-Voting                  +23.13%     20    13      7    30.0% $    615.63
-Mean Reversion          +10.43%      2     0      2    50.0% $    552.16
-Trend Following         -42.54%     15     5     10    20.0% $    287.28
-
-======================================================================
-WINNER: VOTING
-======================================================================
-Return: +23.13%
-Final Equity: $615.63
-Round Trips: 20 (13 long, 7 short)
-Win Rate: 30.0%
-Leverage: 3x
-Funding Paid: $+0.27
-
-----------------------------------------------------------------------
-TRADE LOG (VOTING):
-----------------------------------------------------------------------
-  2025-07-10 00:00 | LONG         @ $111,520.75 | PnL: $   +0.00 | FLAT
-  2025-07-11 00:00 | CLOSE_LONG   @ $115,837.25 | PnL: $  +48.56 | WIN
-  2025-07-15 00:00 | LONG         @ $120,048.97 | PnL: $   +0.00 | FLAT
-  2025-07-17 00:00 | CLOSE_LONG   @ $118,494.46 | PnL: $  -17.27 | LOSS
-  2025-07-19 00:00 | SHORT        @ $117,809.80 | PnL: $   +0.00 | FLAT
-  2025-08-01 00:00 | CLOSE_SHORT  @ $115,885.90 | PnL: $  +20.07 | WIN
-  2025-08-04 00:00 | LONG         @ $114,388.12 | PnL: $   +0.00 | FLAT
-  2025-08-08 00:00 | CLOSE_LONG   @ $117,298.61 | PnL: $  +31.66 | WIN
-  2025-08-14 00:00 | LONG         @ $123,659.19 | PnL: $   +0.00 | FLAT
-  2025-08-15 00:00 | CLOSE_LONG   @ $118,010.47 | PnL: $  -58.97 | LOSS
-  2025-08-20 00:00 | SHORT        @ $112,515.99 | PnL: $   +0.00 | FLAT
-  2025-08-22 00:00 | CLOSE_SHORT  @ $112,737.57 | PnL: $   -3.28 | LOSS
-  2025-08-26 00:00 | SHORT        @ $109,957.22 | PnL: $   +0.00 | FLAT
-  2025-08-28 00:00 | CLOSE_SHORT  @ $111,508.70 | PnL: $  -18.77 | LOSS
-  2025-08-30 00:00 | LONG         @ $108,705.41 | PnL: $   +0.00 | FLAT
-  ... (25 more trades)
-
-======================================================================
-
-
-----------------------------------------
-PERIOD: Nov_2025 (2025-11-01 to 2025-12-01)
-----------------------------------------
-
-======================================================================
-FUTURES STRATEGY COMPARISON [REALISTIC MODE]
-======================================================================
-Testing: mean_reversion, trend_following, voting
-Period: 2025-11-01 to 2025-12-01
-Timeframe: DAILY candles
-Leverage: 3x
-Symbol: BTC/USD
-Starting Capital: $500.0
-Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
-======================================================================
-
-Loading daily data from data/historical/btc_usd_daily.csv...
-   Loaded 731 candles from CSV
-Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
-
-Testing period: 2025-11-01 to 2025-12-01
+Testing period: 2025-01-01 to 2025-01-31
 
 ============================================================
 RUNNING FUTURES STRATEGIES...
@@ -1519,11 +1332,11 @@ Testing MEAN REVERSION...
    0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   5 round trips (0L 5S) | Return: +11.50% | Win Rate: 30.0%
+   4 round trips (3L 1S) | Return: -8.13% | Win Rate: 25.0%
 
 Testing VOTING...
-   4 round trips (2L 2S) | Return: +9.98% | Win Rate: 37.5%
-   Rejected trades: 1
+   3 round trips (2L 1S) | Return: +0.69% | Win Rate: 16.7%
+   Rejected trades: 2
 
 
 ======================================================================
@@ -1532,46 +1345,42 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
-Trend Following         +11.50%      5     0      5    30.0% $    557.51
-Voting                   +9.98%      4     2      2    37.5% $    549.88
+Voting                   +0.69%      3     2      1    16.7% $    503.44
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
+Trend Following          -8.13%      4     3      1    25.0% $    459.33
 
 ======================================================================
-WINNER: TREND FOLLOWING
+WINNER: VOTING
 ======================================================================
-Return: +11.50%
-Final Equity: $557.51
-Round Trips: 5 (0 long, 5 short)
-Win Rate: 30.0%
+Return: +0.69%
+Final Equity: $503.44
+Round Trips: 3 (2 long, 1 short)
+Win Rate: 16.7%
 Leverage: 3x
-Funding Paid: $-0.38
+Funding Paid: $+2.84
 
 ----------------------------------------------------------------------
-TRADE LOG (TREND_FOLLOWING):
+TRADE LOG (VOTING):
 ----------------------------------------------------------------------
-  2025-11-04 00:00 | SHORT        @ $106,419.53 | PnL: $   +0.00 | FLAT
-  2025-11-05 00:00 | CLOSE_SHORT  @ $101,799.79 | PnL: $  +54.62 | WIN
-  2025-11-07 00:00 | SHORT        @ $101,040.65 | PnL: $   +0.00 | FLAT
-  2025-11-10 00:00 | CLOSE_SHORT  @ $104,851.86 | PnL: $  -48.89 | LOSS
-  2025-11-13 00:00 | SHORT        @ $101,190.22 | PnL: $   +0.00 | FLAT
-  2025-11-15 00:00 | CLOSE_SHORT  @ $ 94,749.74 | PnL: $  +80.43 | WIN
-  2025-11-17 00:00 | SHORT        @ $ 93,966.46 | PnL: $   +0.00 | FLAT
-  2025-11-20 00:00 | CLOSE_SHORT  @ $ 91,613.87 | PnL: $  +31.18 | WIN
-  2025-11-22 00:00 | SHORT        @ $ 84,748.90 | PnL: $   +0.00 | FLAT
-  2025-11-25 00:00 | CLOSE_SHORT  @ $ 88,443.52 | PnL: $  -56.38 | LOSS
+  2025-01-10 00:00 | SHORT        @ $ 92,326.65 | PnL: $   +0.00 | FLAT
+  2025-01-12 00:00 | CLOSE_SHORT  @ $ 94,911.17 | PnL: $  -36.48 | LOSS
+  2025-01-14 00:00 | LONG         @ $ 94,807.78 | PnL: $   +0.00 | FLAT
+  2025-01-16 00:00 | CLOSE_LONG   @ $100,163.10 | PnL: $  +71.21 | WIN
+  2025-01-22 00:00 | LONG         @ $106,595.30 | PnL: $   +0.00 | FLAT
+  2025-01-26 00:00 | CLOSE_LONG   @ $104,470.26 | PnL: $  -26.17 | LOSS
 
 ======================================================================
 
 
 ----------------------------------------
-PERIOD: Dec_2025 (2025-12-01 to 2025-12-28)
+PERIOD: Feb_2025 (2025-02-01 to 2025-02-28)
 ----------------------------------------
 
 ======================================================================
 FUTURES STRATEGY COMPARISON [REALISTIC MODE]
 ======================================================================
 Testing: mean_reversion, trend_following, voting
-Period: 2025-12-01 to 2025-12-28
+Period: 2025-02-01 to 2025-02-28
 Timeframe: DAILY candles
 Leverage: 3x
 Symbol: BTC/USD
@@ -1583,20 +1392,88 @@ Loading daily data from data/historical/btc_usd_daily.csv...
    Loaded 731 candles from CSV
 Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
 
-Testing period: 2025-12-01 to 2025-12-28
+Testing period: 2025-02-01 to 2025-02-28
 
 ============================================================
 RUNNING FUTURES STRATEGIES...
 ============================================================
 
 Testing MEAN REVERSION...
-   0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
+   1 round trips (1L 0S) | Return: -0.99% | Win Rate: 0.0%
 
 Testing TREND FOLLOWING...
-   1 round trips (0L 1S) | Return: -9.76% | Win Rate: 0.0%
+   2 round trips (0L 2S) | Return: +8.89% | Win Rate: 25.0%
 
 Testing VOTING...
-   2 round trips (1L 1S) | Return: -11.21% | Win Rate: 25.0%
+   2 round trips (2L 0S) | Return: -15.52% | Win Rate: 0.0%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following          +8.89%      2     0      2    25.0% $    544.44
+Mean Reversion           -0.99%      1     1      0     0.0% $    495.07
+Voting                  -15.52%      2     2      0     0.0% $    422.40
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +8.89%
+Final Equity: $544.44
+Round Trips: 2 (0 long, 2 short)
+Win Rate: 25.0%
+Leverage: 3x
+Funding Paid: $+2.84
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-02-06 00:00 | SHORT        @ $ 96,519.25 | PnL: $   +0.00 | FLAT
+  2025-02-25 00:00 | CLOSE_SHORT  @ $ 91,923.40 | PnL: $  +59.98 | WIN
+  2025-02-27 00:00 | SHORT        @ $ 83,891.60 | PnL: $   +0.00 | FLAT
+  2025-02-28 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $ 84,575.54 | PnL: $  -11.17 | END
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Mar_2025 (2025-03-01 to 2025-03-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-03-01 to 2025-03-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-03-01 to 2025-03-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (1L 0S) | Return: +23.03% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   2 round trips (0L 2S) | Return: +0.05% | Win Rate: 25.0%
+
+Testing VOTING...
+   2 round trips (1L 1S) | Return: +35.21% | Win Rate: 50.0%
    Rejected trades: 1
 
 
@@ -1606,9 +1483,630 @@ FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
 
 Strategy                 Return  Trips  Long  Short     Win%      Final $
 ----------------------------------------------------------------------
+Voting                  +35.21%      2     1      1    50.0% $    676.03
+Mean Reversion          +23.03%      1     1      0    50.0% $    615.15
+Trend Following          +0.05%      2     0      2    25.0% $    500.25
+
+======================================================================
+WINNER: VOTING
+======================================================================
+Return: +35.21%
+Final Equity: $676.03
+Round Trips: 2 (1 long, 1 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-1.66
+
+----------------------------------------------------------------------
+TRADE LOG (VOTING):
+----------------------------------------------------------------------
+  2025-03-02 00:00 | LONG         @ $ 86,249.10 | PnL: $   +0.00 | FLAT
+  2025-03-03 00:00 | CLOSE_LONG   @ $ 93,807.52 | PnL: $ +110.90 | WIN
+  2025-03-28 00:00 | SHORT        @ $ 87,000.11 | PnL: $   +0.00 | FLAT
+  2025-03-31 00:00 | CLOSE_SHORT  @ $ 82,515.64 | PnL: $  +65.00 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Apr_2025 (2025-04-01 to 2025-04-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-04-01 to 2025-04-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-04-01 to 2025-04-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   2 round trips (1L 1S) | Return: +17.93% | Win Rate: 25.0%
+   Rejected trades: 1
+
+Testing TREND FOLLOWING...
+   3 round trips (2L 1S) | Return: +20.15% | Win Rate: 33.3%
+
+Testing VOTING...
+   3 round trips (2L 1S) | Return: +19.26% | Win Rate: 16.7%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following         +20.15%      3     2      1    33.3% $    600.75
+Voting                  +19.26%      3     2      1    16.7% $    596.30
+Mean Reversion          +17.93%      2     1      1    25.0% $    589.63
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +20.15%
+Final Equity: $600.75
+Round Trips: 3 (2 long, 1 short)
+Win Rate: 33.3%
+Leverage: 3x
+Funding Paid: $-3.94
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-04-07 00:00 | SHORT        @ $ 78,038.41 | PnL: $   +0.00 | FLAT
+  2025-04-09 00:00 | CLOSE_SHORT  @ $ 76,377.63 | PnL: $  +26.39 | WIN
+  2025-04-22 00:00 | LONG         @ $ 87,673.80 | PnL: $   +0.00 | FLAT
+  2025-04-23 00:00 | CLOSE_LONG   @ $ 93,213.27 | PnL: $  +79.74 | WIN
+  2025-04-25 00:00 | LONG         @ $ 94,367.04 | PnL: $   +0.00 | FLAT
+  2025-04-30 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $ 93,903.58 | PnL: $   -7.02 | END
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: May_2025 (2025-05-01 to 2025-05-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-05-01 to 2025-05-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-05-01 to 2025-05-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   2 round trips (0L 2S) | Return: -2.62% | Win Rate: 25.0%
+
+Testing TREND FOLLOWING...
+   2 round trips (2L 0S) | Return: +20.27% | Win Rate: 50.0%
+   Rejected trades: 2
+
+Testing VOTING...
+   3 round trips (2L 1S) | Return: -12.83% | Win Rate: 16.7%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following         +20.27%      2     2      0    50.0% $    601.34
+Mean Reversion           -2.62%      2     0      2    25.0% $    486.90
+Voting                  -12.83%      3     2      1    16.7% $    435.86
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +20.27%
+Final Equity: $601.34
+Round Trips: 2 (2 long, 0 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-1.48
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-05-07 00:00 | LONG         @ $ 96,971.18 | PnL: $   +0.00 | FLAT
+  2025-05-13 00:00 | CLOSE_LONG   @ $102,375.44 | PnL: $  +70.25 | WIN
+  2025-05-19 00:00 | LONG         @ $106,792.68 | PnL: $   +0.00 | FLAT
+  2025-05-22 00:00 | CLOSE_LONG   @ $109,467.16 | PnL: $  +31.15 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Jun_2025 (2025-06-01 to 2025-06-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-06-01 to 2025-06-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-06-01 to 2025-06-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (1L 0S) | Return: +5.14% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   3 round trips (2L 1S) | Return: -24.12% | Win Rate: 0.0%
+
+Testing VOTING...
+   2 round trips (1L 1S) | Return: -8.01% | Win Rate: 25.0%
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Mean Reversion           +5.14%      1     1      0    50.0% $    525.69
+Voting                   -8.01%      2     1      1    25.0% $    459.93
+Trend Following         -24.12%      3     2      1     0.0% $    379.41
+
+======================================================================
+WINNER: MEAN REVERSION
+======================================================================
+Return: +5.14%
+Final Equity: $525.69
+Round Trips: 1 (1 long, 0 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-0.84
+
+----------------------------------------------------------------------
+TRADE LOG (MEAN_REVERSION):
+----------------------------------------------------------------------
+  2025-06-06 00:00 | LONG         @ $101,933.67 | PnL: $   +0.00 | FLAT
+  2025-06-07 00:00 | CLOSE_LONG   @ $104,043.52 | PnL: $  +25.61 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Jul_2025 (2025-07-01 to 2025-07-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-07-01 to 2025-07-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-07-01 to 2025-07-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (0L 1S) | Return: +0.99% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   2 round trips (2L 0S) | Return: +9.07% | Win Rate: 25.0%
+
+Testing VOTING...
+   2 round trips (2L 0S) | Return: +1.44% | Win Rate: 25.0%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following          +9.07%      2     2      0    25.0% $    545.34
+Voting                   +1.44%      2     2      0    25.0% $    507.18
+Mean Reversion           +0.99%      1     0      1    50.0% $    504.97
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +9.07%
+Final Equity: $545.34
+Round Trips: 2 (2 long, 0 short)
+Win Rate: 25.0%
+Leverage: 3x
+Funding Paid: $+1.50
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-07-03 00:00 | LONG         @ $109,168.07 | PnL: $   +0.00 | FLAT
+  2025-07-11 00:00 | CLOSE_LONG   @ $115,707.74 | PnL: $  +75.57 | WIN
+  2025-07-13 00:00 | LONG         @ $117,862.81 | PnL: $   +0.00 | FLAT
+  2025-07-31 00:00 | [AUTO-CLOSE] CLOSE_LONG @ $115,418.06 | PnL: $  -27.20 | END
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Aug_2025 (2025-08-01 to 2025-08-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-08-01 to 2025-08-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-08-01 to 2025-08-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
+
+Testing TREND FOLLOWING...
+   3 round trips (1L 2S) | Return: +14.92% | Win Rate: 33.3%
+
+Testing VOTING...
+   5 round trips (3L 2S) | Return: +7.45% | Win Rate: 20.0%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following         +14.92%      3     1      2    33.3% $    574.61
+Voting                   +7.45%      5     3      2    20.0% $    537.25
 Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
-Trend Following          -9.76%      1     0      1     0.0% $    451.21
-Voting                  -11.21%      2     1      1    25.0% $    443.94
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +14.92%
+Final Equity: $574.61
+Round Trips: 3 (1 long, 2 short)
+Win Rate: 33.3%
+Leverage: 3x
+Funding Paid: $+2.00
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-08-12 00:00 | LONG         @ $119,000.47 | PnL: $   +0.00 | FLAT
+  2025-08-14 00:00 | CLOSE_LONG   @ $123,204.41 | PnL: $  +44.25 | WIN
+  2025-08-21 00:00 | SHORT        @ $114,098.71 | PnL: $   +0.00 | FLAT
+  2025-08-26 00:00 | CLOSE_SHORT  @ $110,320.28 | PnL: $  +41.48 | WIN
+  2025-08-30 00:00 | SHORT        @ $108,085.25 | PnL: $   +0.00 | FLAT
+  2025-08-31 00:00 | [AUTO-CLOSE] CLOSE_SHORT @ $108,598.54 | PnL: $   -6.82 | END
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Sep_2025 (2025-09-01 to 2025-09-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-09-01 to 2025-09-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-09-01 to 2025-09-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (0L 1S) | Return: +5.51% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   2 round trips (1L 1S) | Return: -19.48% | Win Rate: 0.0%
+
+Testing VOTING...
+   3 round trips (2L 1S) | Return: +17.74% | Win Rate: 50.0%
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Voting                  +17.74%      3     2      1    50.0% $    588.71
+Mean Reversion           +5.51%      1     0      1    50.0% $    527.57
+Trend Following         -19.48%      2     1      1     0.0% $    402.59
+
+======================================================================
+WINNER: VOTING
+======================================================================
+Return: +17.74%
+Final Equity: $588.71
+Round Trips: 3 (2 long, 1 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-2.80
+
+----------------------------------------------------------------------
+TRADE LOG (VOTING):
+----------------------------------------------------------------------
+  2025-09-06 00:00 | LONG         @ $110,936.59 | PnL: $   +0.00 | FLAT
+  2025-09-11 00:00 | CLOSE_LONG   @ $113,636.45 | PnL: $  +30.25 | WIN
+  2025-09-18 00:00 | SHORT        @ $116,002.98 | PnL: $   +0.00 | FLAT
+  2025-09-23 00:00 | CLOSE_SHORT  @ $113,224.11 | PnL: $  +29.80 | WIN
+  2025-09-26 00:00 | LONG         @ $109,242.88 | PnL: $   +0.00 | FLAT
+  2025-09-29 00:00 | CLOSE_LONG   @ $111,723.47 | PnL: $  +28.17 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Oct_2025 (2025-10-01 to 2025-10-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-10-01 to 2025-10-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-10-01 to 2025-10-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (0L 1S) | Return: +4.55% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   3 round trips (2L 1S) | Return: -9.32% | Win Rate: 33.3%
+   Rejected trades: 1
+
+Testing VOTING...
+   4 round trips (2L 2S) | Return: +29.20% | Win Rate: 50.0%
+   Rejected trades: 1
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Voting                  +29.20%      4     2      2    50.0% $    646.02
+Mean Reversion           +4.55%      1     0      1    50.0% $    522.73
+Trend Following          -9.32%      3     2      1    33.3% $    453.42
+
+======================================================================
+WINNER: VOTING
+======================================================================
+Return: +29.20%
+Final Equity: $646.02
+Round Trips: 4 (2 long, 2 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-2.81
+
+----------------------------------------------------------------------
+TRADE LOG (VOTING):
+----------------------------------------------------------------------
+  2025-10-02 00:00 | LONG         @ $119,175.73 | PnL: $   +0.00 | FLAT
+  2025-10-04 00:00 | CLOSE_LONG   @ $122,091.77 | PnL: $  +30.41 | WIN
+  2025-10-10 00:00 | SHORT        @ $121,164.67 | PnL: $   +0.00 | FLAT
+  2025-10-11 00:00 | CLOSE_SHORT  @ $113,134.83 | PnL: $  +83.78 | WIN
+  2025-10-13 00:00 | SHORT        @ $114,707.51 | PnL: $   +0.00 | FLAT
+  2025-10-15 00:00 | CLOSE_SHORT  @ $113,471.17 | PnL: $  +12.99 | WIN
+  2025-10-17 00:00 | LONG         @ $108,361.54 | PnL: $   +0.00 | FLAT
+  2025-10-21 00:00 | CLOSE_LONG   @ $110,049.74 | PnL: $  +19.09 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Nov_2025 (2025-11-01 to 2025-11-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-11-01 to 2025-11-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-11-01 to 2025-11-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
+
+Testing TREND FOLLOWING...
+   2 round trips (0L 2S) | Return: +26.74% | Win Rate: 50.0%
+   Rejected trades: 4
+
+Testing VOTING...
+   3 round trips (2L 1S) | Return: +2.21% | Win Rate: 33.3%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following         +26.74%      2     0      2    50.0% $    633.72
+Voting                   +2.21%      3     2      1    33.3% $    511.04
+Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +26.74%
+Final Equity: $633.72
+Round Trips: 2 (0 long, 2 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-1.45
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-11-04 00:00 | SHORT        @ $106,184.91 | PnL: $   +0.00 | FLAT
+  2025-11-05 00:00 | CLOSE_SHORT  @ $101,622.26 | PnL: $  +54.05 | WIN
+  2025-11-07 00:00 | SHORT        @ $101,081.18 | PnL: $   +0.00 | FLAT
+  2025-11-15 00:00 | CLOSE_SHORT  @ $ 94,701.56 | PnL: $  +79.75 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Dec_2025 (2025-12-01 to 2025-12-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-12-01 to 2025-12-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-12-01 to 2025-12-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   0 round trips (0L 0S) | Return: +0.00% | Win Rate: 0.0%
+
+Testing TREND FOLLOWING...
+   1 round trips (0L 1S) | Return: -9.41% | Win Rate: 0.0%
+
+Testing VOTING...
+   2 round trips (1L 1S) | Return: -12.19% | Win Rate: 25.0%
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Mean Reversion           +0.00%      0     0      0     0.0% $    500.00
+Trend Following          -9.41%      1     0      1     0.0% $    452.94
+Voting                  -12.19%      2     1      1    25.0% $    439.05
 
 ======================================================================
 WINNER: MEAN REVERSION
@@ -1623,7 +2121,302 @@ Funding Paid: $+0.00
 ======================================================================
 
 
+----------------------------------------
+PERIOD: Q1_2025 (2025-01-01 to 2025-03-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-01-01 to 2025-03-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-01-01 to 2025-03-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (1L 0S) | Return: +28.03% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   6 round trips (2L 4S) | Return: -4.99% | Win Rate: 33.3%
+   Rejected trades: 2
+
+Testing VOTING...
+   9 round trips (7L 2S) | Return: +8.45% | Win Rate: 22.2%
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Mean Reversion          +28.03%      1     1      0    50.0% $    640.15
+Voting                   +8.45%      9     7      2    22.2% $    542.25
+Trend Following          -4.99%      6     2      4    33.3% $    475.06
+
+======================================================================
+WINNER: MEAN REVERSION
+======================================================================
+Return: +28.03%
+Final Equity: $640.15
+Round Trips: 1 (1 long, 0 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-0.32
+
+----------------------------------------------------------------------
+TRADE LOG (MEAN_REVERSION):
+----------------------------------------------------------------------
+  2025-02-27 00:00 | LONG         @ $ 84,461.14 | PnL: $   +0.00 | FLAT
+  2025-03-03 00:00 | CLOSE_LONG   @ $ 93,831.29 | PnL: $ +140.60 | WIN
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Q2_2025 (2025-04-01 to 2025-06-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-04-01 to 2025-06-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-04-01 to 2025-06-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   4 round trips (1L 3S) | Return: -6.00% | Win Rate: 25.0%
+   Rejected trades: 1
+
+Testing TREND FOLLOWING...
+   8 round trips (6L 2S) | Return: +23.05% | Win Rate: 31.2%
+   Rejected trades: 1
+
+Testing VOTING...
+   7 round trips (3L 4S) | Return: -65.89% | Win Rate: 7.1%
+   Rejected trades: 1
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Trend Following         +23.05%      8     6      2    31.2% $    615.23
+Mean Reversion           -6.00%      4     1      3    25.0% $    470.00
+Voting                  -65.89%      7     3      4     7.1% $    170.53
+
+======================================================================
+WINNER: TREND FOLLOWING
+======================================================================
+Return: +23.05%
+Final Equity: $615.23
+Round Trips: 8 (6 long, 2 short)
+Win Rate: 31.2%
+Leverage: 3x
+Funding Paid: $-0.07
+
+----------------------------------------------------------------------
+TRADE LOG (TREND_FOLLOWING):
+----------------------------------------------------------------------
+  2025-04-07 00:00 | SHORT        @ $ 78,033.06 | PnL: $   +0.00 | FLAT
+  2025-04-09 00:00 | CLOSE_SHORT  @ $ 76,350.54 | PnL: $  +26.74 | WIN
+  2025-04-22 00:00 | LONG         @ $ 87,834.51 | PnL: $   +0.00 | FLAT
+  2025-04-23 00:00 | CLOSE_LONG   @ $ 93,131.94 | PnL: $  +76.09 | WIN
+  2025-04-25 00:00 | LONG         @ $ 94,418.60 | PnL: $   +0.00 | FLAT
+  2025-05-02 00:00 | CLOSE_LONG   @ $ 96,326.51 | PnL: $  +24.98 | WIN
+  2025-05-07 00:00 | LONG         @ $ 96,981.89 | PnL: $   +0.00 | FLAT
+  2025-05-09 00:00 | CLOSE_LONG   @ $102,958.47 | PnL: $  +77.76 | WIN
+  2025-05-19 00:00 | LONG         @ $106,639.93 | PnL: $   +0.00 | FLAT
+  2025-05-22 00:00 | CLOSE_LONG   @ $109,329.31 | PnL: $  +31.37 | WIN
+  2025-06-11 00:00 | LONG         @ $110,589.87 | PnL: $   +0.00 | FLAT
+  2025-06-13 00:00 | CLOSE_LONG   @ $105,597.88 | PnL: $  -58.28 | LOSS
+  2025-06-22 00:00 | SHORT        @ $101,729.99 | PnL: $   +0.00 | FLAT
+  2025-06-24 00:00 | CLOSE_SHORT  @ $105,531.53 | PnL: $  -48.44 | LOSS
+  2025-06-27 00:00 | LONG         @ $107,538.12 | PnL: $   +0.00 | FLAT
+  ... (1 more trades)
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Q3_2025 (2025-07-01 to 2025-09-30)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-07-01 to 2025-09-30
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-07-01 to 2025-09-30
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   2 round trips (0L 2S) | Return: +7.44% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   7 round trips (4L 3S) | Return: -18.75% | Win Rate: 21.4%
+
+Testing VOTING...
+   10 round trips (6L 4S) | Return: +38.00% | Win Rate: 40.0%
+   Rejected trades: 2
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Voting                  +38.00%     10     6      4    40.0% $    690.02
+Mean Reversion           +7.44%      2     0      2    50.0% $    537.18
+Trend Following         -18.75%      7     4      3    21.4% $    406.27
+
+======================================================================
+WINNER: VOTING
+======================================================================
+Return: +38.00%
+Final Equity: $690.02
+Round Trips: 10 (6 long, 4 short)
+Win Rate: 40.0%
+Leverage: 3x
+Funding Paid: $+4.47
+
+----------------------------------------------------------------------
+TRADE LOG (VOTING):
+----------------------------------------------------------------------
+  2025-07-12 00:00 | LONG         @ $118,031.82 | PnL: $   +0.00 | FLAT
+  2025-07-14 00:00 | CLOSE_LONG   @ $118,993.76 | PnL: $   +9.62 | WIN
+  2025-07-16 00:00 | SHORT        @ $117,565.48 | PnL: $   +0.00 | FLAT
+  2025-08-01 00:00 | CLOSE_SHORT  @ $115,944.32 | PnL: $  +16.83 | WIN
+  2025-08-04 00:00 | LONG         @ $114,718.47 | PnL: $   +0.00 | FLAT
+  2025-08-08 00:00 | CLOSE_LONG   @ $117,300.08 | PnL: $  +27.91 | WIN
+  2025-08-12 00:00 | LONG         @ $118,843.09 | PnL: $   +0.00 | FLAT
+  2025-08-14 00:00 | CLOSE_LONG   @ $122,843.06 | PnL: $  +42.12 | WIN
+  2025-08-20 00:00 | SHORT        @ $112,320.21 | PnL: $   +0.00 | FLAT
+  2025-08-22 00:00 | CLOSE_SHORT  @ $112,827.05 | PnL: $   -6.52 | LOSS
+  2025-08-26 00:00 | SHORT        @ $109,683.61 | PnL: $   +0.00 | FLAT
+  2025-08-28 00:00 | CLOSE_SHORT  @ $111,550.69 | PnL: $  -22.48 | LOSS
+  2025-08-30 00:00 | LONG         @ $108,822.70 | PnL: $   +0.00 | FLAT
+  2025-09-03 00:00 | CLOSE_LONG   @ $110,796.63 | PnL: $  +22.35 | WIN
+  2025-09-06 00:00 | LONG         @ $110,934.17 | PnL: $   +0.00 | FLAT
+  ... (5 more trades)
+
+======================================================================
+
+
+----------------------------------------
+PERIOD: Q4_2025 (2025-10-01 to 2025-12-31)
+----------------------------------------
+
+======================================================================
+FUTURES STRATEGY COMPARISON [REALISTIC MODE]
+======================================================================
+Testing: mean_reversion, trend_following, voting
+Period: 2025-10-01 to 2025-12-31
+Timeframe: DAILY candles
+Leverage: 3x
+Symbol: BTC/USD
+Starting Capital: $500.0
+Friction: Slippage 0.3%, Noise ±0.2%, Rejection 10%, Next-candle exec
+======================================================================
+
+Loading daily data from data/historical/btc_usd_daily.csv...
+   Loaded 731 candles from CSV
+Loaded 731 candles from 2023-12-27 00:00:00 to 2025-12-26 00:00:00
+
+Testing period: 2025-10-01 to 2025-12-31
+
+============================================================
+RUNNING FUTURES STRATEGIES...
+============================================================
+
+Testing MEAN REVERSION...
+   1 round trips (0L 1S) | Return: +5.35% | Win Rate: 50.0%
+
+Testing TREND FOLLOWING...
+   8 round trips (2L 6S) | Return: -24.75% | Win Rate: 25.0%
+   Rejected trades: 2
+
+Testing VOTING...
+   9 round trips (5L 4S) | Return: -13.82% | Win Rate: 27.8%
+   Rejected trades: 3
+
+
+======================================================================
+FUTURES STRATEGY COMPARISON RESULTS [REALISTIC]
+======================================================================
+
+Strategy                 Return  Trips  Long  Short     Win%      Final $
+----------------------------------------------------------------------
+Mean Reversion           +5.35%      1     0      1    50.0% $    526.77
+Voting                  -13.82%      9     5      4    27.8% $    430.90
+Trend Following         -24.75%      8     2      6    25.0% $    376.27
+
+======================================================================
+WINNER: MEAN REVERSION
+======================================================================
+Return: +5.35%
+Final Equity: $526.77
+Round Trips: 1 (0 long, 1 short)
+Win Rate: 50.0%
+Leverage: 3x
+Funding Paid: $-1.05
+
+----------------------------------------------------------------------
+TRADE LOG (MEAN_REVERSION):
+----------------------------------------------------------------------
+  2025-10-07 00:00 | SHORT        @ $124,243.26 | PnL: $   +0.00 | FLAT
+  2025-10-08 00:00 | CLOSE_SHORT  @ $121,589.57 | PnL: $  +26.48 | WIN
+
+======================================================================
+
+
 
 ========================================
-SCAN COMPLETED: Sun Dec 28 15:32:37 CST 2025
+SCAN COMPLETED: Sun Dec 28 15:41:39 CST 2025
 ========================================

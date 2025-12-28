@@ -1,0 +1,96 @@
+======================================================================
+BACKTEST SCAN SUMMARY
+======================================================================
+
+WINNER COUNTS:
+----------------------------------------
+  MEAN REVERSION        13 wins (37.1%)
+  TREND FOLLOWING       12 wins (34.3%)
+  VOTING                10 wins (28.6%)
+
+MONTHLY PERFORMANCE (Avg per Month)
+------------------------------------------------------------
+Strategy             Avg Return   Win Rate   Best      
+------------------------------------------------------------
+Mean Reversion           +1.43%    33.3%       +23.03%
+Trend Following          -2.54%    41.7%       +26.74%
+Voting                   +1.90%    45.8%       +35.21%
+
+QUARTERLY PERFORMANCE (Avg per Quarter)
+------------------------------------------------------------
+Strategy             Avg Return   Win Rate   Best      
+------------------------------------------------------------
+Mean Reversion           -3.87%    37.5%       +28.03%
+Trend Following         -12.35%    25.0%       +23.05%
+Voting                   -9.65%    25.0%       +38.00%
+
+TOP 5 BEST PERIODS:
+----------------------------------------
+  Q3_2025          +38.00% (VOTING)
+  Mar_2025         +35.21% (VOTING)
+  Nov_2024         +33.34% (VOTING)
+  Oct_2025         +29.20% (VOTING)
+  Q1_2025          +28.03% (MEAN REVERSION)
+
+TOP 5 WORST PERIODS:
+----------------------------------------
+  Jun_2024          -1.95% (TREND FOLLOWING)
+  H1_2024           -3.32% (MEAN REVERSION)
+  Q2_2024           -6.34% (TREND FOLLOWING)
+  Q3_2024          -10.17% (MEAN REVERSION)
+  Full_2024        -21.50% (VOTING)
+
+FULL RESULTS TABLE:
+----------------------------------------------------------------------
+Period          Winner                 Return   Long  Short
+----------------------------------------------------------------------
+Jan_2024        MEAN REVERSION         +0.00%      0      0
+Feb_2024        MEAN REVERSION         +0.00%      0      0
+Mar_2024        MEAN REVERSION         +0.00%      0      0
+Apr_2024        TREND FOLLOWING       +19.60%      0      2
+May_2024        MEAN REVERSION         +0.00%      0      0
+Jun_2024        TREND FOLLOWING        -1.95%      1      1
+Jul_2024        VOTING                +11.43%      2      1
+Aug_2024        MEAN REVERSION         +0.00%      0      0
+Sep_2024        VOTING                +16.12%      2      2
+Oct_2024        TREND FOLLOWING       +15.98%      2      0
+Nov_2024        VOTING                +33.34%      4      0
+Dec_2024        MEAN REVERSION         +0.00%      0      0
+Q1_2024         MEAN REVERSION         +0.00%      0      0
+Q2_2024         TREND FOLLOWING        -6.34%      2      5
+Q3_2024         MEAN REVERSION        -10.17%      2      2
+Q4_2024         TREND FOLLOWING        +0.46%      6      1
+H1_2024         MEAN REVERSION         -3.32%      2      0
+H2_2024         VOTING                +12.30%     12      9
+Full_2024       VOTING                -21.50%     16     10
+Jan_2025        VOTING                 +0.69%      2      1
+Feb_2025        TREND FOLLOWING        +8.89%      0      2
+Mar_2025        VOTING                +35.21%      1      1
+Apr_2025        TREND FOLLOWING       +20.15%      2      1
+May_2025        TREND FOLLOWING       +20.27%      2      0
+Jun_2025        MEAN REVERSION         +5.14%      1      0
+Jul_2025        TREND FOLLOWING        +9.07%      2      0
+Aug_2025        TREND FOLLOWING       +14.92%      1      2
+Sep_2025        VOTING                +17.74%      2      1
+Oct_2025        VOTING                +29.20%      2      2
+Nov_2025        TREND FOLLOWING       +26.74%      0      2
+Dec_2025        MEAN REVERSION         +0.00%      0      0
+Q1_2025         MEAN REVERSION        +28.03%      1      0
+Q2_2025         TREND FOLLOWING       +23.05%      6      2
+Q3_2025         VOTING                +38.00%      6      4
+Q4_2025         MEAN REVERSION         +5.35%      0      1
+
+======================================================================
+KEY INSIGHTS:
+======================================================================
+1. Profitable Months: 16/24 (66.7%)
+2. Avg Winner Return: 11.77% (Monthly)
+3. Consistency King:  Voting (Avg Monthly: 1.90%)
+4. Best Month 2024:   Nov_2024   ( +33.34%)
+5. Worst Month 2024:  Jun_2024   (  -1.95%)
+6. Best Quarter 2024: Q4_2024    (  +0.46%)
+4. Best Month 2025:   Mar_2025   ( +35.21%)
+5. Worst Month 2025:  Dec_2025   (  +0.00%)
+6. Best Quarter 2025: Q3_2025    ( +38.00%)
+
+======================================================================
