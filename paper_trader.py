@@ -203,36 +203,85 @@ def get_user_mode() -> Tuple[str, any]:
 
 def main():
     """Main entry point."""
-    mode, value = get_user_mode()
+    import sys
+    import argparse
     
-    if mode == 'live':
-        bot = PaperTradingBot()
-        bot.run()
-    elif mode == 'compare':
-        timeframe = value.get('timeframe', 'daily')
-        if 'days' in value:
-            comparer = StrategyComparer(days=value['days'], timeframe=timeframe)
-        else:
+    # Check for command line arguments
+    if len(sys.argv) > 1:
+        parser = argparse.ArgumentParser(description='Crypto Paper Trading Bot')
+        parser.add_argument('mode', type=int, choices=[1, 2, 3, 4, 5, 6, 7],
+                          help='Mode: 1=live, 2=backtest, 3-5=compare, 6=futures, 7=futures live')
+        parser.add_argument('--start', type=str, help='Start date (YYYY-MM-DD)')
+        parser.add_argument('--end', type=str, help='End date (YYYY-MM-DD), default=today')
+        parser.add_argument('--days', type=int, default=30, help='Days for comparison (mode 3)')
+        parser.add_argument('--leverage', '-l', type=int, default=LEVERAGE, help='Leverage (1-10)')
+        parser.add_argument('--timeframe', '-t', type=str, default='daily', 
+                          choices=['daily', 'hourly'], help='Timeframe')
+        
+        args = parser.parse_args()
+        
+        # Parse dates
+        start_date = datetime.strptime(args.start, '%Y-%m-%d') if args.start else datetime.now() - timedelta(days=args.days)
+        end_date = datetime.strptime(args.end, '%Y-%m-%d') if args.end else datetime.now()
+        
+        if args.mode == 1:
+            bot = PaperTradingBot()
+            bot.run()
+        elif args.mode == 2:
+            date = datetime.strptime(args.start, '%Y-%m-%d') if args.start else datetime.now()
+            bot = BacktestBot(date)
+            bot.run()
+        elif args.mode in [3, 4, 5]:
+            timeframe = 'hourly' if args.mode == 5 else args.timeframe
             comparer = StrategyComparer(
-                start_date=value['start_date'], 
-                end_date=value['end_date'],
+                start_date=start_date,
+                end_date=end_date,
                 timeframe=timeframe
             )
-        comparer.run()
-    elif mode == 'futures':
-        comparer = FuturesStrategyComparer(
-            start_date=value['start_date'],
-            end_date=value['end_date'],
-            timeframe=value['timeframe'],
-            leverage=value['leverage']
-        )
-        comparer.run()
-    elif mode == 'futures_live':
-        bot = FuturesPaperTradingBot(leverage=value['leverage'])
-        bot.run()
+            comparer.run()
+        elif args.mode == 6:
+            comparer = FuturesStrategyComparer(
+                start_date=start_date,
+                end_date=end_date,
+                timeframe=args.timeframe,
+                leverage=args.leverage
+            )
+            comparer.run()
+        elif args.mode == 7:
+            bot = FuturesPaperTradingBot(leverage=args.leverage)
+            bot.run()
     else:
-        bot = BacktestBot(value)
-        bot.run()
+        # Interactive mode
+        mode, value = get_user_mode()
+        
+        if mode == 'live':
+            bot = PaperTradingBot()
+            bot.run()
+        elif mode == 'compare':
+            timeframe = value.get('timeframe', 'daily')
+            if 'days' in value:
+                comparer = StrategyComparer(days=value['days'], timeframe=timeframe)
+            else:
+                comparer = StrategyComparer(
+                    start_date=value['start_date'], 
+                    end_date=value['end_date'],
+                    timeframe=timeframe
+                )
+            comparer.run()
+        elif mode == 'futures':
+            comparer = FuturesStrategyComparer(
+                start_date=value['start_date'],
+                end_date=value['end_date'],
+                timeframe=value['timeframe'],
+                leverage=value['leverage']
+            )
+            comparer.run()
+        elif mode == 'futures_live':
+            bot = FuturesPaperTradingBot(leverage=value['leverage'])
+            bot.run()
+        else:
+            bot = BacktestBot(value)
+            bot.run()
 
 
 if __name__ == "__main__":

@@ -22,18 +22,46 @@ Go beyond simple buy/hold — open **long** positions (bet price goes up) or **s
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
-# 1. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 2. Run the bot
+# Interactive mode
 python paper_trader.py
 
-# 3. Choose a mode:
-#    Option 7 = Futures live paper trading (recommended to start)
+# Or use command line arguments:
+python paper_trader.py 6 --start 2024-01-01 --end 2024-12-01 --leverage 3
 ```
+
+### Command Line Usage
+
+```bash
+# Futures backtest (Option 6)
+python paper_trader.py 6 --start 2024-01-01 --end 2024-12-01 --leverage 3
+
+# Futures live (Option 7)
+python paper_trader.py 7 --leverage 5
+
+# Strategy comparison (Option 4)
+python paper_trader.py 4 --start 2024-06-01 --end 2024-12-01
+
+# Hourly comparison (Option 5)
+python paper_trader.py 5 --days 30 --timeframe hourly
+
+# Show help
+python paper_trader.py --help
+```
+
+| Argument | Description |
+|----------|-------------|
+| `mode` | 1-7 (required) - see menu options below |
+| `--start` | Start date YYYY-MM-DD |
+| `--end` | End date (default: today) |
+| `--days` | Days back (default: 30) |
+| `--leverage` / `-l` | Leverage 1-10 |
+| `--timeframe` / `-t` | daily or hourly |
 
 ---
 

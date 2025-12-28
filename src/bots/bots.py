@@ -68,13 +68,13 @@ class PaperTradingBot:
         atr = calculate_atr(df['high'], df['low'], df['close'])
         
         print("\n" + "=" * 60)
-        print(f"🤖 PAPER TRADING BOT - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"PAPER TRADING BOT - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
-        print(f"📊 {SYMBOL} @ ${current_price:,.2f}")
+        print(f"{SYMBOL} @ ${current_price:,.2f}")
         print(f"   BB: Lower=${lower.iloc[-1]:,.2f} | Mid=${middle.iloc[-1]:,.2f} | Upper=${upper.iloc[-1]:,.2f}")
         print(f"   RSI: {rsi.iloc[-1]:.1f} | ATR: ${atr.iloc[-1]:,.2f} ({atr.iloc[-1]/current_price*100:.2f}%)")
         print("-" * 60)
-        print(f"💰 ACCOUNT")
+        print(f"ACCOUNT")
         print(f"   Cash: ${self.account.cash_balance:,.2f}")
         print(f"   Equity: ${equity:,.2f} (Starting: ${STARTING_CAPITAL:,.2f})")
         print(f"   Realized PnL: ${self.account.realized_pnl:,.2f}")
@@ -85,36 +85,36 @@ class PaperTradingBot:
         if self.account.position:
             pos = self.account.position
             pnl_pct = (current_price - pos.entry_price) / pos.entry_price * 100
-            print(f"📈 POSITION")
+            print(f"POSITION")
             print(f"   {pos.side.value.upper()} {pos.qty:.6f} {pos.symbol}")
             print(f"   Entry: ${pos.entry_price:,.2f} | Current: ${current_price:,.2f} ({pnl_pct:+.2f}%)")
             print(f"   Stop: ${pos.stop_loss:,.2f} | Target: ${pos.take_profit:,.2f}")
         else:
-            print(f"📈 POSITION: None")
+            print(f"POSITION: None")
         print("-" * 60)
-        print(f"🎯 SIGNAL: {signal_reason}")
-        print(f"📉 Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        print(f"SIGNAL: {signal_reason}")
+        print(f"Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
         
         can_trade, trade_reason = self.account.can_trade()
         if not can_trade:
-            print(f"⏸️  Trading paused: {trade_reason}")
+            print(f"Trading paused: {trade_reason}")
         
         if kill_status.should_halt:
-            print(f"🛑 KILL SWITCH: {kill_status.reason}")
+            print(f"KILL SWITCH: {kill_status.reason}")
         else:
-            print(f"✅ Kill Switch: OK")
+            print(f"Kill Switch: OK")
         
         print("=" * 60)
     
     def run(self):
         """Main trading loop."""
-        print("\n" + "🚀" * 20)
+        print("\n" + "" * 20)
         print("STARTING PAPER TRADING BOT")
         print(f"Mode: {'LIVE' if LIVE_MODE else 'PAPER'}")
         print(f"Symbol: {SYMBOL}")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
         print(f"Strategy: {STRATEGY.upper().replace('_', ' ')} (BB{BB_PERIOD}, {BB_STD}σ)")
-        print("🚀" * 20 + "\n")
+        print("" * 20 + "\n")
         
         while self.running:
             try:
@@ -154,14 +154,14 @@ class PaperTradingBot:
                 self.print_status(df, signal_reason, kill_status)
                 
                 if kill_status.should_halt:
-                    print("\n❌ BOT HALTED BY KILL SWITCH")
+                    print("\nBOT HALTED BY KILL SWITCH")
                     self.running = False
                     break
                 
                 time.sleep(UPDATE_INTERVAL_SECONDS)
                 
             except KeyboardInterrupt:
-                print("\n\n👋 Shutting down gracefully...")
+                print("\n\nShutting down gracefully...")
                 self.running = False
                 break
             except Exception as e:
@@ -201,8 +201,8 @@ class FuturesPaperTradingBot:
     def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
         """Fetch OHLCV data from exchange."""
         try:
-            # Use 1-minute candles for fastest signals in live trading
-            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, "1m", limit=100)
+            # Use daily candles for more stable signals
+            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, "1d", limit=100)
             self.account.consecutive_api_errors = 0
             
             df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
@@ -240,6 +240,7 @@ class FuturesPaperTradingBot:
         print(f"    Equity           ${equity:,.2f}  ({total_return:+.2f}%)")
         print(f"    Realized PnL     ${self.account.realized_pnl:+,.2f}")
         print(f"    Unrealized PnL   ${unrealized:+,.2f}")
+        print(f"    Funding Paid     ${self.account.total_funding_paid:+,.2f}")
         print()
         
         if self.account.position:
@@ -270,14 +271,16 @@ class FuturesPaperTradingBot:
     
     def run(self):
         """Main futures trading loop."""
-        print("\n" + "🔮" * 20)
+        print("\n" + "=" * 60)
         print("STARTING FUTURES PAPER TRADING BOT")
         print(f"Mode: PAPER (Futures)")
         print(f"Symbol: {SYMBOL}")
         print(f"Leverage: {self.leverage}x")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
         print(f"Strategy: {STRATEGY.upper().replace('_', ' ')}")
-        print("🔮" * 20 + "\n")
+        print(f"Timeframe: DAILY candles")
+        print(f"Funding Rate: Simulated every 8 hours")
+        print("=" * 60 + "\n")
         
         while self.running:
             try:
@@ -300,7 +303,22 @@ class FuturesPaperTradingBot:
                     if trade:
                         trade.is_liquidation = True
                         self.logger.log_trade(trade)
-                        print("\n💀 POSITION LIQUIDATED!")
+                        print("\nPOSITION LIQUIDATED!")
+                
+                # Process funding rate every 8 hours (simulate realistic funding)
+                import random
+                now = datetime.now()
+                if self.account.position and (
+                    self.account.last_funding_time is None or 
+                    (now - self.account.last_funding_time).total_seconds() >= 8 * 3600
+                ):
+                    # Randomize funding rate between -0.01% to +0.03% (typical range)
+                    funding_rate = random.uniform(-0.0001, 0.0003)
+                    funding_payment = self.account.process_funding(current_price, funding_rate, now)
+                    if funding_payment:
+                        self.session_log.append(
+                            f"{now}: FUNDING - Rate: {funding_rate:.4%}, Payment: ${funding_payment.payment:+.4f}"
+                        )
                 
                 # Get current position side
                 if self.account.position is None:
@@ -344,7 +362,7 @@ class FuturesPaperTradingBot:
                 self.print_status(df, signal_reason, kill_status)
                 
                 if kill_status.should_halt:
-                    print("\n❌ BOT HALTED BY KILL SWITCH")
+                    print("\nBOT HALTED BY KILL SWITCH")
                     self.running = False
                     break
                 
@@ -352,7 +370,7 @@ class FuturesPaperTradingBot:
                 time.sleep(60)
                 
             except KeyboardInterrupt:
-                print("\n\n👋 Shutting down gracefully...")
+                print("\n\nShutting down gracefully...")
                 self.running = False
                 break
             except Exception as e:
@@ -540,17 +558,17 @@ class BacktestBot:
     
     def run(self):
         """Run backtest simulation."""
-        print("\n" + "📊" * 20)
+        print("\n" + "=" * 60)
         print("BACKTEST MODE")
         print(f"Date: {self.backtest_date.strftime('%Y-%m-%d')}")
         print(f"Symbol: {SYMBOL}")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
-        print(f"Strategy: {STRATEGY.upper().replace('_', ' ')} (BB{BB_PERIOD}, {BB_STD}σ)")
-        print("📊" * 20 + "\n")
+        print(f"Strategy: {STRATEGY.upper().replace('_', ' ')} (BB{BB_PERIOD}, {BB_STD}s)")
+        print("=" * 60 + "\n")
         
         days_ago = (datetime.now() - self.backtest_date).days
         if days_ago > 14:
-            print(f"⚠️  WARNING: Date is {days_ago} days ago. Kraken only keeps ~2 weeks of 15-min data.")
+            print(f"WARNING: Date is {days_ago} days ago. Kraken only keeps ~2 weeks of 15-min data.")
             print("   Try a more recent date (within last 2 weeks) or switch to 1h timeframe.\n")
         
         df = self.fetch_historical_data()
@@ -578,7 +596,7 @@ class BacktestBot:
             
             kill_status = self.kill_switch.check(current_price, current_atr)
             if kill_status.should_halt:
-                print(f"[{current_time}] 🛑 KILL SWITCH: {kill_status.reason}")
+                print(f"[{current_time}] KILL SWITCH: {kill_status.reason}")
                 break
             
             signal, signal_reason = self.signal_generator.generate_signal(
@@ -616,7 +634,7 @@ class BacktestBot:
                 bb_upper = upper.iloc[-1]
                 
                 equity = self.account.get_equity(current_price)
-                pos_str = f"📈 {self.account.position.qty:.6f}" if self.account.position else "No pos"
+                pos_str = f"{self.account.position.qty:.6f}" if self.account.position else "No pos"
                 
                 if current_price < bb_lower:
                     status = "⬇️ BELOW LOWER"
@@ -681,14 +699,14 @@ class StrategyComparer:
             return None
         
         try:
-            print(f"📂 Loading {self.timeframe} data from {csv_path}...")
+            print(f"Loading {self.timeframe} data from {csv_path}...")
             df = pd.read_csv(csv_path)
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df = df.sort_values('timestamp').reset_index(drop=True)
-            print(f"   ✅ Loaded {len(df)} candles from CSV")
+            print(f"   Loaded {len(df)} candles from CSV")
             return df
         except Exception as e:
-            print(f"   ⚠️ Error loading CSV: {e}")
+            print(f"   Error loading CSV: {e}")
             return None
         
     def fetch_multi_day_data(self) -> Optional[pd.DataFrame]:
@@ -789,12 +807,12 @@ class StrategyComparer:
                     
                     if trade.realized_pnl > 0:
                         winning_trades += 1
-                        result = "✅ WIN"
+                        result = "WIN"
                     elif trade.realized_pnl < 0:
                         losing_trades += 1
-                        result = "❌ LOSS"
+                        result = "LOSS"
                     else:
-                        result = "➖ FLAT"
+                        result = "FLAT"
                     
                     trade_log.append({
                         'time': current_time,
@@ -864,7 +882,7 @@ class StrategyComparer:
         
         results = []
         for strategy in self.STRATEGIES:
-            print(f"\n📊 Testing {strategy.upper().replace('_', ' ')}...")
+            print(f"\nTesting {strategy.upper().replace('_', ' ')}...")
             result = self.run_strategy_backtest(df, strategy, start_date, end_date)
             results.append(result)
             print(f"   Trades: {result['trades']} | Return: {result['return_pct']:+.2f}% | "
@@ -873,7 +891,7 @@ class StrategyComparer:
         results.sort(key=lambda x: x['return_pct'], reverse=True)
         
         print("\n\n" + "=" * 60)
-        print("📊 STRATEGY COMPARISON RESULTS")
+        print("STRATEGY COMPARISON RESULTS")
         print("=" * 60)
         print(f"\n{'Strategy':<20} {'Return':>10} {'Trades':>8} {'Win Rate':>10} {'Final $':>12}")
         print("-" * 60)
@@ -888,7 +906,7 @@ class StrategyComparer:
         best = results[0]
         
         print("\n" + "=" * 60)
-        print("🏆 WINNER: " + best['strategy'].upper().replace('_', ' '))
+        print("WINNER: " + best['strategy'].upper().replace('_', ' '))
         print("=" * 60)
         print(f"Return: {best['return_pct']:+.2f}%")
         print(f"Final Equity: ${best['final_equity']:.2f}")
@@ -898,7 +916,7 @@ class StrategyComparer:
         # Print trade logs
         if best['trade_log']:
             print("\n" + "-" * 70)
-            print(f"📋 TRADE LOG ({best['strategy'].upper()}):")
+            print(f"TRADE LOG ({best['strategy'].upper()}):")
             print("-" * 70)
             print(f"{'Date/Time':<20} {'Side':<5} {'Price':>12} {'PnL':>10} {'Result':<8} {'Equity':>10}")
             print("-" * 70)
@@ -913,7 +931,7 @@ class StrategyComparer:
         for r in results[1:]:
             if r['trade_log'] and len(r['trade_log']) > 0:
                 print("\n" + "-" * 70)
-                print(f"📋 TRADE LOG ({r['strategy'].upper()}): {len(r['trade_log'])} trades")
+                print(f"TRADE LOG ({r['strategy'].upper()}): {len(r['trade_log'])} trades")
                 print("-" * 70)
                 print(f"{'Date/Time':<20} {'Side':<5} {'Price':>12} {'PnL':>10} {'Result':<8} {'Equity':>10}")
                 print("-" * 70)
@@ -935,13 +953,13 @@ class StrategyComparer:
         
         # Analysis
         print("\n" + "=" * 60)
-        print("📈 ANALYSIS & RECOMMENDATIONS")
+        print("ANALYSIS & RECOMMENDATIONS")
         print("=" * 60)
         
         if best['return_pct'] > 0:
-            print(f"\n✅ {best['strategy'].upper()} made money! Key insights:")
+            print(f"\n{best['strategy'].upper()} made money! Key insights:")
         else:
-            print(f"\n⚠️ All strategies lost money. This indicates:")
+            print(f"\nAll strategies lost money. This indicates:")
             print("   - Market may be trending strongly (bad for mean reversion)")
             print("   - Consider wider stop losses or smaller position sizes")
             print("   - May need different timeframe (hourly instead of 15-min)")
@@ -949,12 +967,12 @@ class StrategyComparer:
         for r in results:
             if r['strategy'] == 'mean_reversion':
                 if r['return_pct'] < -1:
-                    print(f"\n📉 MEAN REVERSION struggled ({r['return_pct']:+.2f}%):")
+                    print(f"\nMEAN REVERSION struggled ({r['return_pct']:+.2f}%):")
                     print("   → Market was trending, not ranging")
                     print("   → Consider: Use only when volatility is low")
             elif r['strategy'] == 'trend_following':
                 if r['return_pct'] > results[0]['return_pct'] - 1:
-                    print(f"\n📈 TREND FOLLOWING performed well:")
+                    print(f"\nTREND FOLLOWING performed well:")
                     print("   → Market had clear directional moves")
                     print("   → Consider: Increase position size during trends")
             elif r['strategy'] == 'voting':
@@ -978,7 +996,7 @@ class StrategyComparer:
             print(f"   Strategy: {best['strategy']}")
             print(f"   Expected daily return: ~{best['return_pct']/num_days:.2f}%")
         else:
-            print("   ⚠️ Consider waiting for better market conditions")
+            print("   Consider waiting for better market conditions")
             print("   OR use trend_following in trending markets")
             print("   OR increase BB_STD to 1.5+ for mean_reversion")
         
@@ -1021,14 +1039,14 @@ class FuturesStrategyComparer:
             return None
         
         try:
-            print(f"📂 Loading {self.timeframe} data from {csv_path}...")
+            print(f"Loading {self.timeframe} data from {csv_path}...")
             df = pd.read_csv(csv_path)
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df = df.sort_values('timestamp').reset_index(drop=True)
-            print(f"   ✅ Loaded {len(df)} candles from CSV")
+            print(f"   Loaded {len(df)} candles from CSV")
             return df
         except Exception as e:
-            print(f"   ⚠️ Error loading CSV: {e}")
+            print(f"   Error loading CSV: {e}")
             return None
     
     def run_strategy_backtest(self, df: pd.DataFrame, strategy_name: str,
@@ -1037,6 +1055,7 @@ class FuturesStrategyComparer:
         account = FuturesAccount(STARTING_CAPITAL, leverage=self.leverage)
         signal_gen = FuturesSignalGenerator(strategy=strategy_name)
         executor = FuturesOrderExecutor()
+        logger = TradeLogger("logs/current_futures_backtest.csv")
         
         trades_count = 0
         winning_trades = 0
@@ -1068,15 +1087,26 @@ class FuturesStrategyComparer:
                     liquidations += 1
                     losing_trades += 1
                     trades_count += 1
+                    logger.log_trade(trade)  # Log to CSV
                     trade_log.append({
                         'time': current_time,
-                        'side': '💀 LIQUIDATED',
+                        'side': 'LIQUIDATED',
                         'price': trade.price,
                         'pnl': trade.realized_pnl,
-                        'result': '💀 LIQ',
+                        'result': 'LIQ',
                         'equity': account.get_equity(current_price)
                     })
                 continue
+            
+            # Process funding rate every 8 hours (realistic simulation)
+            import random
+            if account.position and (
+                account.last_funding_time is None or
+                (current_time - account.last_funding_time).total_seconds() >= 8 * 3600
+            ):
+                # Randomize funding rate between -0.01% to +0.03%
+                funding_rate = random.uniform(-0.0001, 0.0003)
+                account.process_funding(current_price, funding_rate, current_time)
             
             # Get current position side
             if account.position is None:
@@ -1113,13 +1143,14 @@ class FuturesStrategyComparer:
                     
                     if trade.realized_pnl > 0:
                         winning_trades += 1
-                        result = "✅ WIN"
+                        result = "WIN"
                     elif trade.realized_pnl < 0:
                         losing_trades += 1
-                        result = "❌ LOSS"
+                        result = "LOSS"
                     else:
-                        result = "➖ FLAT"
+                        result = "FLAT"
                     
+                    logger.log_trade(trade)  # Log to CSV
                     trade_log.append({
                         'time': current_time,
                         'side': trade.side.upper(),
@@ -1148,12 +1179,13 @@ class FuturesStrategyComparer:
                     winning_trades += 1
                 elif trade.realized_pnl < 0:
                     losing_trades += 1
+                logger.log_trade(trade)  # Log to CSV
                 trade_log.append({
                     'time': end_date,
                     'side': f"[AUTO-CLOSE] {trade.side.upper()}",
                     'price': trade.price,
                     'pnl': trade.realized_pnl,
-                    'result': '📍 END',
+                    'result': 'END',
                     'equity': account.wallet_balance
                 })
         
@@ -1166,6 +1198,7 @@ class FuturesStrategyComparer:
             'final_equity': final_equity,
             'return_pct': total_return,
             'realized_pnl': account.realized_pnl,
+            'funding_paid': account.total_funding_paid,
             'trades': trades_count,
             'winning': winning_trades,
             'losing': losing_trades,
@@ -1183,7 +1216,7 @@ class FuturesStrategyComparer:
         else:
             period_str = f"Last {self.days} days"
         
-        print("\n" + "🔮" * 20)
+        print("\n" + "" * 20)
         print("FUTURES STRATEGY COMPARISON")
         print(f"Testing: {', '.join(self.STRATEGIES)}")
         print(f"Period: {period_str}")
@@ -1191,7 +1224,7 @@ class FuturesStrategyComparer:
         print(f"Leverage: {self.leverage}x")
         print(f"Symbol: {SYMBOL}")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
-        print("🔮" * 20 + "\n")
+        print("" * 20 + "\n")
         
         df = self.load_from_csv()
         if df is None or len(df) == 0:
@@ -1214,18 +1247,18 @@ class FuturesStrategyComparer:
         
         results = []
         for strategy in self.STRATEGIES:
-            print(f"\n📊 Testing {strategy.upper().replace('_', ' ')}...")
+            print(f"\nTesting {strategy.upper().replace('_', ' ')}...")
             result = self.run_strategy_backtest(df, strategy, start_date, end_date)
             results.append(result)
-            print(f"   {result['long_trades'] + result['short_trades']} round trips (📈{result['long_trades']}L 📉{result['short_trades']}S) | "
+            print(f"   {result['long_trades'] + result['short_trades']} round trips ({result['long_trades']}L {result['short_trades']}S) | "
                   f"Return: {result['return_pct']:+.2f}% | Win Rate: {result['win_rate']:.1f}%")
             if result['liquidations'] > 0:
-                print(f"   ⚠️ Liquidations: {result['liquidations']}")
+                print(f"   Liquidations: {result['liquidations']}")
         
         results.sort(key=lambda x: x['return_pct'], reverse=True)
         
         print("\n\n" + "=" * 70)
-        print("📊 FUTURES STRATEGY COMPARISON RESULTS")
+        print("FUTURES STRATEGY COMPARISON RESULTS")
         print("=" * 70)
         print(f"\n{'Strategy':<20} {'Return':>10} {'Trips':>6} {'Long':>5} {'Short':>6} {'Win%':>8} {'Final $':>12}")
         print("-" * 70)
@@ -1243,22 +1276,23 @@ class FuturesStrategyComparer:
         best = results[0]
         
         print("\n" + "=" * 70)
-        print("🏆 WINNER: " + best['strategy'].upper().replace('_', ' '))
+        print("WINNER: " + best['strategy'].upper().replace('_', ' '))
         print("=" * 70)
         print(f"Return: {best['return_pct']:+.2f}%")
         print(f"Final Equity: ${best['final_equity']:.2f}")
         trips = best['long_trades'] + best['short_trades']
-        print(f"Round Trips: {trips} (📈{best['long_trades']} long, 📉{best['short_trades']} short)")
+        print(f"Round Trips: {trips} ({best['long_trades']} long, {best['short_trades']} short)")
         print(f"Win Rate: {best['win_rate']:.1f}%")
         print(f"Leverage: {self.leverage}x")
+        print(f"Funding Paid: ${best['funding_paid']:+.2f}")
         
         if best['liquidations'] > 0:
-            print(f"⚠️ Liquidations: {best['liquidations']}")
+            print(f"Liquidations: {best['liquidations']}")
         
         # Show trade log summary
         if best['trade_log']:
             print("\n" + "-" * 70)
-            print(f"📋 TRADE LOG ({best['strategy'].upper()}):")
+            print(f"TRADE LOG ({best['strategy'].upper()}):")
             print("-" * 70)
             for t in best['trade_log'][:15]:  # Show first 15
                 print(f"  {t['time'].strftime('%Y-%m-%d %H:%M')} | {t['side']:<12} @ ${t['price']:>10,.2f} | "
