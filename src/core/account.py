@@ -10,7 +10,8 @@ from config import (
     LIVE_MODE, MAKER_FEE, TAKER_FEE, SIMULATED_SLIPPAGE,
     STOP_LOSS_PCT, TAKE_PROFIT_PCT, MAX_TRADES_PER_DAY, COOLDOWN_MINUTES,
     FUTURES_MODE, LEVERAGE, FUTURES_MAKER_FEE, FUTURES_TAKER_FEE,
-    LIQUIDATION_BUFFER_PCT, DEFAULT_FUNDING_RATE
+    LIQUIDATION_BUFFER_PCT, DEFAULT_FUNDING_RATE,
+    FUTURES_STOP_LOSS_PCT, FUTURES_TAKE_PROFIT_PCT
 )
 from src.core.models import Side, Position, Trade, PositionSide, FuturesPosition, FundingPayment
 
@@ -73,7 +74,7 @@ class PaperAccount:
         """Check if trading is allowed based on cooldown and limits."""
         self.reset_daily_counters()
         
-        if self.trades_today >= MAX_TRADES_PER_DAY:
+        if MAX_TRADES_PER_DAY and self.trades_today >= MAX_TRADES_PER_DAY:
             return False, f"Daily trade limit reached ({MAX_TRADES_PER_DAY})"
         
         if self.last_trade_time:
@@ -250,7 +251,7 @@ class FuturesAccount:
             self.current_day = today
             self.trades_today = 0
         
-        if self.trades_today >= MAX_TRADES_PER_DAY:
+        if MAX_TRADES_PER_DAY and self.trades_today >= MAX_TRADES_PER_DAY:
             return False, f"Daily trade limit reached ({MAX_TRADES_PER_DAY})"
         
         if self.last_trade_time:
@@ -327,8 +328,8 @@ class FuturesAccount:
         fees = position_value * FUTURES_TAKER_FEE
         
         # Calculate stop loss and take profit
-        stop_loss = executed_price * (1 - STOP_LOSS_PCT)
-        take_profit = executed_price * (1 + TAKE_PROFIT_PCT)
+        stop_loss = executed_price * (1 - FUTURES_STOP_LOSS_PCT)
+        take_profit = executed_price * (1 + FUTURES_TAKE_PROFIT_PCT)
         
         # Calculate liquidation price
         liq_price = self.calculate_liquidation_price(
@@ -396,8 +397,8 @@ class FuturesAccount:
         fees = position_value * FUTURES_TAKER_FEE
         
         # For shorts: stop loss is above entry, take profit is below
-        stop_loss = executed_price * (1 + STOP_LOSS_PCT)
-        take_profit = executed_price * (1 - TAKE_PROFIT_PCT)
+        stop_loss = executed_price * (1 + FUTURES_STOP_LOSS_PCT)
+        take_profit = executed_price * (1 - FUTURES_TAKE_PROFIT_PCT)
         
         liq_price = self.calculate_liquidation_price(
             PositionSide.SHORT, executed_price, self.leverage, margin_amount

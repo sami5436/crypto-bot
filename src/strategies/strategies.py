@@ -10,7 +10,9 @@ from config import (
     BB_PERIOD, BB_STD, RSI_PERIOD, RSI_OVERSOLD, RSI_OVERBOUGHT,
     MAKER_FEE, SIMULATED_SPREAD, SIMULATED_SLIPPAGE, ATR_VOLATILITY_THRESHOLD,
     HOURLY_BB_PERIOD, HOURLY_BB_STD, HOURLY_RSI_PERIOD, 
-    HOURLY_RSI_OVERSOLD, HOURLY_RSI_OVERBOUGHT, HOURLY_ATR_VOLATILITY_THRESHOLD
+    HOURLY_RSI_OVERSOLD, HOURLY_RSI_OVERBOUGHT, HOURLY_ATR_VOLATILITY_THRESHOLD,
+    FUTURES_BB_PERIOD, FUTURES_BB_STD, FUTURES_RSI_PERIOD,
+    FUTURES_RSI_OVERSOLD, FUTURES_RSI_OVERBOUGHT, FUTURES_ATR_VOLATILITY_THRESHOLD
 )
 from src.core.models import Signal
 from src.strategies.indicators import (
@@ -361,12 +363,12 @@ class FuturesSignalGenerator:
     
     def __init__(self, strategy: str = "voting"):
         self.strategy = strategy
-        self.bb_period = BB_PERIOD
-        self.bb_std = BB_STD
-        self.rsi_period = RSI_PERIOD
-        self.rsi_oversold = RSI_OVERSOLD
-        self.rsi_overbought = RSI_OVERBOUGHT
-        self.atr_threshold = ATR_VOLATILITY_THRESHOLD
+        self.bb_period = FUTURES_BB_PERIOD
+        self.bb_std = FUTURES_BB_STD
+        self.rsi_period = FUTURES_RSI_PERIOD
+        self.rsi_oversold = FUTURES_RSI_OVERSOLD
+        self.rsi_overbought = FUTURES_RSI_OVERBOUGHT
+        self.atr_threshold = FUTURES_ATR_VOLATILITY_THRESHOLD
     
     def _check_volatility_filter(self, df: pd.DataFrame, current_price: float) -> Tuple[bool, float]:
         """Check if volatility is too high for trading."""
@@ -585,4 +587,3 @@ class FuturesSignalGenerator:
             signal, reason, _ = self._voting_signal(df, current_price, position_side)
         
         return signal, reason
-

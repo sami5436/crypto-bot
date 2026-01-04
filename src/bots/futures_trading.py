@@ -11,9 +11,11 @@ from datetime import datetime
 from typing import Optional
 
 from config import (
-    EXCHANGE, SYMBOL, STARTING_CAPITAL, STRATEGY,
-    RSI_PERIOD, UPDATE_INTERVAL_SECONDS, MAX_TRADES_PER_DAY,
-    LEVERAGE
+    FUTURES_EXCHANGE, FUTURES_SYMBOL, FUTURES_TIMEFRAME,
+    STARTING_CAPITAL, STRATEGY, FUTURES_RSI_PERIOD,
+    UPDATE_INTERVAL_SECONDS, MAX_TRADES_PER_DAY, LEVERAGE,
+    FUNDING_RATE_INTERVAL_HOURS, FUNDING_RATE_MIN, FUNDING_RATE_MAX,
+    FUTURES_TRADES_LOG_FILE, FUTURES_MIN_CLOSE_THRESHOLD
 )
 from src.core.models import Signal, KillSwitchStatus, PositionSide
 from src.strategies.indicators import calculate_rsi, calculate_atr
@@ -31,22 +33,27 @@ class FuturesPaperTradingBot(BaseBot):
     
     def __init__(self, leverage: int = LEVERAGE):
         super().__init__()
+        exchange_class = getattr(ccxt, FUTURES_EXCHANGE)
+        self.exchange = exchange_class({
+            'enableRateLimit': True,
+            'options': {'defaultType': 'swap'},
+        })
         self.leverage = leverage
         self.account = FuturesAccount(STARTING_CAPITAL, leverage=leverage)
         self.kill_switch = KillSwitch(self.account)
         self.signal_generator = FuturesSignalGenerator(strategy=STRATEGY)
         self.executor = FuturesOrderExecutor()
-        self.logger = TradeLogger("logs/futures_trades.csv")
+        self.logger = TradeLogger(FUTURES_TRADES_LOG_FILE)
         
         # Session tracking for detailed log
         self.start_time = datetime.now()
         self.session_log = []
+        self.last_candle_ts = None
     
     def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
         """Fetch OHLCV data from exchange."""
         try:
-            # Use daily candles for more stable signals
-            ohlcv = self.exchange.fetch_ohlcv(SYMBOL, "1d", limit=100)
+            ohlcv = self.exchange.fetch_ohlcv(FUTURES_SYMBOL, FUTURES_TIMEFRAME, limit=100)
             self.account.consecutive_api_errors = 0
             
             df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
@@ -57,6 +64,12 @@ class FuturesPaperTradingBot(BaseBot):
             self.account.consecutive_api_errors += 1
             print(f"[ERROR] API error ({self.account.consecutive_api_errors}): {e}")
             return None
+
+    def _sleep_backoff(self):
+        """Sleep with exponential backoff after API errors."""
+        errors = max(self.account.consecutive_api_errors, 1)
+        backoff = UPDATE_INTERVAL_SECONDS * (2 ** min(errors - 1, 6))
+        time.sleep(min(backoff, 300))
     
     def print_status(self, df: pd.DataFrame, signal_reason: str, kill_status: KillSwitchStatus):
         """Print current status to console - simple, clean format."""
@@ -68,14 +81,14 @@ class FuturesPaperTradingBot(BaseBot):
         total_return = (equity - STARTING_CAPITAL) / STARTING_CAPITAL * 100
         
         closes = df['close']
-        rsi = calculate_rsi(closes, RSI_PERIOD)
+        rsi = calculate_rsi(closes, FUTURES_RSI_PERIOD)
         
         print("=" * 60)
         print(f"FUTURES PAPER TRADING  |  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
         print()
         print(f"  MARKET")
-        print(f"    {SYMBOL}         ${current_price:,.2f}")
+        print(f"    {FUTURES_SYMBOL}         ${current_price:,.2f}")
         print(f"    RSI              {rsi.iloc[-1]:.1f}")
         print(f"    Leverage         {self.leverage}x")
         print()
@@ -108,7 +121,11 @@ class FuturesPaperTradingBot(BaseBot):
         print()
         
         status = "HALTED: " + kill_status.reason if kill_status.should_halt else "ACTIVE"
-        print(f"  STATUS: {status}  |  Trades: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        if MAX_TRADES_PER_DAY:
+            trades_label = f"{self.account.trades_today}/{MAX_TRADES_PER_DAY}"
+        else:
+            trades_label = f"{self.account.trades_today}"
+        print(f"  STATUS: {status}  |  Trades: {trades_label}")
         print()
         print("=" * 60)
     
@@ -117,11 +134,11 @@ class FuturesPaperTradingBot(BaseBot):
         print("\n" + "=" * 60)
         print("STARTING FUTURES PAPER TRADING BOT")
         print(f"Mode: PAPER (Futures)")
-        print(f"Symbol: {SYMBOL}")
+        print(f"Symbol: {FUTURES_SYMBOL}")
         print(f"Leverage: {self.leverage}x")
         print(f"Starting Capital: ${STARTING_CAPITAL}")
         print(f"Strategy: {STRATEGY.upper().replace('_', ' ')}")
-        print(f"Timeframe: DAILY candles")
+        print(f"Timeframe: {FUTURES_TIMEFRAME} candles")
         print(f"Funding Rate: Simulated every 8 hours")
         print("=" * 60 + "\n")
         
@@ -130,8 +147,14 @@ class FuturesPaperTradingBot(BaseBot):
             try:
                 df = self.fetch_ohlcv()
                 if df is None:
+                    self._sleep_backoff()
+                    continue
+
+                latest_ts = df['timestamp'].iloc[-1]
+                if self.last_candle_ts == latest_ts:
                     time.sleep(UPDATE_INTERVAL_SECONDS)
                     continue
+                self.last_candle_ts = latest_ts
                 
                 current_price = df['close'].iloc[-1]
                 atr = calculate_atr(df['high'], df['low'], df['close'])
@@ -143,7 +166,7 @@ class FuturesPaperTradingBot(BaseBot):
                 # Check liquidation
                 liq_signal = check_futures_liquidation(self.account, current_price)
                 if liq_signal:
-                    trade = self.executor.execute(self.account, liq_signal, SYMBOL, current_price)
+                    trade = self.executor.execute(self.account, liq_signal, FUTURES_SYMBOL, current_price)
                     if trade:
                         trade.is_liquidation = True
                         self.logger.log_trade(trade)
@@ -151,11 +174,12 @@ class FuturesPaperTradingBot(BaseBot):
                 
                 # Process funding rate every 8 hours
                 now = datetime.now()
+                funding_interval = FUNDING_RATE_INTERVAL_HOURS * 3600
                 if self.account.position and (
                     self.account.last_funding_time is None or 
-                    (now - self.account.last_funding_time).total_seconds() >= 8 * 3600
+                    (now - self.account.last_funding_time).total_seconds() >= funding_interval
                 ):
-                    funding_rate = random.uniform(-0.0001, 0.0003)
+                    funding_rate = random.uniform(FUNDING_RATE_MIN, FUNDING_RATE_MAX)
                     funding_payment = self.account.process_funding(current_price, funding_rate, now)
                     if funding_payment:
                         self.session_log.append(
@@ -174,13 +198,14 @@ class FuturesPaperTradingBot(BaseBot):
                 )
                 
                 # Profit/loss threshold - don't close on tiny moves
-                MIN_CLOSE_THRESHOLD = 0.0015
                 if signal in [Signal.CLOSE_LONG, Signal.CLOSE_SHORT] and self.account.position:
                     pos = self.account.position
                     move_pct = abs(current_price - pos.entry_price) / pos.entry_price
-                    if move_pct < MIN_CLOSE_THRESHOLD:
+                    if move_pct < FUTURES_MIN_CLOSE_THRESHOLD:
                         signal = Signal.NONE
-                        signal_reason = f"HOLDING (move {move_pct:.3%} < {MIN_CLOSE_THRESHOLD:.2%} threshold)"
+                        signal_reason = (
+                            f"HOLDING (move {move_pct:.3%} < {FUTURES_MIN_CLOSE_THRESHOLD:.2%} threshold)"
+                        )
                 
                 # Check stop loss / take profit
                 sl_tp_signal = check_stop_loss_take_profit(self.account, current_price)
@@ -194,7 +219,7 @@ class FuturesPaperTradingBot(BaseBot):
                     can_trade, _ = self.account.can_trade()
                     if can_trade or sl_tp_signal:
                         trade = self.executor.execute(
-                            self.account, signal, SYMBOL, current_price
+                            self.account, signal, FUTURES_SYMBOL, current_price
                         )
                         if trade:
                             self.logger.log_trade(trade)
@@ -207,7 +232,7 @@ class FuturesPaperTradingBot(BaseBot):
                     self.running = False
                     break
                 
-                time.sleep(60)
+                time.sleep(UPDATE_INTERVAL_SECONDS)
                 
             except KeyboardInterrupt:
                 print("\n\nShutting down gracefully...")
@@ -217,7 +242,7 @@ class FuturesPaperTradingBot(BaseBot):
                 print(f"\n[ERROR] Unexpected error: {e}")
                 self.account.consecutive_api_errors += 1
                 self.session_log.append(f"{datetime.now()}: ERROR - {e}")
-                time.sleep(60)
+                self._sleep_backoff()
         
         # Final status
         final_price = df['close'].iloc[-1] if df is not None else 0
@@ -253,7 +278,7 @@ class FuturesPaperTradingBot(BaseBot):
             f.write(f"  Start Time:        {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"  End Time:          {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"  Duration:          {str(session_duration).split('.')[0]}\n")
-            f.write(f"  Symbol:            {SYMBOL}\n")
+            f.write(f"  Symbol:            {FUTURES_SYMBOL}\n")
             f.write(f"  Leverage:          {self.leverage}x\n")
             f.write(f"  Strategy:          {STRATEGY}\n")
             f.write("\n")
@@ -316,8 +341,11 @@ class FuturesPaperTradingBot(BaseBot):
             
             f.write("NOTES\n")
             f.write("-" * 40 + "\n")
-            f.write("  - Close threshold: 0.15% (prevents oscillation)\n")
-            f.write("  - All trades logged to: futures_trades.csv\n")
+            f.write(f"  - Timeframe: {FUTURES_TIMEFRAME}\n")
+            f.write(
+                f"  - Close threshold: {FUTURES_MIN_CLOSE_THRESHOLD:.2%} (prevents oscillation)\n"
+            )
+            f.write(f"  - All trades logged to: {FUTURES_TRADES_LOG_FILE}\n")
             f.write("  - This is PAPER TRADING - no real money\n")
             f.write("\n")
             f.write("=" * 70 + "\n")

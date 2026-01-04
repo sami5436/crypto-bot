@@ -1,0 +1,79 @@
+======================================================================
+FUTURES PAPER TRADING SESSION LOG
+======================================================================
+
+SESSION OVERVIEW
+----------------------------------------
+  Start Time:        2025-12-29 08:27:08
+  End Time:          2026-01-02 18:46:47
+  Duration:          4 days, 10:19:39
+  Symbol:            BTC/USD
+  Leverage:          3x
+  Strategy:          voting
+
+ACCOUNT SUMMARY
+----------------------------------------
+  Starting Capital:  $500.00
+  Final Equity:      $470.91
+  Total Return:      -5.82%
+  Realized PnL:      $-26.40
+
+TRADE SUMMARY
+----------------------------------------
+  Total Trades:      8
+  Winning Trades:    0
+  Losing Trades:     4
+  Flat Trades:       4
+  Win Rate:          0.0%
+
+TRADE LOG
+----------------------------------------------------------------------
+  1. 2025-12-29 08:29:12
+     Side: SHORT  |  Price: $87,136.70  |  Qty: 0.014632
+     Fees: $0.7650  |  PnL: $+0.00
+
+  2. 2025-12-29 08:31:13
+     Side: CLOSE_SHORT  |  Price: $87,620.68  |  Qty: 0.014632
+     Fees: $0.7692  |  PnL: $-7.85
+
+  3. 2025-12-29 09:12:40
+     Side: SHORT  |  Price: $87,187.75  |  Qty: 0.014624
+     Fees: $0.7650  |  PnL: $+0.00
+
+  4. 2025-12-29 16:13:39
+     Side: CLOSE_SHORT  |  Price: $87,249.26  |  Qty: 0.014624
+     Fees: $0.7655  |  PnL: $-1.67
+
+  5. 2025-12-29 16:45:05
+     Side: SHORT  |  Price: $86,974.59  |  Qty: 0.014659
+     Fees: $0.7650  |  PnL: $+0.00
+
+  6. 2025-12-29 17:10:13
+     Side: CLOSE_SHORT  |  Price: $87,532.11  |  Qty: 0.014659
+     Fees: $0.7699  |  PnL: $-8.94
+
+  7. 2025-12-29 17:29:18
+     Side: SHORT  |  Price: $86,875.49  |  Qty: 0.014676
+     Fees: $0.7650  |  PnL: $+0.00
+
+  8. 2025-12-29 17:30:18
+     Side: CLOSE_SHORT  |  Price: $87,364.21  |  Qty: 0.014676
+     Fees: $0.7693  |  PnL: $-7.94
+
+
+FINAL POSITION STATE
+----------------------------------------
+  No open position at session end.
+
+SESSION EVENTS
+----------------------------------------
+  2025-12-29 08:30:13.121348: FUNDING - Rate: 0.0212%, Payment: $+0.2717
+  2025-12-29 17:10:13.164706: FUNDING - Rate: 0.0074%, Payment: $+0.0951
+
+NOTES
+----------------------------------------
+  - Close threshold: 0.15% (prevents oscillation)
+  - All trades logged to: futures_trades.csv
+  - This is PAPER TRADING - no real money
+
+======================================================================

@@ -15,10 +15,11 @@ STARTING_CAPITAL = 500.0  # USD
 SYMBOL = "BTC/USD"  # For spot (Kraken)
 FUTURES_SYMBOL = "BTC/USDT:USDT"  # For futures (Bybit)
 TIMEFRAME = "1h"
+FUTURES_TIMEFRAME = "5m"  # Faster futures signals
 
 # Exchange selection
 SPOT_EXCHANGE = "kraken"
-FUTURES_EXCHANGE = "bybit"
+FUTURES_EXCHANGE = "okx"
 EXCHANGE = SPOT_EXCHANGE  # Backward compatibility
 
 
@@ -121,6 +122,20 @@ HOURLY_ATR_VOLATILITY_THRESHOLD = 0.025  # Stricter for hourly
 
 
 # =============================================================================
+# STRATEGY PARAMETERS - FUTURES (tunable for faster timeframes)
+# =============================================================================
+
+# Aggressive scalping defaults (5m candles)
+FUTURES_BB_PERIOD = 20
+FUTURES_BB_STD = 2.0
+FUTURES_RSI_PERIOD = 10
+FUTURES_RSI_OVERSOLD = 35
+FUTURES_RSI_OVERBOUGHT = 65
+FUTURES_ATR_VOLATILITY_THRESHOLD = 0.035
+FUTURES_MIN_CLOSE_THRESHOLD = 0.0012  # 0.12% move required to close
+
+
+# =============================================================================
 # RISK MANAGEMENT
 # =============================================================================
 
@@ -132,6 +147,8 @@ MIN_EXPECTED_EDGE = 0.005  # Need 0.5% expected edge to trade
 # Futures-specific risk
 MAX_LEVERAGE = 10  # Hard cap on leverage
 LIQUIDATION_BUFFER_PCT = 0.10  # Close position if within 10% of liquidation
+FUTURES_STOP_LOSS_PCT = 0.008  # 0.8% stop loss (aggressive scalping)
+FUTURES_TAKE_PROFIT_PCT = 0.012  # 1.2% take profit
 
 
 # =============================================================================
@@ -141,7 +158,7 @@ LIQUIDATION_BUFFER_PCT = 0.10  # Close position if within 10% of liquidation
 MAX_DAILY_DRAWDOWN_PCT = 0.10  # 10% daily drawdown limit
 MAX_VOLATILITY_PCT = 0.08  # ATR > 8% triggers halt
 MAX_CONSECUTIVE_API_ERRORS = 3
-MAX_TRADES_PER_DAY = 20  # Trade limit
+MAX_TRADES_PER_DAY = None  # None disables trade cap
 COOLDOWN_MINUTES = 60  # 1-hour cooldown (for daily)
 HOURLY_COOLDOWN_MINUTES = 360  # 6-hour cooldown (for hourly)
 FUTURES_COOLDOWN_MINUTES = 0  # No cooldown for futures paper trading
@@ -152,6 +169,7 @@ FUTURES_COOLDOWN_MINUTES = 0  # No cooldown for futures paper trading
 # =============================================================================
 
 TRADES_LOG_FILE = "logs/trades_log.csv"
+FUTURES_TRADES_LOG_FILE = "logs/futures_trades.csv"
 UPDATE_INTERVAL_SECONDS = 5
 
 # Strategy selection: "mean_reversion", "trend_following", or "voting"

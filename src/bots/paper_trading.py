@@ -32,6 +32,7 @@ class PaperTradingBot(BaseBot):
         self.signal_generator = SignalGenerator(strategy=STRATEGY)
         self.executor = OrderExecutor()
         self.logger = TradeLogger(TRADES_LOG_FILE)
+        self.last_candle_ts = None
     
     def fetch_ohlcv(self) -> Optional[pd.DataFrame]:
         """Fetch OHLCV data from exchange."""
@@ -47,6 +48,12 @@ class PaperTradingBot(BaseBot):
             self.account.consecutive_api_errors += 1
             print(f"[ERROR] API error ({self.account.consecutive_api_errors}): {e}")
             return None
+
+    def _sleep_backoff(self):
+        """Sleep with exponential backoff after API errors."""
+        errors = max(self.account.consecutive_api_errors, 1)
+        backoff = UPDATE_INTERVAL_SECONDS * (2 ** min(errors - 1, 6))
+        time.sleep(min(backoff, 300))
     
     def print_status(self, df: pd.DataFrame, signal_reason: str, kill_status: KillSwitchStatus):
         """Print current status to console."""
@@ -86,7 +93,10 @@ class PaperTradingBot(BaseBot):
             print(f"POSITION: None")
         print("-" * 60)
         print(f"SIGNAL: {signal_reason}")
-        print(f"Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        if MAX_TRADES_PER_DAY:
+            print(f"Trades Today: {self.account.trades_today}/{MAX_TRADES_PER_DAY}")
+        else:
+            print(f"Trades Today: {self.account.trades_today}")
         
         can_trade, trade_reason = self.account.can_trade()
         if not can_trade:
@@ -113,8 +123,14 @@ class PaperTradingBot(BaseBot):
             try:
                 df = self.fetch_ohlcv()
                 if df is None:
+                    self._sleep_backoff()
+                    continue
+
+                latest_ts = df['timestamp'].iloc[-1]
+                if self.last_candle_ts == latest_ts:
                     time.sleep(UPDATE_INTERVAL_SECONDS)
                     continue
+                self.last_candle_ts = latest_ts
                 
                 current_price = df['close'].iloc[-1]
                 atr = calculate_atr(df['high'], df['low'], df['close'])
@@ -160,7 +176,7 @@ class PaperTradingBot(BaseBot):
             except Exception as e:
                 print(f"\n[ERROR] Unexpected error: {e}")
                 self.account.consecutive_api_errors += 1
-                time.sleep(UPDATE_INTERVAL_SECONDS)
+                self._sleep_backoff()
         
         print("\n" + "=" * 60)
         print("FINAL ACCOUNT STATUS")

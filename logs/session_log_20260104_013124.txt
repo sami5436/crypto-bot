@@ -1,0 +1,94 @@
+======================================================================
+FUTURES PAPER TRADING SESSION LOG
+======================================================================
+
+SESSION OVERVIEW
+----------------------------------------
+  Start Time:        2026-01-04 01:31:24
+  End Time:          2026-01-04 05:35:06
+  Duration:          4:03:41
+  Symbol:            BTC/USDT:USDT
+  Leverage:          3x
+  Strategy:          voting
+
+ACCOUNT SUMMARY
+----------------------------------------
+  Starting Capital:  $500.00
+  Final Equity:      $449.68
+  Total Return:      -10.06%
+  Realized PnL:      $-41.74
+
+TRADE SUMMARY
+----------------------------------------
+  Total Trades:      11
+  Winning Trades:    0
+  Losing Trades:     5
+  Flat Trades:       6
+  Win Rate:          0.0%
+
+TRADE LOG
+----------------------------------------------------------------------
+  1. 2026-01-04 01:34:05
+     Side: SHORT  |  Price: $91,022.71  |  Qty: 0.014007
+     Fees: $0.7650  |  PnL: $+0.00
+
+  2. 2026-01-04 02:02:06
+     Side: CLOSE_SHORT  |  Price: $91,586.24  |  Qty: 0.014007
+     Fees: $0.7697  |  PnL: $-8.66
+
+  3. 2026-01-04 02:56:06
+     Side: LONG  |  Price: $91,586.14  |  Qty: 0.013921
+     Fees: $0.7650  |  PnL: $+0.00
+
+  4. 2026-01-04 03:19:05
+     Side: CLOSE_LONG  |  Price: $91,058.50  |  Qty: 0.013921
+     Fees: $0.7606  |  PnL: $-8.11
+
+  5. 2026-01-04 03:36:05
+     Side: SHORT  |  Price: $91,030.19  |  Qty: 0.014006
+     Fees: $0.7650  |  PnL: $+0.00
+
+  6. 2026-01-04 04:20:05
+     Side: CLOSE_SHORT  |  Price: $91,728.86  |  Qty: 0.014006
+     Fees: $0.7709  |  PnL: $-10.56
+
+  7. 2026-01-04 04:28:03
+     Side: LONG  |  Price: $91,710.71  |  Qty: 0.013902
+     Fees: $0.7650  |  PnL: $+0.00
+
+  8. 2026-01-04 04:35:04
+     Side: CLOSE_LONG  |  Price: $91,234.37  |  Qty: 0.013902
+     Fees: $0.7610  |  PnL: $-7.38
+
+  9. 2026-01-04 04:40:04
+     Side: LONG  |  Price: $91,735.58  |  Qty: 0.013899
+     Fees: $0.7650  |  PnL: $+0.00
+
+  10. 2026-01-04 04:49:01
+     Side: CLOSE_LONG  |  Price: $91,284.32  |  Qty: 0.013899
+     Fees: $0.7612  |  PnL: $-7.03
+
+  11. 2026-01-04 05:34:03
+     Side: SHORT  |  Price: $91,084.23  |  Qty: 0.013998
+     Fees: $0.7650  |  PnL: $+0.00
+
+
+FINAL POSITION STATE
+----------------------------------------
+  Side:              SHORT
+  Entry Price:       $91,084.23
+  Current Price:     $91,359.10
+  Unrealized PnL:    $-3.85
+  Liquidation:       $120,990.21
+
+SESSION EVENTS
+----------------------------------------
+  2026-01-04 01:35:03.204402: FUNDING - Rate: -0.0110%, Payment: $-0.1412
+
+NOTES
+----------------------------------------
+  - Close threshold: 0.15% (prevents oscillation)
+  - All trades logged to: logs/futures_trades.csv
+  - This is PAPER TRADING - no real money
+
+======================================================================
